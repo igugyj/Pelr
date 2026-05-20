@@ -70,7 +70,6 @@ GLCore::GLCore(QWidget *parent) : QOpenGLWidget(parent)
             Qt::WindowDoesNotAcceptFocus);
     }
     this->setAttribute(Qt::WA_TranslucentBackground);
-    this->setAttribute(Qt::WA_DeleteOnClose); // 关闭时自动删除
 
     connectSignals();
     // 鼠标跟踪
@@ -358,7 +357,9 @@ void GLCore::connectSignals()
     connect(TrayIcon::instance()->action_quit, &QAction::triggered, [&]()
             {
         saveWindowLocation();
-        QCoreApplication::quit(); });
+        if (m_watcher.isRunning())
+            m_watcher.cancel();
+        qApp->quit(); });
     // 重置window位置
     connect(TrayIcon::instance()->action_resetWinLoc, SIGNAL(triggered()), this, SLOT(resetLocation()));
     // 显示界面
@@ -474,12 +475,14 @@ void GLCore::onAskWeather()
 
 void GLCore::startRunStarIfPoweredInThread()
 {
-    if (m_watcher.isRunning()) {
+    if (m_watcher.isRunning())
+    {
         qWarning() << "Background task already running, skipping";
         return;
     }
     QString title = DataManager::instance().Project_Name + " " + QTime::currentTime().toString("hh:mm:ss");
     // 如果开机时长大于20分钟，则return
+    // TODO 让用户自己设定
     if (isSystemUptimeExceeds(20))
     {
         TrayIcon::showMessage(
@@ -518,8 +521,10 @@ void GLCore::runStarIfPowered()
     qDebug() << "run star if powered，wt 60s";
     // 提前拷贝 future，避免访问 m_watcher 时对象已析构
     QFuture<void> future = m_watcher.future();
-    for (int i = 0; i < 60; ++i) {
-        if (future.isCanceled()) {
+    for (int i = 0; i < 60; ++i)
+    { // 1 min todo: 让用户自己定
+        if (future.isCanceled())
+        {
             qDebug() << "runStarIfPowered cancelled";
             return;
         }
@@ -527,7 +532,7 @@ void GLCore::runStarIfPowered()
     }
     QList<MenuData> menu_data = DataManager::instance().getMenuData();
     std::vector<QString> powerStatus = getPowerStatus();
-    if (powerStatus[0] != "Online (AC)")
+    if (powerStatus.size() < 1 || powerStatus[0] != "Online (AC)")
         return;
     for (MenuData &item : menu_data)
     {
@@ -749,14 +754,11 @@ void GLCore::retranslateUI()
 
 void GLCore::closeEvent(QCloseEvent *event)
 {
-    // 保存窗口位置
     saveWindowLocation();
-    // 取消并等待后台任务结束，防止空悬指针
-    if (m_watcher.isRunning()) {
+    if (m_watcher.isRunning())
         m_watcher.cancel();
-        m_watcher.waitForFinished();
-    }
     event->accept();
+    qApp->quit();
 }
 
 void GLCore::hideEvent(QHideEvent *event)

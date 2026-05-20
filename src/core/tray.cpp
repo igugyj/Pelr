@@ -228,6 +228,15 @@ void TrayIcon::switchMusicIcon(const bool flag)
     }
 }
 
+void TrayIcon::cleanup()
+{
+    if (m_instance)
+    {
+        delete m_instance;
+        m_instance = nullptr;
+    }
+}
+
 TrayIcon::~TrayIcon()
 {
     delete menu;

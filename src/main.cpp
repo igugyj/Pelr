@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
         qDebug() << "License accepted";
     }
 
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, TrayIcon::cleanup);
+
     TrayIcon::instance()->show();
 
     // ONNX 初始化（如可能耗时，可考虑异步，此处保持简单）
