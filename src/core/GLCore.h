@@ -36,6 +36,8 @@ Q_OBJECT // 可以用信号槽机制进行通信 信号与槽
 
     void initContextMenu();
 
+    void handleClick(const QPoint &localPos);
+
     void switchWindowTransparent(bool transparent);
 
     void switchListener();

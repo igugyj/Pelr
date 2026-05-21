@@ -107,7 +107,19 @@ void GLCore::checkMouseTransparency()
     }
     // 鼠标位置的像素
     QImage image = grabFramebuffer();
-    QColor color = image.pixelColor(localPos);
+
+    // 核心修复：将逻辑坐标转换为物理像素坐标（处理高分屏缩放）
+    qreal dpr = this->devicePixelRatioF();
+    QPoint physicalPos(qRound(localPos.x() * dpr), qRound(localPos.y() * dpr));
+
+    // 越界保护
+    if (physicalPos.x() < 0 || physicalPos.x() >= image.width() ||
+        physicalPos.y() < 0 || physicalPos.y() >= image.height())
+    {
+        return;
+    }
+
+    QColor color = image.pixelColor(physicalPos);
 
     // 检查透明度
     bool shouldBeTransparent = (color.alpha() < 64); // 25%透明度阈值
@@ -654,7 +666,7 @@ void GLCore::resetLocation()
 
 void GLCore::mousePressEvent(QMouseEvent *event)
 {
-    // LAppDelegate::GetInstance()->GetView()->OnTouchesBegan(event->x(), event->y());
+    LAppDelegate::GetInstance()->GetView()->OnTouchesBegan(event->position().x(), event->position().y());
     // 按住鼠标开始拖动
     if (event->button() == Qt::LeftButton)
     {
@@ -691,14 +703,45 @@ void GLCore::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void GLCore::handleClick(const QPoint &localPos)
+{
+    if (!rect().contains(localPos))
+        return;
+
+    QImage frame = grabFramebuffer();
+
+    // 核心修复：将逻辑坐标转换为物理像素坐标（处理高分屏缩放）
+    qreal dpr = this->devicePixelRatioF();
+    QPoint physicalPos(qRound(localPos.x() * dpr), qRound(localPos.y() * dpr));
+
+    // 越界保护
+    if (physicalPos.x() < 0 || physicalPos.x() >= frame.width() ||
+        physicalPos.y() < 0 || physicalPos.y() >= frame.height())
+        return;
+
+    QColor color = frame.pixelColor(physicalPos);
+
+    // 如果是透明区域，则忽略点击
+    if (color.alpha() < 64)
+        return;
+
+    LAppModel *model = LAppLive2DManager::GetInstance()->GetModel(0);
+    if (model)
+        model->StartRandomMotion(LAppDefine::MotionGroupTapBody,
+                                 LAppDefine::PriorityNormal, nullptr, nullptr);
+}
+
 void GLCore::mouseReleaseEvent(QMouseEvent *event)
 {
-    LAppDelegate::GetInstance()->GetView()->OnTouchesEnded(event->position().x(), event->position().y());
-    // 按住鼠标释放时停止拖动
     if (event->button() == Qt::LeftButton)
     {
+        handleClick(event->position().toPoint());
         left_button_down = false;
     }
+
+    // 停止拖拽（眼神跟随用）
+    LAppLive2DManager::GetInstance()->OnDrag(0.0f, 0.0f);
+
     if (event->button() == Qt::RightButton)
     {
         right_button_down = false;

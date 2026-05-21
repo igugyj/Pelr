@@ -54,6 +54,9 @@ void LAppView::Render()
     GLCore *window = LAppDelegate::GetInstance()->GetWindow();
     int maxWidth = window->width();
     int maxHeight = window->height();
+    // 清除帧缓冲，使背景透明（用于像素级碰撞检测等）
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     // _back->SetWindowSize(maxWidth, maxHeight);
     // _gear->SetWindowSize(maxWidth, maxHeight);
@@ -145,8 +148,8 @@ void LAppView::OnTouchesEnded(float px, float py) const
 {
     LAppLive2DManager *mgr = LAppLive2DManager::GetInstance();
     mgr->OnDrag(0.0f, 0.0f);
-    float x = _deviceToScreen->TransformX(_touchManager->GetX());
-    float y = _deviceToScreen->TransformY(_touchManager->GetY());
+    float x = _deviceToScreen->TransformX(px);
+    float y = _deviceToScreen->TransformY(py);
     mgr->OnTap(x, y);
     /*
     if (_gear->IsHit(px, py))

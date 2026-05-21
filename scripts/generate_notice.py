@@ -98,7 +98,7 @@ SOFTWARE."""
 THIRD_PARTY_LIBS = [
     {
         "name": "Qt",
-        "version": "5.15.2",
+        "version": "6.10.1",
         "license_type": "LGPLv3 (with GPLv2 as an alternative)",
         "copyright": "The Qt Company Ltd.",
         "homepage": "https://www.qt.io/",
