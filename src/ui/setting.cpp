@@ -274,7 +274,7 @@ SettingWidget::SettingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::sett
     if (NOTICE.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream in(&NOTICE);
-        in.setCodec("UTF-8"); // 设置编码为 UTF-8
+
         content_NOTICE = in.readAll();
         NOTICE.close();
     }

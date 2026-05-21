@@ -42,7 +42,7 @@ inline LogLevel read_log_level()
         return LogLevel::Debug;
     }
     QDataStream in(&file);
-    in.setVersion(QDataStream::Qt_5_11); // 设置流版本以确保兼容性
+    in.setVersion(QDataStream::Qt_6_0); // 设置流版本以确保兼容性
     in >> level;
     file.close();
     return level;

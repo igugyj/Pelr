@@ -1,11 +1,11 @@
 # ============================================================================
 # 项目基本信息
 # ============================================================================
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.16)
 project(Pelr)
 
 # ====================== 全局配置开关 ======================
-set(DEBUG_MODE OFF)           # ON: Debug, OFF: Release
+set(DEBUG_MODE ON)           # ON: Debug, OFF: Release
 
 # 根据 DEBUG_MODE 设置构建类型和子系统
 if(DEBUG_MODE)
@@ -27,19 +27,19 @@ set(CMAKE_AUTORCC ON)        # 自动处理 Qt RCC
 set(CMAKE_AUTOUIC ON)        # 自动处理 Qt UIC
 
 # Qt 路径与模块查找
-set(CMAKE_PREFIX_PATH "D:/Qt/5.15.2/mingw81_64")
-find_package(Qt5 COMPONENTS
-        Core Gui Widgets Network OpenGL SerialPort Sql Svg
+set(CMAKE_PREFIX_PATH "D:/Qt/6.10.1/mingw_64")
+find_package(Qt6 REQUIRED COMPONENTS
+        Core Gui Widgets Network OpenGL OpenGLWidgets Svg
         WebChannel WebSockets Multimedia Concurrent MultimediaWidgets
         LinguistTools
-        REQUIRED)
+)
 
 # ============================================================================
 # 资源与翻译文件
 # ============================================================================
 
 # 资源文件（.qrc）
-qt5_add_resources(QT_RESOURCES Resource.qrc)
+qt_add_resources(QT_RESOURCES Resource.qrc)
 
 # 翻译文件（.ts）
 set(TRANSLATION_FILES
@@ -90,17 +90,8 @@ set(ALL_HEADER_FILES
 # Qt 自动化工具处理
 # ============================================================================
 
-# MOC：处理头文件中的 Q_OBJECT 宏
-qt5_wrap_cpp(MOC_SOURCES ${ALL_HEADER_FILES})
-
-# UIC：将 .ui 文件转换为 C++ 头文件
-qt5_wrap_ui(UI_HEADERS ${UI_FILES})
-
-# 生成翻译文件（.qm），扫描所有源文件、头文件、UI 文件中的 tr()
-qt5_create_translation(QM_FILES
-        ${ALL_CPP_SOURCES} ${ALL_HEADER_FILES} ${UI_FILES}
-        ${TRANSLATION_FILES}
-)
+# 生成翻译文件（.qm）
+qt_add_translation(QM_FILES ${TRANSLATION_FILES})
 
 # ============================================================================
 # 第三方库：kissfft
@@ -240,8 +231,6 @@ add_compile_definitions(GLEW_STATIC)
 add_executable(${PROJECT_NAME}
         ${EXE_WIN32}                    # WIN32 或空
         ${ALL_CPP_SOURCES}         # 所有 .cpp 源文件
-        ${MOC_SOURCES}             # MOC 生成的文件
-        ${UI_HEADERS}              # UI 生成的头文件
         ${QT_RESOURCES}            # RCC 生成的资源文件
         ${QM_FILES}                # 翻译文件（.qm）
 )
@@ -253,20 +242,23 @@ target_link_libraries(${PROJECT_NAME}
         Framework          # Cubism Framework 静态库
         kissfft
         voicevox_core
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        Qt5::Network
-        Qt5::OpenGL
-        Qt5::SerialPort
-        Qt5::Svg
-        Qt5::WebChannel
-        Qt5::WebSockets
-        Qt5::Multimedia
-        Qt5::Concurrent
-        Qt5::MultimediaWidgets
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        Qt6::Network
+        Qt6::OpenGL
+        Qt6::OpenGLWidgets
+        Qt6::Svg
+        Qt6::WebChannel
+        Qt6::WebSockets
+        Qt6::Multimedia
+        Qt6::Concurrent
+        Qt6::MultimediaWidgets
         ksuser
 )
+
+# 强制在 Qt OpenGL 头前包含 GLEW，避免符号冲突
+target_compile_options(${PROJECT_NAME} PRIVATE -include GL/glew.h)
 
 # ============================================================================
 # Windows 平台后处理

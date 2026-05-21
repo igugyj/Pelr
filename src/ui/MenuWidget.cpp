@@ -150,7 +150,7 @@ void MenuWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
         left_button_down = true;
-        dragStartPos = event->globalPos() - frameGeometry().topLeft();
+        dragStartPos = event->globalPosition().toPoint() - frameGeometry().topLeft();
     }
 }
 
@@ -158,7 +158,7 @@ void MenuWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (left_button_down && (event->buttons() & Qt::LeftButton))
     {
-        move(event->globalPos() - dragStartPos);
+        move(event->globalPosition().toPoint() - dragStartPos);
     }
 }
 

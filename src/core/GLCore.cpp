@@ -361,18 +361,18 @@ void GLCore::connectSignals()
             m_watcher.cancel();
         qApp->quit(); });
     // 重置window位置
-    connect(TrayIcon::instance()->action_resetWinLoc, SIGNAL(triggered()), this, SLOT(resetLocation()));
+    connect(TrayIcon::instance()->action_resetWinLoc, &QAction::triggered, this, &GLCore::resetLocation);
     // 显示界面
-    connect(TrayIcon::instance()->action_showWin, SIGNAL(triggered()), this->main_widget, SLOT(show()));
+    connect(TrayIcon::instance()->action_showWin, &QAction::triggered, this->main_widget, &QWidget::show);
     // 静默模式
-    connect(TrayIcon::instance()->action_silentMode, SIGNAL(triggered()), this, SLOT(silentMode()));
+    connect(TrayIcon::instance()->action_silentMode, &QAction::triggered, this, &GLCore::silentMode);
     // 按键监听
     connect(TrayIcon::instance()->action_keyListener, &QAction::triggered, this, &GLCore::switchListener);
 
     // 拖动窗口
-    connect(TrayIcon::instance()->action_switchDrag, SIGNAL(triggered()), this, SLOT(switchDragStatus()));
+    connect(TrayIcon::instance()->action_switchDrag, &QAction::triggered, this, &GLCore::switchDragStatus);
     // 播放媒体
-    connect(TrayIcon::instance()->action_mediaPlayer, SIGNAL(triggered()), this, SLOT(onPlayMedia()));
+    connect(TrayIcon::instance()->action_mediaPlayer, &QAction::triggered, this, &GLCore::onPlayMedia);
     connect(TrayIcon::instance(), &QSystemTrayIcon::activated, [&](QSystemTrayIcon::ActivationReason reason)
             {
         // 判断是否为双击动作
@@ -499,7 +499,8 @@ void GLCore::startRunStarIfPoweredInThread()
     connect(&m_watcher, &QFutureWatcher<void>::finished, this, &GLCore::onRunStarIfPoweredFinished);
 
     // 启动任务，运行在子线程中
-    QFuture<void> future = QtConcurrent::run(this, &GLCore::runStarIfPowered);
+    QFuture<void> future = QtConcurrent::run([this]()
+                                             { runStarIfPowered(); });
     m_watcher.setFuture(future);
 }
 
@@ -658,7 +659,7 @@ void GLCore::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
         left_button_down = true;
-        dragStartPos = event->globalPos() - frameGeometry().topLeft();
+        dragStartPos = event->globalPosition().toPoint() - frameGeometry().topLeft();
     }
 
     if (event->button() == Qt::RightButton)
@@ -681,18 +682,18 @@ void GLCore::mousePressEvent(QMouseEvent *event)
 
 void GLCore::mouseMoveEvent(QMouseEvent *event)
 {
-    LAppDelegate::GetInstance()->GetView()->OnTouchesMoved(event->x(), event->y());
+    LAppDelegate::GetInstance()->GetView()->OnTouchesMoved(event->position().x(), event->position().y());
     // 按住鼠标移动时拖动窗口
     if (left_button_down && (event->buttons() & Qt::LeftButton) && isAllowDrag)
     {
-        move(event->globalPos() - dragStartPos);
+        move(event->globalPosition().toPoint() - dragStartPos);
         // keyLabel->updateWindowLocation(this->x(), this->y(), width(), height());
     }
 }
 
 void GLCore::mouseReleaseEvent(QMouseEvent *event)
 {
-    LAppDelegate::GetInstance()->GetView()->OnTouchesEnded(event->x(), event->y());
+    LAppDelegate::GetInstance()->GetView()->OnTouchesEnded(event->position().x(), event->position().y());
     // 按住鼠标释放时停止拖动
     if (event->button() == Qt::LeftButton)
     {

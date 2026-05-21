@@ -152,8 +152,10 @@ MediaPlayerWidget::MediaPlayerWidget(QWidget *parent)
     setupUI();
     setupConnections();
 
-    // 初始化播放器
-    m_player->setVolume(50);
+    // 初始化播放器和音频输出
+    m_audioOutput = new QAudioOutput();
+    m_player->setAudioOutput(m_audioOutput);
+    m_audioOutput->setVolume(0.5);
     m_volumeSlider->setValue(50);
 
     // 设置位置更新定时器
@@ -169,6 +171,7 @@ MediaPlayerWidget::~MediaPlayerWidget()
     {
         m_videoWidget->deleteLater();
     }
+    delete m_audioOutput;
 }
 
 void MediaPlayerWidget::closeEvent(QCloseEvent *event)
@@ -255,9 +258,9 @@ void MediaPlayerWidget::setupConnections()
     // 播放器连接
     connect(m_player, &QMediaPlayer::positionChanged, this, &MediaPlayerWidget::onPositionChanged);
     connect(m_player, &QMediaPlayer::durationChanged, this, &MediaPlayerWidget::onDurationChanged);
-    connect(m_player, &QMediaPlayer::stateChanged, this, &MediaPlayerWidget::onStateChanged);
+    connect(m_player, &QMediaPlayer::playbackStateChanged, this, &MediaPlayerWidget::onStateChanged);
     connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &MediaPlayerWidget::onMediaStatusChanged);
-    connect(m_player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error), this,
+    connect(m_player, &QMediaPlayer::errorOccurred, this,
             &MediaPlayerWidget::onPlayerError);
     connect(m_positionTimer, &QTimer::timeout, this, &MediaPlayerWidget::updateTimeDisplay);
 }
@@ -305,7 +308,7 @@ void MediaPlayerWidget::playMedia(const QString &filePath)
         cleanupVideoOutput();
     }
 
-    m_player->setMedia(QUrl::fromLocalFile(filePath));
+    m_player->setSource(QUrl::fromLocalFile(filePath));
 
     // 设置滚动文件名
     QString displayName = "正在播放: " + QFileInfo(filePath).fileName();
@@ -319,7 +322,7 @@ void MediaPlayerWidget::playMedia(const QString &filePath)
 
 void MediaPlayerWidget::onPlayPause()
 {
-    if (m_player->state() == QMediaPlayer::PlayingState)
+    if (m_player->playbackState() == QMediaPlayer::PlayingState)
     {
         m_player->pause();
         m_positionTimer->stop();
@@ -336,7 +339,7 @@ void MediaPlayerWidget::onPlayPause()
 void MediaPlayerWidget::onStop()
 {
     m_player->stop();
-    m_player->setMedia(nullptr);
+    m_player->setSource(QUrl());
     m_positionTimer->stop();
     m_positionSlider->setValue(0);
     m_timeLabel->setText("00:00/00:00");
@@ -362,7 +365,7 @@ void MediaPlayerWidget::onDurationChanged(qint64 duration)
     updatePositionDisplay(m_player->position(), duration);
 }
 
-void MediaPlayerWidget::onStateChanged(QMediaPlayer::State state)
+void MediaPlayerWidget::onStateChanged(QMediaPlayer::PlaybackState state)
 {
     switch (state)
     {
@@ -397,9 +400,9 @@ void MediaPlayerWidget::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
     }
 }
 
-void MediaPlayerWidget::onPlayerError(QMediaPlayer::Error error)
+void MediaPlayerWidget::onPlayerError(QMediaPlayer::Error error, const QString &errorString)
 {
-    qDebug() << "player error:" << error << "file:" << m_currentMedia;
+    qDebug() << "player error:" << error << errorString << "file:" << m_currentMedia;
 
     // 如果是视频文件且出现格式错误，提示下载解码器
     if (m_hasVideo && (error == QMediaPlayer::FormatError || error == QMediaPlayer::ResourceError))
@@ -410,7 +413,7 @@ void MediaPlayerWidget::onPlayerError(QMediaPlayer::Error error)
 
 void MediaPlayerWidget::onVolumeChanged(int volume)
 {
-    m_player->setVolume(volume);
+    m_audioOutput->setVolume(volume / 100.0);
 }
 
 void MediaPlayerWidget::onSliderPressed()
@@ -425,7 +428,7 @@ void MediaPlayerWidget::onSliderReleased()
     m_player->setPosition(m_positionSlider->value());
 
     // 如果正在播放，重新启动定时器
-    if (m_player->state() == QMediaPlayer::PlayingState)
+    if (m_player->playbackState() == QMediaPlayer::PlayingState)
     {
         m_positionTimer->start();
     }
@@ -441,7 +444,7 @@ void MediaPlayerWidget::onSliderMoved(int position)
 void MediaPlayerWidget::updateTimeDisplay()
 {
     // 这个函数现在只由定时器调用，用于平滑更新时间显示
-    if (!m_isSeeking && m_player->state() == QMediaPlayer::PlayingState)
+    if (!m_isSeeking && m_player->playbackState() == QMediaPlayer::PlayingState)
     {
         updatePositionDisplay(m_player->position(), m_player->duration());
     }
@@ -512,6 +515,6 @@ void MediaPlayerWidget::cleanupVideoOutput()
 
 void MediaPlayerWidget::setVolume(int volume)
 {
-    m_player->setVolume(volume);
+    m_audioOutput->setVolume(volume / 100.0);
     m_volumeSlider->setValue(volume);
 }

@@ -55,7 +55,7 @@ bool CheckApplication::hasValidLicense()
     }
 
     QDataStream in(&file);
-    in.setVersion(QDataStream::Qt_5_0);
+    in.setVersion(QDataStream::Qt_6_0);
 
     QString savedUsername, savedVersion;
     QDateTime savedTimestamp;
@@ -133,8 +133,8 @@ void CheckApplication::setupUI()
     mainLayout->addLayout(buttonLayout);
 
     // 连接信号槽
-    connect(agreeCheckbox, &QCheckBox::stateChanged,
-            [this](int state)
+    connect(agreeCheckbox, &QCheckBox::checkStateChanged,
+            [this](Qt::CheckState state)
             { acceptButton->setEnabled(state == Qt::Checked); });
     connect(acceptButton, &QPushButton::clicked, this, &CheckApplication::onAcceptClicked);
     connect(rejectButton, &QPushButton::clicked, this, &CheckApplication::onRejectClicked);
@@ -156,7 +156,7 @@ bool CheckApplication::validateExistingLicense()
     }
 
     QDataStream in(&file);
-    in.setVersion(QDataStream::Qt_5_0);
+    in.setVersion(QDataStream::Qt_6_0);
 
     QString savedUsername, savedVersion;
     QDateTime savedTimestamp;
@@ -194,7 +194,7 @@ void CheckApplication::saveLicenseAgreement()
     if (file.open(QIODevice::WriteOnly))
     {
         QDataStream out(&file);
-        out.setVersion(QDataStream::Qt_5_0);
+        out.setVersion(QDataStream::Qt_6_0);
 
         QDateTime timestamp = QDateTime::currentDateTime();
         out << m_username << m_version << timestamp;

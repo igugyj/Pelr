@@ -122,7 +122,7 @@ bool TranslationManager::loadTranslation(const QString &languageCode)
         // 加载Qt标准库的翻译（可选）
         QTranslator *qtTranslator = new QTranslator(this);
         if (qtTranslator->load(QString("qt_%1").arg(languageCode),
-                               QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+                               QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
         {
             if (m_app)
             {

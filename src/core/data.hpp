@@ -39,7 +39,7 @@ struct ConfigData
 {
     // basic
     QString model_path;
-    int model_size = 150;
+    int model_size = 120;
     int FPS = 30;
     int volume = 50;
     colorPair color_bubble = {"#ffffffff", "#ff00ffff"};

@@ -122,9 +122,9 @@ void DateTimePickerDialog::setupUI()
 void DateTimePickerDialog::setupShortcuts()
 {
     // 快捷键支持
-    new QShortcut(QKeySequence(Qt::Key_Return), this, SLOT(accept()));
-    new QShortcut(QKeySequence(Qt::Key_Enter), this, SLOT(accept()));
-    new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(reject()));
+    new QShortcut(QKeySequence(Qt::Key_Return), this, [this]() { accept(); });
+    new QShortcut(QKeySequence(Qt::Key_Enter), this, [this]() { accept(); });
+    new QShortcut(QKeySequence(Qt::Key_Escape), this, [this]() { reject(); });
 }
 
 QDateTime DateTimePickerDialog::getSelectedDateTime() const

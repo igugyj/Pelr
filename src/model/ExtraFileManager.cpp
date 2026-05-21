@@ -40,7 +40,7 @@ void ExtraFileManager::scanDirectory(const QDir &dir)
     QFileInfoList entries = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot);
     qDebug() << "Found" << entries.size() << "entries in directory";
 
-    foreach (const QFileInfo &entry, entries)
+    for (const QFileInfo &entry : entries)
     {
         if (entry.isDir())
         {

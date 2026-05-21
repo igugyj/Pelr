@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMediaPlayer>
+#include <QAudioOutput>
 #include <QVideoWidget>
 #include <QPushButton>
 #include <QSlider>
@@ -73,7 +74,7 @@ private slots:
 
     void onDurationChanged(qint64 duration);
 
-    void onStateChanged(QMediaPlayer::State state);
+    void onStateChanged(QMediaPlayer::PlaybackState state);
 
     void onVolumeChanged(int volume);
 
@@ -87,7 +88,7 @@ private slots:
 
     void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
 
-    void onPlayerError(QMediaPlayer::Error error);
+    void onPlayerError(QMediaPlayer::Error error, const QString &errorString);
 
     void showLAVFiltersDownloadDialog();
 
@@ -107,6 +108,7 @@ private:
     void updatePositionDisplay(qint64 position, qint64 duration);
 
     QMediaPlayer *m_player;
+    QAudioOutput *m_audioOutput;
     QVideoWidget *m_videoWidget;
 
     // UI 组件

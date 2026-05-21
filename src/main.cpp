@@ -23,11 +23,6 @@ void initTranslator(QApplication &a, const QString &path);
 
 int main(int argc, char *argv[])
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-#endif
-
     // ---- 基础初始化（应在 QApplication 之前完成，但注意不要依赖 QSettings 等） ----
     initFileSys();
     initLogFile();
