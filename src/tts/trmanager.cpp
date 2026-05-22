@@ -47,7 +47,7 @@ void TrManager::setConfig(const TTSConfig &config)
         }
         else
         {
-            qWarning() << "Invalid LibreTranslate port:" << m_config.tr_libretranslate_port;
+            qWarning() << "[TrManager] Invalid LibreTranslate port:" << m_config.tr_libretranslate_port;
         }
     }
     // 应用腾讯云配置

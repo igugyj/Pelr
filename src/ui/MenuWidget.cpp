@@ -78,7 +78,7 @@ void MenuWidget::showNearMouse()
     {
         x = screenGeometry.left();
     }
-    qInfo() << "Menu show at: (" << x << "," << y << ")";
+    qInfo() << "[Menu] Menu show at: (" << x << "," << y << ")";
 
     // 移动窗口到计算位置
     move(x, y);

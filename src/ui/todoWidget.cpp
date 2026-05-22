@@ -130,7 +130,7 @@ void todoWidget::onCheckBoxClicked()
     setting.is_show_todo = ui->checkBox->isChecked();
     setting.is_notify_tray = ui->checkBox_2->isChecked();
     DataManager::instance().writeData(setting);
-    qDebug() << "todoNotySetting changed and saved.";
+    qDebug() << "[TODO] TodoNotify setting changed and saved.";
 }
 
 void todoWidget::moveItem(QTableView *view)
@@ -142,7 +142,7 @@ void todoWidget::moveItem(QTableView *view)
     QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
     if (selectedIndexes.isEmpty())
     {
-        qWarning() << "请先选择一个项目";
+        qWarning() << "[TODO] Please select an item first";
         return;
     }
 
@@ -178,7 +178,7 @@ void todoWidget::moveItem(QTableView *view)
         // 添加到目标模型
         to_model->appendRow(rowItems);
     }
-    qDebug() << "count of moved items:" << selectedRows.size();
+    qDebug() << "[TODO] Count of moved items:" << selectedRows.size();
 
     // 清除原视图的选择
     selectionModel->clearSelection();
@@ -212,7 +212,7 @@ void todoWidget::deleteSelectedItem(QTableView *view)
     QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
     if (selectedIndexes.isEmpty())
     {
-        qWarning() << "请先选择一个项目";
+        qWarning() << "[TODO] Please select an item first";
         return;
     }
 
@@ -246,7 +246,7 @@ void todoWidget::deleteSelectedItem(QTableView *view)
         QList<QStandardItem *> rowItems = model->takeRow(row);
         model->removeRow(row);
     }
-    qDebug() << "count of deleted items:" << selectedRows.size();
+    qDebug() << "[TODO] Count of deleted items:" << selectedRows.size();
 
     // 清除原视图的选择
     selectionModel->clearSelection();
@@ -305,16 +305,16 @@ void todoWidget::saveAllData()
             data.isNotify = model->item(i, 4)->checkState() == Qt::Checked;
             if (data.title.isEmpty() && data.deadline.isEmpty())
             {
-                qWarning() << "item" << i << "is empty, skip it.";
+                qWarning() << "[TODO] Item" << i << "is empty, skip it.";
                 continue;
             } // 如果标题、截止日期为空，则不保存
             todo_data.append(data);
         }
     }
-    qDebug() << "count of saved items:" << todo_data.size();
+    qDebug() << "[TODO] Count of saved items:" << todo_data.size();
     // 保存数据到文件
     DataManager::instance().writeData<QList<TodoData>>(todo_data);
-    qDebug() << "data saved successfully.";
+    qDebug() << "[TODO] Data saved successfully.";
 }
 
 void todoWidget::addTodoItem(QStandardItemModel *model)

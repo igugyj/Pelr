@@ -69,7 +69,7 @@ bool CheckApplication::hasValidLicense()
         // 检查许可证是否在有效期内
         if (savedTimestamp.daysTo(QDateTime::currentDateTime()) <= 365)
         {
-            qDebug() << "found valid license file";
+            qDebug() << "[License] Found valid license file";
             return true;
         }
     }
@@ -145,13 +145,13 @@ bool CheckApplication::validateExistingLicense()
     QFile file(LICENSE_CHECK_FILE);
     if (!file.exists())
     {
-        qDebug() << "license check file not found";
+        qDebug() << "[License] License check file not found";
         return false;
     }
 
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << "license check file open failed";
+        qDebug() << "[License] License check file open failed";
         return false;
     }
 
@@ -168,16 +168,16 @@ bool CheckApplication::validateExistingLicense()
     {
         if (savedTimestamp.daysTo(QDateTime::currentDateTime()) <= 365)
         {
-            qDebug() << "found valid license file, user:" << savedUsername << "version:" << savedVersion;
+            qDebug() << "[License] Found valid license file, user:" << savedUsername << "version:" << savedVersion;
             return true;
         }
         else
         {
-            qDebug() << "found expired license file";
+            qDebug() << "[License] Found expired license file";
         }
     }
 
-    qDebug() << "license check failed, expected user:" << m_username << "actual user:" << savedUsername
+    qDebug() << "[License] License check failed, expected user:" << m_username << "actual user:" << savedUsername
              << "expected version:" << m_version << "actual version:" << savedVersion;
     return false;
 }
@@ -199,11 +199,11 @@ void CheckApplication::saveLicenseAgreement()
         QDateTime timestamp = QDateTime::currentDateTime();
         out << m_username << m_version << timestamp;
         file.close();
-        qDebug() << "license agreement saved, user:" << m_username << "version:" << m_version;
+        qDebug() << "[License] License agreement saved, user:" << m_username << "version:" << m_version;
     }
     else
     {
-        qDebug() << "can't save license agreement";
+        qDebug() << "[License] Can't save license agreement";
     }
 }
 

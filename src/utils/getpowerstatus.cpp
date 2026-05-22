@@ -63,7 +63,7 @@ std::vector<QString> getPowerStatus()
         statusList.push_back(BatteryFlag);
         // qDebug() << BatteryFlag;
     }
-    qDebug() << statusList[0] << statusList[1] << statusList[2];
+    qDebug() << "[Power]" << statusList[0] << statusList[1] << statusList[2];
     return statusList;
 }
 
@@ -73,7 +73,7 @@ bool isSystemUptimeExceeds(const int thresholdMinutes)
     const ULONGLONG uptimeMillis = GetTickCount64();
     // 转换为分钟
     const ULONGLONG uptimeMinutes = uptimeMillis / (1000 * 60);
-    qDebug() << "Windows already running over" << uptimeMinutes << "minutes";
+    qDebug() << "[Power] Windows already running over" << uptimeMinutes << "minutes";
     // 检查是否超过阈值
     return uptimeMinutes >= static_cast<ULONGLONG>(thresholdMinutes);
 }

@@ -5,7 +5,7 @@ bool DataManager::writeJsonFile(const QString &filePath, const QJsonDocument &do
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
     {
-        qCritical() << "Cannot open file for writing:" << filePath;
+        qCritical() << "[Data] Cannot open file for writing:" << filePath;
         return false;
     }
     file.write(doc.toJson());
@@ -77,7 +77,7 @@ QJsonDocument DataManager::readJsonFile(const QString &filePath)
     QJsonDocument doc = QJsonDocument::fromJson(data, &err);
     if (err.error != QJsonParseError::NoError)
     {
-        qCritical() << "JSON parse error in" << filePath << ":" << err.errorString();
+        qCritical() << "[Data] JSON parse error in" << filePath << ":" << err.errorString();
         return {};
     }
     return doc;
@@ -293,7 +293,7 @@ void DataManager::readTTSConfig()
     tts_config.provider = obj["provider"].toInt(0);
     if (tts_config.provider < 0 || tts_config.provider >= TTSProviderList.length())
     {
-        qDebug() << "Invalid TTS provider:" << tts_config.provider << ", reset to 0";
+        qDebug() << "[Data] Invalid TTS provider:" << tts_config.provider << ", reset to 0";
         tts_config.provider = 0;
     }
     tts_config.speaker_openai_edge_tts = obj["speaker_openai_edge_tts"].toString("zh-CN-XiaoxiaoNeural");
@@ -305,7 +305,7 @@ void DataManager::readTTSConfig()
 
     if (tts_config.provider == 1 && (tts_config.iFlytek_APPID.isEmpty() || tts_config.iFlytek_APISecret.isEmpty() || tts_config.iFlytek_APIKey.isEmpty()))
     {
-        qDebug() << "iFlytek credentials missing, fallback to OpenAI TTS";
+        qDebug() << "[Data] iFlytek credentials missing, fallback to OpenAI TTS";
         tts_config.provider = 0;
     }
     tts_config.voicevox_dict_dir = obj["voicevox_dict_dir"].toString();
@@ -348,7 +348,7 @@ void DataManager::readOpenWeatherData()
     openWeather_data.api_key = obj["api_key"].toString();
     if (openWeather_data.api_key.isEmpty())
     {
-        qWarning() << "api_key in config file is empty or does not exist";
+        qWarning() << "[Data] api_key in config file is empty or does not exist";
     }
     openWeather_data.city = obj["city"].toString();
 }
@@ -364,7 +364,7 @@ QFont DataManager::loadFont()
             QStringList families = QFontDatabase::applicationFontFamilies(id);
             if (!families.isEmpty())
             {
-                qInfo() << "load font success:" << families.at(0);
+                qInfo() << "[Data] Load font success:" << families.at(0);
                 return QFont(families.at(0));
             }
         }

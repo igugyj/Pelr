@@ -77,19 +77,19 @@ void LAppLive2DManager::LoadModelFromConfig()
     QString modelPath = DataManager::instance().getBasicData().model_path;
     if (modelPath.isEmpty())
     {
-        qCritical() << "model path is empty, using default model";
+        qCritical() << "[LApp] Model path is empty, using default model";
         modelPath = "Resources/Hiyori/Hiyori.model3.json";
     }
     QFileInfo fi(modelPath);
     if (!fi.exists())
     {
-        qCritical() << "model file not exists:" << modelPath;
+        qCritical() << "[LApp] Model file not exists:" << modelPath;
         modelPath = "Resources/Hiyori/Hiyori.model3.json";
         fi.setFile(modelPath);
     }
     QString dir = fi.absolutePath();
     QString fName = fi.fileName();
-    qDebug() << "Loading model from config:" << dir << fName;
+    qDebug() << "[LApp] Loading model from config:" << dir << fName;
     LoadModelFromPath(dir.toStdString() + "/", fName.toStdString());
 }
 

@@ -285,7 +285,7 @@ void MediaPlayerWidget::playMedia(const QString &filePath)
 {
     if (!checkFormatSupport(filePath))
     {
-        qDebug() << "unsupported media format:" << filePath;
+        qDebug() << "[MediaPlayer] Unsupported media format:" << filePath;
         m_fileNameLabel->setText("不支持的媒体格式: " + QFileInfo(filePath).fileName());
         return;
     }
@@ -391,7 +391,7 @@ void MediaPlayerWidget::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
     // 当媒体状态变为无效媒体时，提示用户
     if (status == QMediaPlayer::InvalidMedia)
     {
-        qDebug() << "invalid media file:" << m_currentMedia;
+        qDebug() << "[MediaPlayer] Invalid media file:" << m_currentMedia;
 
         // 如果是视频文件，提示下载解码器
         // if (m_hasVideo) {
@@ -402,7 +402,7 @@ void MediaPlayerWidget::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 
 void MediaPlayerWidget::onPlayerError(QMediaPlayer::Error error, const QString &errorString)
 {
-    qDebug() << "player error:" << error << errorString << "file:" << m_currentMedia;
+    qDebug() << "[MediaPlayer] Player error:" << error << errorString << "file:" << m_currentMedia;
 
     // 如果是视频文件且出现格式错误，提示下载解码器
     if (m_hasVideo && (error == QMediaPlayer::FormatError || error == QMediaPlayer::ResourceError))

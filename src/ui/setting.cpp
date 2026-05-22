@@ -37,11 +37,11 @@ ConfigData SettingWidget::getAllValues()
     // 检查文件是否存在
     if (fi.exists() && fi.isFile())
     {
-        qDebug() << "File exists: " << data.model_path;
+        qDebug() << "[Settings] File exists:" << data.model_path;
     }
     else
     {
-        qWarning() << "File not exists: " << data.model_path;
+        qWarning() << "[Settings] File does not exist:" << data.model_path;
         data.model_path = "";
     }
     data.model_size = ui->horizontalSlider->value();
@@ -79,9 +79,9 @@ TTSConfig SettingWidget::getTTSConfigValue() const
 {
     TTSConfig data;
     data.provider = ui->comboBox_4->currentIndex();
-    qDebug() << "TTS provider: " << data.provider;
+    qDebug() << "[Settings] TTS provider:" << data.provider;
     data.tr_point = ui->comboBox_7->currentIndex();
-    qDebug() << "TRA provider: " << data.tr_point;
+    qDebug() << "[Settings] TRA provider:" << data.tr_point;
     // openai_edge_tts
     data.speaker_openai_edge_tts = ui->lineEdit_11->text();
     data.speed_openai_edge_tts = ui->doubleSpinBox->value();
@@ -138,9 +138,9 @@ LlamaData SettingWidget::getLlamaDataValue() const
 void SettingWidget::setTTSConfig(const TTSConfig &data) const
 {
     // TTS
-    qDebug() << " TTS provider " << data.provider;
+    qDebug() << "[Settings] TTS provider:" << data.provider;
     ui->comboBox_4->setCurrentIndex(static_cast<int>(data.provider));
-    qDebug() << " TRA point " << data.tr_point;
+    qDebug() << "[Settings] TRA point:" << data.tr_point;
     ui->comboBox_7->setCurrentIndex(static_cast<int>(data.tr_point));
     // openai-edge-tts
     ui->lineEdit_11->setText(data.speaker_openai_edge_tts);
@@ -399,7 +399,7 @@ void SettingWidget::connectSignals()
         QString text = ui->lineEdit_14->text();
         if (provider.isEmpty() || language.isEmpty() || text.isEmpty())
         {
-            qDebug() << "translate test value is empty";
+            qDebug() << "[Settings] Translate test value is empty";
             NotificationWidget::showNotification(tr("Warning"), tr("Please fill in all fields first."), 5000, MessageType::Warning);
         }
         else
@@ -408,7 +408,7 @@ void SettingWidget::connectSignals()
         } });
     connect(m_langClient, &PyLang::languagesReady, m_langClient, [this](const QList<QString> &langs)
             {
-        qDebug() << "Languages fetch successfully";
+        qDebug() << "[Settings] Languages fetch successfully";
         ui->comboBox_5->clear();
         int index = 0;
         for (const auto &lang : langs)
@@ -419,7 +419,7 @@ void SettingWidget::connectSignals()
 
     connect(m_langClient, &PyLang::providersReady, m_langClient, [this](const QList<QString> &providers)
             {
-        qDebug() << "Providers fetch successfully";
+        qDebug() << "[Settings] Providers fetch successfully";
         ui->comboBox->clear();
         int index = 0;
         for (const auto &provider : providers)
@@ -525,7 +525,7 @@ void SettingWidget::saveData()
     DataManager::writeTTSConfig(tts_data);
     DataManager::writeOpenWeatherData(weather_data);
     DataManager::writeLlamaData(llm_data);
-    qDebug() << "save data success";
+    qDebug() << "[Settings] Save data success";
 }
 
 bool SettingWidget::checkStartupLink()
@@ -539,7 +539,7 @@ bool SettingWidget::checkStartupLink()
         appData = env.value("USERPROFILE");
         if (appData.isEmpty())
         {
-            qWarning() << "cannot get startup folder path";
+            qWarning() << "[Settings] Cannot get startup folder path";
             return false;
         }
         appData.append("/AppData/Roaming");
@@ -551,7 +551,7 @@ bool SettingWidget::checkStartupLink()
     QString executablePath = QCoreApplication::applicationFilePath();
     if (executablePath.isEmpty())
     {
-        qWarning() << "cannot get application path";
+        qWarning() << "[Settings] Cannot get application path";
         return false;
     }
 
@@ -560,7 +560,7 @@ bool SettingWidget::checkStartupLink()
     QString shortcutPath = QDir(startupFolder).filePath(shortcutName);
     if (!QFile::exists(shortcutPath))
     {
-        qDebug() << "shortcut not exists: " << shortcutPath;
+        qDebug() << "[Settings] Shortcut does not exist:" << shortcutPath;
         return false;
     }
     return true;
@@ -610,7 +610,7 @@ void SettingWidget::resetSetting()
 
         if (!success)
         {
-            qWarning() << "Failed to delete some user data folders";
+            qWarning() << "[Settings] Failed to delete some user data folders";
             NotificationWidget::showNotification(
                 tr("Error"),
                 tr("部分数据文件夹无法删除，请手动清理后重启程序。"),
@@ -628,7 +628,7 @@ void SettingWidget::resetSetting()
         const ConfigData new_data = ConfigData();
         setAllValues(new_data);
         DataManager::instance().writeData<ConfigData>(new_data);
-        qDebug() << "Reset setting to defaults";
+        qDebug() << "[Settings] Reset setting to defaults";
         NotificationWidget::showNotification(tr("Information"), tr("设置已重置！"));
     }
 }
@@ -644,7 +644,7 @@ void SettingWidget::startupSwitch(const bool flag)
         appData = env.value("USERPROFILE");
         if (appData.isEmpty())
         {
-            qWarning() << "cannot get startup folder path";
+            qWarning() << "[Settings] Cannot get startup folder path";
         }
         appData.append("/AppData/Roaming");
     }
@@ -655,7 +655,7 @@ void SettingWidget::startupSwitch(const bool flag)
     QString executablePath = QCoreApplication::applicationFilePath();
     if (executablePath.isEmpty())
     {
-        qWarning() << "cannot get application path";
+        qWarning() << "[Settings] Cannot get application path";
     }
 
     // 构建快捷方式名称和路径
@@ -666,18 +666,18 @@ void SettingWidget::startupSwitch(const bool flag)
         // 移除启动项
         if (!QFile::exists(shortcutPath))
         {
-            qDebug() << "shortcut not exists: " << shortcutPath;
+            qDebug() << "[Settings] Shortcut does not exist:" << shortcutPath;
             NotificationWidget::showNotification(tr("Information"), tr("快捷方式已不存在！"));
             return;
         }
         bool success = QFile::remove(shortcutPath);
         if (!success)
         {
-            qWarning() << "cannot remove shortcut: " << shortcutPath;
+            qWarning() << "[Settings] Cannot remove shortcut:" << shortcutPath;
             NotificationWidget::showNotification(tr("Warning"), tr("移除快捷方式失败！"), 5000, MessageType::Warning);
             return;
         }
-        qDebug() << "remove shortcut success: " << shortcutPath;
+        qDebug() << "[Settings] Remove shortcut success:" << shortcutPath;
         NotificationWidget::showNotification(tr("Information"), tr("快捷方式已移除！"));
     }
     else
@@ -708,12 +708,12 @@ void SettingWidget::startupSwitch(const bool flag)
 
         if (FAILED(hr))
         {
-            qWarning() << "cannot create shortcut: " << shortcutPath;
+            qWarning() << "[Settings] Cannot create shortcut:" << shortcutPath;
             NotificationWidget::showNotification(tr("Warning"), tr("创建快捷方式失败！"), 5000, MessageType::Warning);
         }
         else
         {
-            qDebug() << "create shortcut success: " << shortcutPath;
+            qDebug() << "[Settings] Create shortcut success:" << shortcutPath;
             NotificationWidget::showNotification(tr("Information"), tr("快捷方式已创建！"));
         }
     }
@@ -731,7 +731,7 @@ QString SettingWidget::selectColor()
     {
         QColor selectedColor = dialog.currentColor();
         QString colorStr = selectedColor.name(QColor::HexArgb);
-        qDebug() << "chose color: " << colorStr;
+        qDebug() << "[Settings] Chose color:" << colorStr;
         return colorStr;
     }
     return "";
@@ -739,7 +739,7 @@ QString SettingWidget::selectColor()
 void SettingWidget::onTranslatorsChanged()
 {
     int index = ui->comboBox_7->currentIndex();
-    qDebug() << "Translator changed to " << index;
+    qDebug() << "[Settings] Translator changed to" << index;
     QList<QGroupBox *> groupBoxes = {
         ui->groupBox_5, // libretranslate
         ui->groupBox,   // translators
@@ -761,7 +761,7 @@ void SettingWidget::onTranslatorsChanged()
 void SettingWidget::onTTSProviderChanged()
 {
     int index = ui->comboBox_4->currentIndex();
-    qDebug() << "TTS provider changed to " << index;
+    qDebug() << "[Settings] TTS provider changed to" << index;
     QList<QGroupBox *> groupBoxes = {
         ui->groupBox_2,
         ui->groupBox_3,
@@ -779,7 +779,7 @@ void SettingWidget::onLogLevelChanged()
 {
     LogLevel level = static_cast<LogLevel>(ui->comboBox_3->currentData().toInt());
     write_log_level(level);
-    qDebug() << "set logLevel to" << static_cast<int>(level);
+    qDebug() << "[Settings] Set logLevel to" << static_cast<int>(level);
 }
 
 void SettingWidget::selectModelPath()
@@ -796,7 +796,7 @@ void SettingWidget::selectModelPath()
         QFileInfo file_info(path);
         QString model_dir = file_info.absolutePath();
         QString fileName = file_info.fileName();
-        qDebug() << "model dir: " << model_dir << " fileName: " << fileName;
+        qDebug() << "[Settings] Model dir:" << model_dir << "fileName:" << fileName;
         LAppLive2DManager::GetInstance()->LoadModelFromPath(model_dir.toStdString() + "/", fileName.toStdString());
         // 保存配置 用以加载模型表情
         saveData();
@@ -820,7 +820,7 @@ void SettingWidget::onChooseVoicevoxModel()
         NotificationWidget::showNotification(
             tr("Warning"),
             tr("模型加载失败，请检查模型文件是否正确，并重新加载。"), 5000, MessageType::Warning);
-        qDebug() << "[SettingWidget] Model load failed:" << filePath;
+        qDebug() << "[Settings] Model load failed:" << filePath;
         return;
     }
 
@@ -830,7 +830,7 @@ void SettingWidget::onChooseVoicevoxModel()
     if (ui->comboBox_6->count() > 0 && ui->comboBox_6->currentData().toInt() < 0)
     {
         ui->comboBox_6->setCurrentIndex(0);
-        qDebug() << "[SettingWidget] Forced selection to first style, id="
+        qDebug() << "[Settings] Forced selection to first style, id="
                  << ui->comboBox_6->currentData().toInt();
     }
 
@@ -849,7 +849,7 @@ void SettingWidget::refreshVoicevoxStyles()
     {
         ui->comboBox_6->addItem(tr("(无可用风格)"), -1);
         ui->comboBox_6->blockSignals(false);
-        qWarning() << "[SettingWidget] No speakers/styles available after loading model";
+        qWarning() << "[Settings] No speakers/styles available after loading model";
         return;
     }
 
@@ -861,7 +861,7 @@ void SettingWidget::refreshVoicevoxStyles()
         {
             const QString itemText = QStringLiteral("%1 - %2").arg(speaker.name, style.name);
             ui->comboBox_6->addItem(itemText, style.id);
-            qDebug() << "[SettingWidget] Added style:" << itemText << "id=" << style.id;
+            qDebug() << "[Settings] Added style:" << itemText << "id=" << style.id;
             if (!previousStyleText.isEmpty() && itemText == previousStyleText)
                 indexToSelect = currentIdx;
             ++currentIdx;
@@ -871,13 +871,13 @@ void SettingWidget::refreshVoicevoxStyles()
     if (indexToSelect >= 0)
     {
         ui->comboBox_6->setCurrentIndex(indexToSelect);
-        qDebug() << "[SettingWidget] Restored previous style selection:" << previousStyleText;
+        qDebug() << "[Settings] Restored previous style selection:" << previousStyleText;
     }
     else if (ui->comboBox_6->count() > 0)
     {
         ui->comboBox_6->setCurrentIndex(0);
         int firstId = ui->comboBox_6->currentData().toInt();
-        qDebug() << "[SettingWidget] No previous style match, selected first style with id:" << firstId;
+        qDebug() << "[Settings] No previous style match, selected first style with id:" << firstId;
     }
 
     ui->comboBox_6->blockSignals(false);
@@ -890,12 +890,12 @@ void SettingWidget::loadVoicevoxDict(const QString &dir)
 
     if (!VoicevoxTTS::instance().initialize(dir))
     {
-        qWarning() << "Failed to initialize VoicevoxTTS: " << dir;
+        qWarning() << "[Settings] Failed to initialize VoicevoxTTS:" << dir;
         NotificationWidget::showNotification(tr("Warning"), tr("辞书加载失败，请检查路径是否正确，并确保该路径下有有效的字典文件"), 5000, NotificationWidget::Warning);
         return;
     }
 
-    qDebug() << "[SettingWidget] Voicevox dictionary initialized successfully:" << dir;
+    qDebug() << "[Settings] Voicevox dictionary initialized successfully:" << dir;
 
     QString currentModel = ui->lineEdit_16->text();
     if (!currentModel.isEmpty() && QFile::exists(currentModel))
@@ -903,11 +903,11 @@ void SettingWidget::loadVoicevoxDict(const QString &dir)
         if (VoicevoxTTS::instance().loadModel(currentModel))
         {
             refreshVoicevoxStyles();
-            qDebug() << "[SettingWidget] Model reloaded after dict change:" << currentModel;
+            qDebug() << "[Settings] Model reloaded after dict change:" << currentModel;
         }
         else
         {
-            qWarning() << "[SettingWidget] Failed to reload model after dict change:" << currentModel;
+            qWarning() << "[Settings] Failed to reload model after dict change:" << currentModel;
         }
     }
 }
@@ -931,7 +931,7 @@ void SettingWidget::onTestVoicevox()
     TTSConfig cfg = getTTSConfigValue();
     cfg.provider = 2; // 强制使用 VOICEVOX
 
-    qDebug() << "[SettingWidget] Testing Voicevox with:"
+    qDebug() << "[Settings] Testing Voicevox with:"
              << "model=" << cfg.voicevox_model
              << "dict=" << cfg.voicevox_dict_dir
              << "styleId=" << cfg.voicevox_style_id;
@@ -979,7 +979,7 @@ void SettingWidget::onTestVoicevox()
     file.close();
 
     VoiceGenerator::instance()->playVoice(testFile);
-    qDebug() << "[SettingWidget] Test synthesis and playback completed.";
+    qDebug() << "[Settings] Test synthesis and playback completed.";
 }
 SettingWidget::~SettingWidget()
 {

@@ -75,7 +75,7 @@ void ChatBoxOnModel::onTextGenerated(const QString &text, const int &id)
 {
     if (id != ai_id)
         return;
-    qDebug() << "text:" << text;
+    qDebug() << "[ChatBox] Text:" << text;
     // 处理生成的文本
     BubbleBox::instance()->textSet(text);
 }
@@ -84,7 +84,7 @@ void ChatBoxOnModel::onErrorOccurred(const QString &error, const int &id)
 {
     if (id != ai_id)
         return;
-    qDebug() << "error:" << error;
+    qDebug() << "[ChatBox] Error:" << error;
     // 处理错误
     BubbleBox::instance()->textSet(tr("错误：%1").arg(error));
 }

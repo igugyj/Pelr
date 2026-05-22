@@ -113,7 +113,7 @@ TrayIcon::TrayIcon(QObject *parent)
     // 设置托盘图标的菜单
     this->setContextMenu(menu);
 
-    qDebug() << "TrayIcon singleton initialized";
+    qDebug() << "[Tray] TrayIcon singleton initialized";
 
     // 显示托盘图标
     this->show();
@@ -126,11 +126,11 @@ void TrayIcon::initializeAudioDetector()
     if (m_audioDetector->start())
     {
         m_audioCheckTimer->start();
-        qDebug() << "Spectrum-based audio detector initialized";
+        qDebug() << "[Tray] Spectrum-based audio detector initialized";
     }
     else
     {
-        qDebug() << "Audio spectrum detector initialization failed";
+        qDebug() << "[Tray] Audio spectrum detector initialization failed";
         delete m_audioDetector;
         m_audioDetector = nullptr;
     }
@@ -209,11 +209,11 @@ void TrayIcon::checkAudioActivity()
 
 void TrayIcon::switchMusicIcon(const bool flag)
 {
-    qDebug() << "switchMusicIcon called with flag:" << flag;
+    qDebug() << "[Tray] SwitchMusicIcon called with flag:" << flag;
     if (flag)
     {
         initializeAudioDetector();
-        qDebug() << "music icon enabled";
+        qDebug() << "[Tray] Music icon enabled";
     }
     else
     {
@@ -228,7 +228,7 @@ void TrayIcon::switchMusicIcon(const bool flag)
             delete m_audioDetector;
             m_audioDetector = nullptr;
         }
-        qDebug() << "music icon disabled";
+        qDebug() << "[Tray] Music icon disabled";
     }
 }
 

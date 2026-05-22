@@ -263,5 +263,5 @@ void TencentTranslator::testTranslate(const TTSConfig &config,
     else
         *msg = result;
 
-    qDebug() << msg;
+    qDebug() << "[TencentTr]" << msg;
 }

@@ -56,7 +56,7 @@ inline void write_log_level(const LogLevel level)
     {
         // 无法打开文件进行写入
         QMessageBox::critical(nullptr, "Error", "写入数据失败！");
-        qCritical() << "write data failed: can not open file" << LOG_LEVEL_FILE;
+        qCritical() << "[Log] Write data failed: can not open file" << LOG_LEVEL_FILE;
         return;
     }
 

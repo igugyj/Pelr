@@ -71,7 +71,7 @@ BubbleBox::BubbleBox(QLabel *parent) : QLabel(parent)
     connect(VoiceGenerator::instance(), &VoiceGenerator::voiceGenerated,
             this, [&](const QString &filePath)
             {
-                qDebug() << "Voice generated:" << filePath;
+                qDebug() << "[BubbleBox] Voice generated:" << filePath;
                 // 可以直接播放
                 VoiceGenerator::instance()->playVoice(filePath);
                 setText(m_text);
@@ -82,7 +82,7 @@ BubbleBox::BubbleBox(QLabel *parent) : QLabel(parent)
     connect(VoiceGenerator::instance(), &VoiceGenerator::errorOccurred,
             this, [&](const QString &error)
             {
-                qDebug() << "Error:" << error;
+                qDebug() << "[BubbleBox] Error:" << error;
                 setText(m_text);
                 adjustSize();
                 show();
@@ -172,7 +172,7 @@ void BubbleBox::showTime()
             NotificationWidget::showNotification(
                 DataManager::instance().Project_Name, tr("现在是%1").arg(time));
         }
-        qDebug() << "now:" << time << "isTrayHourAlarm：" << fg;
+        qDebug() << "[BubbleBox] Now:" << time << "isTrayHourAlarm:" << fg;
         this->now = time;
     }
 }
@@ -198,9 +198,9 @@ void BubbleBox::textSet(const QString &text)
     m_text = text;
     if (!DataManager::instance().getBasicData().isSaying)
     {
-        qDebug() << "No text-to-speech interface is used";
+        qDebug() << "[BubbleBox] No text-to-speech interface is used";
         setText(m_text);
-        qInfo() << "BubbleBox:" << m_text; // 日志记录
+        qInfo() << "[BubbleBox] BubbleBox:" << m_text;
         adjustSize();
         show();
         resetFadeTimer();

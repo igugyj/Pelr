@@ -90,7 +90,7 @@ bool TranslationManager::loadTranslation(const QString &languageCode)
 {
     if (languageCode.isEmpty())
     {
-        qWarning() << "Language code is empty";
+        qWarning() << "[L10n] Language code is empty";
         return false;
     }
 
@@ -107,7 +107,7 @@ bool TranslationManager::loadTranslation(const QString &languageCode)
 
     if (translationFile.isEmpty())
     {
-        qWarning() << "Translation file not found for language:" << languageCode;
+        qWarning() << "[L10n] Translation file not found for language:" << languageCode;
         return false;
     }
 
@@ -131,7 +131,7 @@ bool TranslationManager::loadTranslation(const QString &languageCode)
         }
 
         m_currentLanguage = languageCode;
-        qDebug() << "Language changed to:" << languageCode;
+        qDebug() << "[L10n] Language changed to:" << languageCode;
 
         // 发射信号
         emit languageChanged(languageCode);
@@ -139,7 +139,7 @@ bool TranslationManager::loadTranslation(const QString &languageCode)
         return true;
     }
 
-    qWarning() << "Failed to load translation file:" << translationFile;
+    qWarning() << "[L10n] Failed to load translation file:" << translationFile;
     return false;
 }
 

@@ -263,7 +263,7 @@ public:
         }
         else
         {
-            qCritical() << "Unsupported data type for writing:" << typeid(T).name();
+            qCritical() << "[Data] Unsupported data type for writing:" << typeid(T).name();
             return;
         }
         writeJsonFile(filename, doc);

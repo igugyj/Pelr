@@ -122,7 +122,7 @@ public:
         m_currentPlayFile = filePath;
         if (!QFile::exists(filePath))
         {
-            qWarning() << "[VoiceGenerator] File does not exist:" << filePath;
+            qWarning() << "[VoiceGen] File does not exist:" << filePath;
             emit errorOccurred(tr("音频文件不存在: %1").arg(filePath));
             return;
         }
@@ -149,13 +149,13 @@ private slots:
     // 翻译成功后的处理
     void onTranslationFinished(const QString &translatedText)
     {
-        qDebug() << "Translation successful:" << translatedText;
+        qDebug() << "[VoiceGen] Translation successful:" << translatedText;
         doGenerateVoice(m_pendingConfig, translatedText);
     }
 
     void onTranslationError(const QString &errorMessage)
     {
-        qWarning() << "Translation failed:" << errorMessage;
+        qWarning() << "[VoiceGen] Translation failed:" << errorMessage;
         emit errorOccurred("Translation failed: " + errorMessage);
         doGenerateVoice(m_pendingConfig, m_pendingText); // 回退原文合成
     }
@@ -234,7 +234,7 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "voice generate response:" << json;
+            qDebug() << "[VoiceGen] Voice generate response:" << json;
             QString filePath = json["file_path"].toString();
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
@@ -264,7 +264,7 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "OpenAI TTS response:" << json;
+            qDebug() << "[VoiceGen] OpenAI TTS response:" << json;
             QString filePath = json["file_path"].toString();
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
@@ -289,7 +289,7 @@ private:
 
     void onConnectionRefused()
     {
-        qDebug() << "TTS server connection refused";
+        qDebug() << "[VoiceGen] TTS server connection refused";
     }
 
     QNetworkAccessManager *m_manager;

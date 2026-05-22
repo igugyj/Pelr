@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     QStringList styles = QStyleFactory::keys();
     for (auto &style : styles)
     {
-        qDebug() << "Available style:" << style;
+        qDebug() << "[APP] Available style:" << style;
     }
     if (styles.contains("windows11", Qt::CaseInsensitive))
         app.setStyle("windows11");
@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
         CheckApplication licenseDialog;
         if (licenseDialog.exec() != QDialog::Accepted || !licenseDialog.isLicenseAccepted())
         {
-            qDebug() << "License not accepted, exit";
+            qDebug() << "[APP] License not accepted, exit";
             return 1; // 非零退出码表示异常
         }
-        qDebug() << "License accepted";
+        qDebug() << "[APP] License accepted";
     }
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, TrayIcon::cleanup);
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     // ONNX 初始化（如可能耗时，可考虑异步，此处保持简单）
     if (!VoicevoxTTS::initializeOnnxRuntime())
     {
-        qWarning() << "Failed to initialize OnnxRuntime";
+        qWarning() << "[APP] Failed to initialize OnnxRuntime";
     }
 
     // 根据静默启动选项决定是否显示主窗口
@@ -103,6 +103,6 @@ void initTranslator(QApplication &a, const QString &path)
     TranslationManager::instance()->addTranslationPath(path);
     QString sysLang = TranslationManager::instance()->detectSystemLanguage();
     TranslationManager::instance()->setLanguage("en_US");
-    qDebug() << "System language:" << sysLang;
-    qDebug() << "Translator initialized";
+    qDebug() << "[APP] System language:" << sysLang;
+    qDebug() << "[APP] Translator initialized";
 }
