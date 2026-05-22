@@ -13,10 +13,10 @@ PyLang::PyLang(QObject *parent)
 {
     connect(this, &PyLang::errorOccurred, this, [](const QString &err)
             {
-                qWarning() << "Error:" << err;
+                qWarning() << "[PyLang] Error:" << err;
                 NotificationWidget::showNotification(tr("Warning"),err); });
     connect(this, &PyLang::translationTestCompleted, this, [](bool success)
-            { qDebug() << "Translation test completed:" << success;
+            { qDebug() << "[PyLang] Translation test completed:" << success;
                 success?NotificationWidget::showNotification(tr("Success"),tr("Translation test successful")):NotificationWidget::showNotification(tr("Failed"),tr("Translation test failed"),5000,MessageType::Warning); });
 }
 

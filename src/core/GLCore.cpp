@@ -70,13 +70,12 @@ GLCore::GLCore(QWidget *parent) : QOpenGLWidget(parent)
             Qt::WindowDoesNotAcceptFocus);
     }
     this->setAttribute(Qt::WA_TranslucentBackground);
-    this->setAttribute(Qt::WA_DeleteOnClose); // 关闭时自动删除
 
     connectSignals();
     // 鼠标跟踪
     if (DataManager::instance().getBasicData().isLookingMouse)
     {
-        qDebug() << "mouse tracking enabled";
+        qDebug() << "[GLCore] Mouse tracking enabled";
         this->setMouseTracking(true);
     }
     int step = DataManager::instance().getBasicData().model_size; // 150;
@@ -108,7 +107,19 @@ void GLCore::checkMouseTransparency()
     }
     // 鼠标位置的像素
     QImage image = grabFramebuffer();
-    QColor color = image.pixelColor(localPos);
+
+    // 核心修复：将逻辑坐标转换为物理像素坐标（处理高分屏缩放）
+    qreal dpr = this->devicePixelRatioF();
+    QPoint physicalPos(qRound(localPos.x() * dpr), qRound(localPos.y() * dpr));
+
+    // 越界保护
+    if (physicalPos.x() < 0 || physicalPos.x() >= image.width() ||
+        physicalPos.y() < 0 || physicalPos.y() >= image.height())
+    {
+        return;
+    }
+
+    QColor color = image.pixelColor(physicalPos);
 
     // 检查透明度
     bool shouldBeTransparent = (color.alpha() < 64); // 25%透明度阈值
@@ -130,7 +141,7 @@ void GLCore::switchWindowTransparent(bool transparent)
     {
         // 窗口句柄可能尚未创建，例如在窗口显示之前
         // 可以考虑延迟执行或使用其他方法
-        qCritical() << "Failed to get QWindow handle. Window may not have been created yet.";
+        qCritical() << "[GLCore] Failed to get QWindow handle. Window may not have been created yet.";
         return;
     }
 
@@ -159,7 +170,7 @@ void GLCore::switchWindowTransparent(bool transparent)
 
 void GLCore::initContextMenu()
 {
-    qInfo() << "init context menu";
+    qInfo() << "[GLCore] Init context menu";
     // 实时显示键盘and鼠标按键状态 switch on/off
     switchListenerButton = new QPushButton(tr("按键监听"), this);
     connect(switchListenerButton, &QPushButton::clicked, this, &GLCore::switchListener);
@@ -208,10 +219,10 @@ void GLCore::initContextMenu()
             modelChatBox->hide();
             // 更新数据
             main_widget->Widget_Todo->loadAllData();
-            qDebug() << "show main_widget ";
+            qDebug() << "[GLCore] Show main_widget";
         } else {
             main_widget->hide(); // 隐藏界面
-            qDebug() << "hide main_widget ";
+            qDebug() << "[GLCore] Hide main_widget";
         } });
     // 表情/动作控制菜单
     EmotionButton = new QPushButton(tr("EMO"), this);
@@ -308,15 +319,15 @@ void GLCore::connectSignals()
     inputCheckTimer->start();
     if (DataManager::instance().getBasicData().isListening)
     {
-        qDebug() << "key listening enabled";
+        qDebug() << "[GLCore] Key listening enabled";
         // 开始监听
         if (!listener->startListening())
         {
-            qCritical() << "Failed to start global input listening";
+            qCritical() << "[GLCore] Failed to start global input listening";
         }
         else
         {
-            qDebug() << "Global input listener is running. ";
+            qDebug() << "[GLCore] Global input listener is running.";
         }
     }
     // 定时说话
@@ -331,11 +342,11 @@ void GLCore::connectSignals()
         int minTime = DataManager::instance().getBasicData().RandomInterval.first;
         int maxTime = DataManager::instance().getBasicData().RandomInterval.second;
         int randomTime = rand() % (maxTime - minTime + 1) + minTime; //15-25min
-        qInfo() << "next random sentence in " << QString::number(randomTime * 60 * 1000) << " s";
+        qInfo() << "[GLCore] Next random sentence in " << QString::number(randomTime * 60 * 1000) << " s";
         randomSentenceTimer->start(randomTime * 60 * 1000); });
     if (DataManager::instance().getBasicData().isRandomSpeech)
     {
-        qDebug() << "random speech enabled";
+        qDebug() << "[GLCore] Random speech enabled";
         randomSentenceTimer->start(10 * 60 * 1000); // 3min
     }
     /*
@@ -358,20 +369,22 @@ void GLCore::connectSignals()
     connect(TrayIcon::instance()->action_quit, &QAction::triggered, [&]()
             {
         saveWindowLocation();
-        QCoreApplication::quit(); });
+        if (m_watcher.isRunning())
+            m_watcher.cancel();
+        qApp->quit(); });
     // 重置window位置
-    connect(TrayIcon::instance()->action_resetWinLoc, SIGNAL(triggered()), this, SLOT(resetLocation()));
+    connect(TrayIcon::instance()->action_resetWinLoc, &QAction::triggered, this, &GLCore::resetLocation);
     // 显示界面
-    connect(TrayIcon::instance()->action_showWin, SIGNAL(triggered()), this->main_widget, SLOT(show()));
+    connect(TrayIcon::instance()->action_showWin, &QAction::triggered, this->main_widget, &QWidget::show);
     // 静默模式
-    connect(TrayIcon::instance()->action_silentMode, SIGNAL(triggered()), this, SLOT(silentMode()));
+    connect(TrayIcon::instance()->action_silentMode, &QAction::triggered, this, &GLCore::silentMode);
     // 按键监听
     connect(TrayIcon::instance()->action_keyListener, &QAction::triggered, this, &GLCore::switchListener);
 
     // 拖动窗口
-    connect(TrayIcon::instance()->action_switchDrag, SIGNAL(triggered()), this, SLOT(switchDragStatus()));
+    connect(TrayIcon::instance()->action_switchDrag, &QAction::triggered, this, &GLCore::switchDragStatus);
     // 播放媒体
-    connect(TrayIcon::instance()->action_mediaPlayer, SIGNAL(triggered()), this, SLOT(onPlayMedia()));
+    connect(TrayIcon::instance()->action_mediaPlayer, &QAction::triggered, this, &GLCore::onPlayMedia);
     connect(TrayIcon::instance(), &QSystemTrayIcon::activated, [&](QSystemTrayIcon::ActivationReason reason)
             {
         // 判断是否为双击动作
@@ -386,7 +399,7 @@ void GLCore::connectSignals()
     // 启动启动项
     if (DataManager::instance().getBasicData().isStartStar)
     {
-        qDebug() << "starting app in star category";
+        qDebug() << "[GLCore] Starting app in star category";
         startRunStarIfPoweredInThread();
     }
 }
@@ -399,7 +412,7 @@ void GLCore::switchListener()
         QString msg = "key listening disabled";
         if (!isHidden())
             BubbleBox::instance()->textSet(msg);
-        qDebug() << msg;
+        qDebug() << "[GLCore] " << msg;
         overlay->hide();
         TrayIcon::instance()->action_keyListener->setChecked(false);
     }
@@ -409,7 +422,7 @@ void GLCore::switchListener()
         QString msg = "key listening enabled";
         if (!isHidden())
             BubbleBox::instance()->textSet(msg);
-        qDebug() << msg;
+        qDebug() << "[GLCore] " << msg;
         overlay->show();
         TrayIcon::instance()->action_keyListener->setChecked(true);
     }
@@ -426,7 +439,7 @@ void GLCore::silentMode()
             randomSentenceTimer->start();
         if (DataManager::instance().getBasicData().isListening)
             listener->startListening();
-        qDebug() << "silent mode off";
+        qDebug() << "[GLCore] Silent mode off";
         isSilentMode = false;
     }
     else
@@ -438,7 +451,7 @@ void GLCore::silentMode()
         BubbleBox::instance()->hide();
         menuWidget->hide();
         modelChatBox->hide();
-        qDebug() << "silent mode on";
+        qDebug() << "[GLCore] Silent mode on";
         isSilentMode = true;
     }
     TrayIcon::instance()->action_silentMode->setChecked(isSilentMode);
@@ -468,14 +481,20 @@ void GLCore::onAskWeather()
     {
         msg = weather.error;
     }
-    qDebug() << msg;
+    qDebug() << "[GLCore] " << msg;
     BubbleBox::instance()->textSet(msg);
 }
 
 void GLCore::startRunStarIfPoweredInThread()
 {
+    if (m_watcher.isRunning())
+    {
+        qWarning() << "[GLCore] Background task already running, skipping";
+        return;
+    }
     QString title = DataManager::instance().Project_Name + " " + QTime::currentTime().toString("hh:mm:ss");
     // 如果开机时长大于20分钟，则return
+    // TODO 让用户自己设定
     if (isSystemUptimeExceeds(20))
     {
         TrayIcon::showMessage(
@@ -492,30 +511,41 @@ void GLCore::startRunStarIfPoweredInThread()
     connect(&m_watcher, &QFutureWatcher<void>::finished, this, &GLCore::onRunStarIfPoweredFinished);
 
     // 启动任务，运行在子线程中
-    QFuture<void> future = QtConcurrent::run(this, &GLCore::runStarIfPowered);
+    QFuture<void> future = QtConcurrent::run([this]()
+                                             { runStarIfPowered(); });
     m_watcher.setFuture(future);
 }
 
 void GLCore::onPlayMedia()
 {
     MediaPlayerWidget::instance().setVisible(!MediaPlayerWidget::instance().isVisible());
-    qDebug() << "MediaPlayerWidget visible: " << MediaPlayerWidget::instance().isVisible();
+    qDebug() << "[GLCore] MediaPlayerWidget visible: " << MediaPlayerWidget::instance().isVisible();
 }
 
 void GLCore::onRunStarIfPoweredFinished()
 {
     // 任务完成后进行清理
     m_watcher.disconnect();
-    qDebug() << "Task completed and resources cleaned.";
+    qDebug() << "[GLCore] Task completed and resources cleaned.";
 }
 
 void GLCore::runStarIfPowered()
 {
-    qDebug() << "run star if powered，wt 60s";
-    QThread::sleep(60); // 等待60s
+    qDebug() << "[GLCore] Run star if powered, wt 60s";
+    // 提前拷贝 future，避免访问 m_watcher 时对象已析构
+    QFuture<void> future = m_watcher.future();
+    for (int i = 0; i < 60; ++i)
+    { // 1 min todo: 让用户自己定
+        if (future.isCanceled())
+        {
+            qDebug() << "[GLCore] RunStarIfPowered cancelled";
+            return;
+        }
+        QThread::sleep(1);
+    }
     QList<MenuData> menu_data = DataManager::instance().getMenuData();
     std::vector<QString> powerStatus = getPowerStatus();
-    if (powerStatus[0] != "Online (AC)")
+    if (powerStatus.size() < 1 || powerStatus[0] != "Online (AC)")
         return;
     for (MenuData &item : menu_data)
     {
@@ -532,7 +562,7 @@ void GLCore::switchDragStatus()
     isAllowDrag = !isAllowDrag;
     QString msg;
     msg = isAllowDrag ? "drag enabled" : "drag disabled";
-    qDebug() << msg;
+    qDebug() << "[GLCore] " << msg;
     switchWindowTransparent(isAllowDrag);
     TrayIcon::instance()->action_switchDrag->setChecked(!isAllowDrag);
 }
@@ -556,19 +586,19 @@ void GLCore::loadModel()
     // QString msg;
     if (model_path.isEmpty())
     {
-        qCritical() << "model path is empty";
+        qCritical() << "[GLCore] Model path is empty";
         model_path = "Resources/Hiyori/Hiyori.model3.json";
     }
     QFileInfo file_info(model_path);
     if (!file_info.exists())
     {
-        qCritical() << "model file not exists: " << model_path;
+        qCritical() << "[GLCore] Model file not exists: " << model_path;
         model_path = "Resources/Hiyori/Hiyori.model3.json";
         file_info.setFile(model_path);
     }
     QString dir = file_info.absolutePath();
     QString fileName = file_info.fileName();
-    qDebug() << "model dir: " << dir << " fileName: " << fileName;
+    qDebug() << "[GLCore] Model dir: " << dir << " fileName: " << fileName;
     LAppLive2DManager::GetInstance()->LoadModelFromPath(dir.toStdString() + "/", fileName.toStdString());
 }
 
@@ -583,7 +613,7 @@ void GLCore::saveWindowLocation()
     {
         // 无法打开文件进行写入
         QMessageBox::critical(nullptr, "Error", "写入数据失败！");
-        qCritical() << "write data failed: can not open file" << WINDOW_LOCATION_FILE;
+        qCritical() << "[GLCore] Write data failed: can not open file" << WINDOW_LOCATION_FILE;
         return;
     }
 
@@ -604,7 +634,7 @@ void GLCore::loadWindowLocation()
     QFile file(WINDOW_LOCATION_FILE);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << "read data failed: can not open file" << WINDOW_LOCATION_FILE;
+        qDebug() << "[GLCore] Read data failed: can not open file" << WINDOW_LOCATION_FILE;
         return; // 文件不存在或无法打开，返回空列表
     }
     QDataStream in(&file);
@@ -612,7 +642,7 @@ void GLCore::loadWindowLocation()
     int x, y;
     in >> x >> y;
     file.close();
-    qDebug() << "load window location: " << x << " " << y;
+    qDebug() << "[GLCore] Load window location: " << x << " " << y;
     // 移动窗口到指定位置
     move(x, y);
 }
@@ -636,12 +666,12 @@ void GLCore::resetLocation()
 
 void GLCore::mousePressEvent(QMouseEvent *event)
 {
-    // LAppDelegate::GetInstance()->GetView()->OnTouchesBegan(event->x(), event->y());
+    LAppDelegate::GetInstance()->GetView()->OnTouchesBegan(event->position().x(), event->position().y());
     // 按住鼠标开始拖动
     if (event->button() == Qt::LeftButton)
     {
         left_button_down = true;
-        dragStartPos = event->globalPos() - frameGeometry().topLeft();
+        dragStartPos = event->globalPosition().toPoint() - frameGeometry().topLeft();
     }
 
     if (event->button() == Qt::RightButton)
@@ -664,23 +694,54 @@ void GLCore::mousePressEvent(QMouseEvent *event)
 
 void GLCore::mouseMoveEvent(QMouseEvent *event)
 {
-    LAppDelegate::GetInstance()->GetView()->OnTouchesMoved(event->x(), event->y());
+    LAppDelegate::GetInstance()->GetView()->OnTouchesMoved(event->position().x(), event->position().y());
     // 按住鼠标移动时拖动窗口
     if (left_button_down && (event->buttons() & Qt::LeftButton) && isAllowDrag)
     {
-        move(event->globalPos() - dragStartPos);
+        move(event->globalPosition().toPoint() - dragStartPos);
         // keyLabel->updateWindowLocation(this->x(), this->y(), width(), height());
     }
 }
 
+void GLCore::handleClick(const QPoint &localPos)
+{
+    if (!rect().contains(localPos))
+        return;
+
+    QImage frame = grabFramebuffer();
+
+    // 核心修复：将逻辑坐标转换为物理像素坐标（处理高分屏缩放）
+    qreal dpr = this->devicePixelRatioF();
+    QPoint physicalPos(qRound(localPos.x() * dpr), qRound(localPos.y() * dpr));
+
+    // 越界保护
+    if (physicalPos.x() < 0 || physicalPos.x() >= frame.width() ||
+        physicalPos.y() < 0 || physicalPos.y() >= frame.height())
+        return;
+
+    QColor color = frame.pixelColor(physicalPos);
+
+    // 如果是透明区域，则忽略点击
+    if (color.alpha() < 64)
+        return;
+
+    LAppModel *model = LAppLive2DManager::GetInstance()->GetModel(0);
+    if (model)
+        model->StartRandomMotion(LAppDefine::MotionGroupTapBody,
+                                 LAppDefine::PriorityNormal, nullptr, nullptr);
+}
+
 void GLCore::mouseReleaseEvent(QMouseEvent *event)
 {
-    LAppDelegate::GetInstance()->GetView()->OnTouchesEnded(event->x(), event->y());
-    // 按住鼠标释放时停止拖动
     if (event->button() == Qt::LeftButton)
     {
+        handleClick(event->position().toPoint());
         left_button_down = false;
     }
+
+    // 停止拖拽（眼神跟随用）
+    LAppLive2DManager::GetInstance()->OnDrag(0.0f, 0.0f);
+
     if (event->button() == Qt::RightButton)
     {
         right_button_down = false;
@@ -692,7 +753,7 @@ void GLCore::mouseDoubleClickEvent(QMouseEvent *event)
     if (event->buttons() & Qt::LeftButton)
     {
         modelChatBox->setVisible(!modelChatBox->isVisible());
-        qDebug() << "model chat box visible: " << modelChatBox->isVisible();
+        qDebug() << "[GLCore] Model chat box visible: " << modelChatBox->isVisible();
     }
 }
 
@@ -719,7 +780,7 @@ void GLCore::retranslateUI()
 {
     if (!switchListenerButton)
     {
-        qDebug() << "ui part is null, can not retranslate ui by " << typeid(*this).name();
+        qDebug() << "[GLCore] UI part is null, can not retranslate ui by " << typeid(*this).name();
         return;
     }
     switchListenerButton->setText(tr("按键监听"));
@@ -732,14 +793,16 @@ void GLCore::retranslateUI()
     SettingButton->setText(tr("界面"));
     EmotionButton->setText(tr("EMO"));
     MediaButton->setText(tr("媒体播放"));
-    qDebug() << "retranslate ui:" << typeid(*this).name();
+    qDebug() << "[GLCore] Retranslate ui:" << typeid(*this).name();
 }
 
 void GLCore::closeEvent(QCloseEvent *event)
 {
-    // 保存窗口位置
     saveWindowLocation();
+    if (m_watcher.isRunning())
+        m_watcher.cancel();
     event->accept();
+    qApp->quit();
 }
 
 void GLCore::hideEvent(QHideEvent *event)

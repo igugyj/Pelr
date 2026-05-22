@@ -120,12 +120,12 @@ bool LlamaClient::loadSystemPromptFromFile(const QString &filePath)
     QFile file(filePath);
     if (!file.exists())
     {
-        qDebug() << "File does not exist: " << filePath;
+        qDebug() << "[AI] File does not exist:" << filePath;
         return false;
     }
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qWarning() << "Cannot open file:" << filePath;
+        qWarning() << "[AI] Cannot open file:" << filePath;
         return false;
     }
     QString content = QString::fromUtf8(file.readAll());

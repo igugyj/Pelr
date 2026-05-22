@@ -3,8 +3,6 @@ QMenu {
     border: 1px solid #e0e0e0;
     border-radius: 8px; /* 减小圆角 */
     padding: 4px 0; /* 减少内边距 */
-    font-size: 16px; /* 字体大小 */
-    font-weight: 500;
     margin: 2px; /* 添加外边距确保边框完整显示 */
 }
 

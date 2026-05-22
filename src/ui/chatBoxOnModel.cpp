@@ -29,9 +29,9 @@ ChatBoxOnModel::ChatBoxOnModel(QLineEdit *parent)
     // 样式
     setLineStyle();
     // 字体
-    QFont font = DataManager::instance()._font;
+    QFont font = qApp->font();
     font.setPointSize((int)18 * (DataManager::instance().getBasicData().model_size / 150));
-    font.setWeight(50);
+    font.setWeight(QFont::Normal);
     // font.setBold(true);
     setFont(font);
     // 信号槽
@@ -75,7 +75,7 @@ void ChatBoxOnModel::onTextGenerated(const QString &text, const int &id)
 {
     if (id != ai_id)
         return;
-    qDebug() << "text:" << text;
+    qDebug() << "[ChatBox] Text:" << text;
     // 处理生成的文本
     BubbleBox::instance()->textSet(text);
 }
@@ -84,7 +84,7 @@ void ChatBoxOnModel::onErrorOccurred(const QString &error, const int &id)
 {
     if (id != ai_id)
         return;
-    qDebug() << "error:" << error;
+    qDebug() << "[ChatBox] Error:" << error;
     // 处理错误
     BubbleBox::instance()->textSet(tr("错误：%1").arg(error));
 }

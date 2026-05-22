@@ -37,7 +37,7 @@ void ChatWidget::addMessage(const QString &message, const bool &isAI)
 {
     if (message.isEmpty())
         return;
-    qDebug() << "addMessage:" << message;
+    qDebug() << "[Chat] AddMessage:" << message;
     QWidget *p = ui->scrollAreaWidgetContents;
     int maxWidth = p->width() * 4 / 5;
     int margin = 10;
@@ -95,7 +95,7 @@ void ChatWidget::onTextGenerated(const QString &text, const int &id)
 {
     if (id != ai_id)
         return;
-    qDebug() << "textGenerated:" << text;
+    qDebug() << "[Chat] TextGenerated:" << text;
     // 处理生成的文本
     addMessage(text, true);
 }
@@ -104,7 +104,7 @@ void ChatWidget::onErrorOccurred(const QString &error, const int &id)
 {
     if (id != ai_id)
         return;
-    qDebug() << "errorOccurred:" << error;
+    qDebug() << "[Chat] ErrorOccurred:" << error;
     // 处理错误
     addMessage(tr("错误：%1").arg(error), true);
 }

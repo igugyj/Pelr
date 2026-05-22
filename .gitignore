@@ -6,7 +6,7 @@
 *.o
 
 # folder
-build
+/build*
 lib
 log
 release

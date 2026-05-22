@@ -131,14 +131,14 @@ public:
         addMenu(menu_Scripts);
         addSeparator();
         addMenu(menu_LaunchAll);
-        qDebug() << "menu loaded";
+        qDebug() << "[LauncherMenu] Menu loaded";
         hasContent = (star_count + app_count + link_count + scripts_count != 0);
     }
 
     // 刷新菜单数据
     void refreshMenu()
     {
-        qDebug() << "refresh menu";
+        qDebug() << "[LauncherMenu] Refresh menu";
         initMenu();
     }
 

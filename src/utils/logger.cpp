@@ -130,7 +130,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
     if (logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
     {
         QTextStream textStream(&logFile);
-        textStream.setCodec("UTF-8");
+
         textStream << txt << Qt::endl;
         logFile.close();
     }

@@ -13,7 +13,7 @@
 
 static QFuture<void> launchByPathAsync(const QString &path)
 {
-    qDebug() << "launching: " << path;
+    qDebug() << "[Launcher] Launching: " << path;
     return QtConcurrent::run([path]() -> bool
                              {
         try {
@@ -39,7 +39,7 @@ static QFuture<void> launchByPathAsync(const QString &path)
                                          process, &QProcess::deleteLater);
                         QObject::connect(process, &QProcess::errorOccurred,
                                          [path, process](QProcess::ProcessError error) {
-                                             qWarning() << "Process error for" << path << ":" << error;
+                                              qWarning() << "[Launcher] Process error for" << path << ":" << error;
                                              process->deleteLater();
                                          });
 
@@ -51,7 +51,7 @@ static QFuture<void> launchByPathAsync(const QString &path)
                         success = QDesktopServices::openUrl(localUrl);
                     }
                 } else {
-                    qWarning() << "File or directory does not exist:" << path;
+                    qWarning() << "[Launcher] File or directory does not exist:" << path;
                     QMetaObject::invokeMethod(qApp, [path]() {
                         NotificationWidget::showNotification(
                             QObject::tr("Warning"),
@@ -64,7 +64,7 @@ static QFuture<void> launchByPathAsync(const QString &path)
                 }
             }
             if (!success) {
-                qWarning() << "Failed to open:" << path;
+                qWarning() << "[Launcher] Failed to open:" << path;
                 QMetaObject::invokeMethod(qApp, [path]() {
                     NotificationWidget::showNotification(
                         QObject::tr("Warning"),
@@ -77,7 +77,7 @@ static QFuture<void> launchByPathAsync(const QString &path)
             }
             return true;
         } catch (const std::exception &e) {
-            qCritical() << "Exception occurred while launching" << path << ":" << e.what();
+            qCritical() << "[Launcher] Exception occurred while launching" << path << ":" << e.what();
             QMetaObject::invokeMethod(qApp, [path, e]() {
                 NotificationWidget::showNotification(
                     QObject::tr("Error"),
@@ -87,7 +87,7 @@ static QFuture<void> launchByPathAsync(const QString &path)
             }, Qt::QueuedConnection);
             return false;
         } catch (...) {
-            qCritical() << "Unknown exception occurred while launching" << path;
+            qCritical() << "[Launcher] Unknown exception occurred while launching" << path;
             QMetaObject::invokeMethod(qApp, [path]() {
                 NotificationWidget::showNotification(
                     QObject::tr("Error"),

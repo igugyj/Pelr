@@ -54,13 +54,18 @@ void ManageStartWidget::initWidget()
     ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);  // 设置选择行为为选择整行
     ui->treeView->setAlternatingRowColors(true);                        // 设置交替行背景色
     ui->treeView->setColumnWidth(4, 300);
+
     for (int i = 0; i < 5; ++i)
     {
         ui->treeView->header()->setSectionResizeMode(i, QHeaderView::Interactive); // 可交互
     }
     loadMenuData();
 
-    qDebug() << "manageStartWidget init";
+    QFont font = qApp->font();
+    font.setWeight(QFont::Medium);
+    ui->treeView->setFont(font);
+    qDebug() << "[ManageStart] TreeView font:" << QFontInfo(ui->treeView->font()).family();
+    qDebug() << "[ManageStart] ManageStartWidget init";
 }
 
 void ManageStartWidget::deleteSelectedItem()
@@ -69,7 +74,7 @@ void ManageStartWidget::deleteSelectedItem()
     if (!currentIndex.isValid())
     {
         NotificationWidget::showNotification(tr("Warning"), tr("请先选择一个项目!"), 5000, MessageType::Warning);
-        qWarning() << "index is invalid";
+        qWarning() << "[ManageStart] Index is invalid";
         return;
     }
 
@@ -84,7 +89,7 @@ void ManageStartWidget::deleteSelectedItem()
     QModelIndex parentIndex = currentIndex.parent();
     if (!parentIndex.isValid())
     {
-        qWarning() << "can't delete root item";
+        qWarning() << "[ManageStart] Can't delete root item";
         return;
     }
 
@@ -101,7 +106,7 @@ void ManageStartWidget::deleteSelectedItem()
         {
             // 删除选中的行
             parentItem->removeRow(currentIndex.row());
-            qDebug() << "Delete data:" << selectedItem->text();
+            qDebug() << "[ManageStart] Delete data:" << selectedItem->text();
         }
     }
     isSaved = false;
@@ -112,7 +117,7 @@ void ManageStartWidget::loadMenuData()
     QList<MenuData> data = DataManager::instance().getMenuData();
     if (data.isEmpty())
     {
-        qDebug() << "No data to load";
+        qDebug() << "[ManageStart] No data to load";
         return;
     }; // 如果数据为空，则不加载
     for (MenuData item : data)
@@ -147,7 +152,7 @@ void ManageStartWidget::saveMenuData()
         if (!fileInfo.exists() && data[i].category != "Link")
             NotificationWidget::showNotification(
                 tr("Warning"), tr("项目 %1 \n的路径不存在：%2").arg(data[i].name).arg(data[i].path), 5000, MessageType::Warning);
-        qDebug() << "Save data:" << data[i].category << " " << data[i].name << " " << data[i].path << " "
+        qDebug() << "[ManageStart] Save data:" << data[i].category << " " << data[i].name << " " << data[i].path << " "
                  << data[i].icon << " " << data[i].description;
     }
     DataManager::instance().writeData<QList<MenuData>>(data);
@@ -227,7 +232,7 @@ void ManageStartWidget::onEditorAccepted()
     {
         return; // 如果信息不完整，则不添加
     }
-    qDebug() << info.first;
+    qDebug() << "[ManageStart]" << info.first;
 
     if (info.first.contains("Star"))
     {
@@ -271,7 +276,7 @@ void ManageStartWidget::editObj()
     QModelIndex currentIndex = ui->treeView->currentIndex();
     if (!currentIndex.isValid())
     {
-        qWarning() << "Invalid index";
+        qWarning() << "[ManageStart] Invalid index";
         return;
     }
 
@@ -279,14 +284,14 @@ void ManageStartWidget::editObj()
     QModelIndex parentIndex = currentIndex.parent();
     if (!parentIndex.isValid())
     {
-        qWarning() << "Invalid parent";
+        qWarning() << "[ManageStart] Invalid parent";
         return;
     }
     // 获取父项（分类节点）
     QStandardItem *parentItem = dataModel->itemFromIndex(parentIndex);
     if (!parentItem)
     {
-        qWarning() << "Invalid parent";
+        qWarning() << "[ManageStart] Invalid parent";
         return;
     }
 
@@ -301,7 +306,7 @@ void ManageStartWidget::editObj()
     QStandardItem *descItem = parentItem->child(currentRow, 4);
     if (!nameItem || !pathItem)
     {
-        qWarning() << "Error: name or path is null";
+        qWarning() << "[ManageStart] Error: name or path is null";
         return;
     }
     currentName = nameItem->text();
@@ -327,7 +332,7 @@ void ManageStartWidget::onEditorAcceptedForEdit()
     {
         return;
     }
-    qDebug() << info.first;
+    qDebug() << "[ManageStart]" << info.first;
     // 获取父项
     QStandardItem *parentItem = nullptr;
     if (currentCategory == "Star")
@@ -345,7 +350,7 @@ void ManageStartWidget::onEditorAcceptedForEdit()
     }
     // 从原分类删除
     parentItem->removeRow(currentRow);
-    qDebug() << "Remove row:" << currentRow;
+    qDebug() << "[ManageStart] Remove row:" << currentRow;
 
     if (info.first.contains("Star"))
     {

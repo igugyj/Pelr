@@ -10,7 +10,7 @@ EditorWidget::EditorWidget(QWidget *parent) : QWidget(parent), ui(new Ui::editor
 {
     ui->setupUi(this);
 
-    this->setWindowIcon(QIcon(":/public/image/Pelr.png"));
+    this->setWindowIcon(qApp->windowIcon());
     // QFile styleFile(":/thirdParty/QSS/Ubuntu.qss");
     // if (styleFile.open(QIODevice::ReadOnly | QIODevice::Text))
     // {

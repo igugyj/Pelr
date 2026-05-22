@@ -24,27 +24,27 @@ void ExtraFileManager::loadExtraFiles(const QString &modelDir)
     QDir dir(modelDir);
     if (!dir.exists())
     {
-        qWarning() << "Model directory does not exist:" << modelDir;
+        qWarning() << "[ExtraMotions] Model directory does not exist:" << modelDir;
         return;
     }
 
     scanDirectory(dir);
-    qDebug() << "Loaded" << _extraExpressions.size() << "extra expressions and"
+    qDebug() << "[ExtraMotions] Loaded" << _extraExpressions.size() << "extra expressions and"
              << _extraMotions.size() << "extra motions";
 }
 
 void ExtraFileManager::scanDirectory(const QDir &dir)
 {
-    qDebug() << "=== Scanning directory:" << dir.absolutePath() << "===";
+    qDebug() << "[ExtraMotions] === Scanning directory:" << dir.absolutePath() << "===";
     // 获取目录下所有文件和子目录
     QFileInfoList entries = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot);
-    qDebug() << "Found" << entries.size() << "entries in directory";
+    qDebug() << "[ExtraMotions] Found" << entries.size() << "entries in directory";
 
-    foreach (const QFileInfo &entry, entries)
+    for (const QFileInfo &entry : entries)
     {
         if (entry.isDir())
         {
-            qDebug() << "Entering subdirectory:" << entry.fileName();
+            qDebug() << "[ExtraMotions] Entering subdirectory:" << entry.fileName();
             scanDirectory(QDir(entry.absoluteFilePath()));
         }
         else if (entry.isFile())
@@ -67,7 +67,7 @@ void ExtraFileManager::scanDirectory(const QDir &dir)
             }
             else
             {
-                qDebug() << "Skipping file (not .exp3.json or .motion3.json):" << fileName;
+                qDebug() << "[ExtraMotions] Skipping file (not .exp3.json or .motion3.json):" << fileName;
             }
         }
     }
@@ -78,7 +78,7 @@ void ExtraFileManager::loadExpressionFile(const QString &filePath)
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qWarning() << "Failed to open expression file:" << filePath;
+        qWarning() << "[ExtraMotions] Failed to open expression file:" << filePath;
         return;
     }
 
@@ -98,7 +98,7 @@ void ExtraFileManager::loadMotionFile(const QString &filePath)
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qWarning() << "Failed to open motion file:" << filePath;
+        qWarning() << "[ExtraMotions] Failed to open motion file:" << filePath;
         return;
     }
 

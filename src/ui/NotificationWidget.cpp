@@ -190,8 +190,8 @@ void NotificationWidget::showNotificationInternal(
     int duration,
     MessageType type,
     std::function<void()> clickCallback) {
-    qDebug() << "thread:" << QThread::currentThread();
-    qDebug() << "UI thread :" << QApplication::instance()->thread();
+    qDebug() << "[Notify] Thread:" << QThread::currentThread();
+    qDebug() << "[Notify] UI thread:" << QApplication::instance()->thread();
 
     // 停止计时器
     if (m_hideTimer && m_hideTimer->isActive()) {

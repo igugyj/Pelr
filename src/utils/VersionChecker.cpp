@@ -8,9 +8,9 @@
 
 void checkSslSupport()
 {
-    qDebug() << "SSL support:" << QSslSocket::supportsSsl();
-    qDebug() << "SSL version:" << QSslSocket::sslLibraryVersionString();
-    qDebug() << "SSL build version:" << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << "[UpdateCheck] SSL support:" << QSslSocket::supportsSsl();
+    qDebug() << "[UpdateCheck] SSL version:" << QSslSocket::sslLibraryVersionString();
+    qDebug() << "[UpdateCheck] SSL build version:" << QSslSocket::sslLibraryBuildVersionString();
 }
 
 // 提取主版本号（忽略前导日期和后缀，只取第一个数字段）
@@ -55,7 +55,7 @@ VersionChecker::VersionChecker(QObject *parent)
             this, &VersionChecker::onReplyFinished);
     connect(this, &VersionChecker::sourceError,
             this, [](const QString &source, const QString &error)
-            { qDebug() << "[Update Check] Source:" << source << "Error:" << error; });
+             { qDebug() << "[UpdateCheck] Source:" << source << "Error:" << error; });
 }
 
 VersionChecker::~VersionChecker()
@@ -233,7 +233,7 @@ void VersionChecker::processReply(QNetworkReply *reply, const QString &sourceNam
 {
     if (!m_results.contains(sourceName))
     {
-        qWarning() << "Unknown source name:" << sourceName;
+        qWarning() << "[UpdateCheck] Unknown source name:" << sourceName;
         return;
     }
 
@@ -313,7 +313,7 @@ void VersionChecker::processReply(QNetworkReply *reply, const QString &sourceNam
     }
 
     result.success = true;
-    qDebug() << result.success << result.sourceName << result.latestVersion << result.publishedAt;
+    qDebug() << "[UpdateCheck]" << result.success << result.sourceName << result.latestVersion << result.publishedAt;
 }
 
 void VersionChecker::finalizeIfAllFinished()
@@ -368,5 +368,5 @@ void VersionChecker::finalizeIfAllFinished()
         emit versionCheckCompleted(false, msg);
         emit errorOccurred(msg);
     }
-    qDebug() << msg;
+    qDebug() << "[UpdateCheck]" << msg;
 }

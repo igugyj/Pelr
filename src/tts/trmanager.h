@@ -1,5 +1,5 @@
-#ifndef TRANSLATIONMANAGER_H
-#define TRANSLATIONMANAGER_H
+#ifndef TRMANAGER_H
+#define TRMANAGER_H
 
 #include <QObject>
 #include <QString>

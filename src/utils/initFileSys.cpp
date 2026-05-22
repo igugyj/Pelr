@@ -14,5 +14,5 @@ void initFileSys()
     {
         QDir().mkpath(path);
     }
-    qDebug() << "Necessary paths have been ensured";
+    qDebug() << "[APP] Necessary paths have been ensured";
 }

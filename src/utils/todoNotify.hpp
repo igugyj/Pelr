@@ -52,7 +52,7 @@ public:
                                                     tr("待办事项提醒"), msg,
                                                     10000, NotificationWidget::Information); }, Qt::QueuedConnection);
                 }
-                qDebug() << "notify：" << msg;
+                qDebug() << "[TODO] Notify:" << msg;
                 // 更新最新数据
                 newest_title = item.title;
             }
@@ -65,7 +65,7 @@ public:
         QList<TodoData> data = DataManager::instance().todo_data; // first
         if (data.isEmpty())
         {
-            qDebug() << "todo data is empty";
+            qDebug() << "[TODO] TODO data is empty";
             BubbleBox::instance()->textSet(tr("还没有待办事项哦！"));
             return;
         }
@@ -88,10 +88,10 @@ public:
                 }
             }
         }
-        qDebug() << "nearestFuture:" << nearestFuture << "nearestEvent:" << nearestEvent.title;
+        qDebug() << "[TODO] nearestFuture:" << nearestFuture << "nearestEvent:" << nearestEvent.title;
         if (nearestEvent.title.isEmpty())
         {
-            qInfo() << "nearestEvent.title isEmpty";
+            qInfo() << "[TODO] NearestEvent.title isEmpty";
             BubbleBox::instance()->textSet(tr("还没有最近的待办事项哦！"));
             return;
         }

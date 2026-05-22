@@ -74,7 +74,7 @@ void LAppModel::LoadAssets(const csmChar *dir, const csmChar *fileName)
     if (_debugMode)
     {
         LAppPal::PrintLogLn("[APP]load model setting: %s", fileName);
-        qDebug() << "load model setting:" << fileName;
+        qDebug() << "[LApp] Load model setting:" << fileName;
     }
     csmSizeInt size;
     csmString path = csmString(dir) + fileName;
@@ -610,7 +610,7 @@ void LAppModel::LoadExtraFiles()
         }
     }
 
-    qDebug() << "Loaded" << extraExpressions.GetSize() << "extra expressions and"
+    qDebug() << "[LApp] Loaded" << extraExpressions.GetSize() << "extra expressions and"
              << extraMotions.GetSize() << "extra motions";
     ExtraMotionManager::getInstance()->setModel(this);
 }
@@ -630,12 +630,12 @@ Csm::CubismMotionQueueEntryHandle LAppModel::StartExtraMotion(const csmChar *mot
         }
         else if (!_motionManager->ReserveMotion(priority))
         {
-            qDebug() << "Can't start extra motion - priority reserved";
+            qDebug() << "[LApp] Can't start extra motion - priority reserved";
             return InvalidMotionQueueEntryHandleValue;
         }
         return _motionManager->StartMotionPriority(motion, false, priority);
     }
-    qDebug() << "Extra motion not found:" << motionName;
+    qDebug() << "[LApp] Extra motion not found:" << motionName;
     return InvalidMotionQueueEntryHandleValue;
 }
 
@@ -648,7 +648,7 @@ void LAppModel::SetExtraExpression(const csmChar *expressionID)
     }
     else
     {
-        qDebug() << "Extra expression not found:" << expressionID;
+        qDebug() << "[LApp] Extra expression not found:" << expressionID;
     }
 }
 

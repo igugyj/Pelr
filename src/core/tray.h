@@ -21,6 +21,9 @@ public:
     // 获取单例实例
     static TrayIcon *instance();
 
+    // 程序退出时清理单例
+    static void cleanup();
+
     // 静态方法用于显示消息
     static void showMessage(const QString &title, const QString &msg,
                             QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information,

@@ -85,6 +85,14 @@ docs/**   linguist-vendored
 assets/** linguist-vendored
 scripts/** linguist-vendored=true
 
-# 若仍有其他自动生成的代码目录，也按同样方式排除
-# generated/** linguist-vendored
+# ===== 资源文件中的其他语言忽略 =====
+# 自动生成的资源文件（如 Qt rcc 输出的 Python、QRC 中引用的文件）
+*.py    linguist-vendored=true
+*.ts    linguist-vendored=true
+*.qm    linguist-vendored=true
+*.json  linguist-vendored=true
+*.xml   linguist-vendored=true
+*.yml   linguist-vendored=true
+*.yaml  linguist-vendored=true
+*.svg   linguist-vendored=true
 

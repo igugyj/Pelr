@@ -71,7 +71,6 @@ TrayIcon::TrayIcon(QObject *parent)
     QAction *action_openDirPath = new QAction(tr("程序文件夹"), MenuOpen);
     QAction *action_openUserPath = new QAction(tr("用户文件夹"), MenuOpen);
     QAction *action_openLogPath = new QAction(tr("日志文件夹"), MenuOpen);
-    QAction *action_openTTSServer = new QAction(tr("TTS Server"), MenuOpen);
     // 连接信号和槽
     // 打开程序文件夹
     connect(action_openDirPath, &QAction::triggered, []()
@@ -90,9 +89,6 @@ TrayIcon::TrayIcon(QObject *parent)
         QString appDir = QCoreApplication::applicationDirPath();
         const QString logDir = appDir.append("/log");
         launchByPath(logDir); });
-    connect(action_openTTSServer, &QAction::triggered, []()
-            { launchByPath(DataManager::instance().const_config_data.tts_server); });
-
     QAction *action_startApp = new QAction("启动项目", this);
     action_startApp->setMenu(launcherMenu::instance());
     // 如果有内容就添加到菜单
@@ -105,16 +101,20 @@ TrayIcon::TrayIcon(QObject *parent)
     menu->addActions({action_silentMode, action_switchDrag,
                       action_keyListener,
                       action_showWin, action_resetWinLoc, action_mediaPlayer});
-    MenuOpen->addActions({action_openUserPath, action_openDirPath, action_openLogPath, action_openTTSServer});
+    MenuOpen->addActions({action_openUserPath, action_openDirPath, action_openLogPath});
     menu->addSeparator();
     menu->addMenu(MenuOpen);
     menu->addSeparator();
     menu->addAction(action_quit);
-
+    // 字体
+    QFont font = qApp->font();
+    font.setWeight(QFont::Medium);
+    menu->setFont(font);
     // 设置托盘图标的菜单
     this->setContextMenu(menu);
 
-    qDebug() << "TrayIcon singleton initialized";
+    qDebug() << "[Tray] TrayIcon singleton initialized";
+
     // 显示托盘图标
     this->show();
     switchMusicIcon(DataManager::instance().getBasicData().isMusicIcon);
@@ -126,11 +126,11 @@ void TrayIcon::initializeAudioDetector()
     if (m_audioDetector->start())
     {
         m_audioCheckTimer->start();
-        qDebug() << "Spectrum-based audio detector initialized";
+        qDebug() << "[Tray] Spectrum-based audio detector initialized";
     }
     else
     {
-        qDebug() << "Audio spectrum detector initialization failed";
+        qDebug() << "[Tray] Audio spectrum detector initialization failed";
         delete m_audioDetector;
         m_audioDetector = nullptr;
     }
@@ -154,7 +154,7 @@ QPixmap TrayIcon::createMusicIcon() const
     }
 
     // 设置字体和颜色
-    QFont font(DataManager::instance()._font);
+    QFont font(qApp->font());
     font.setPointSize(64);
     font.setBold(true);
     painter.setFont(font);
@@ -209,11 +209,11 @@ void TrayIcon::checkAudioActivity()
 
 void TrayIcon::switchMusicIcon(const bool flag)
 {
-    qDebug() << "switchMusicIcon called with flag:" << flag;
+    qDebug() << "[Tray] SwitchMusicIcon called with flag:" << flag;
     if (flag)
     {
         initializeAudioDetector();
-        qDebug() << "music icon enabled";
+        qDebug() << "[Tray] Music icon enabled";
     }
     else
     {
@@ -228,7 +228,16 @@ void TrayIcon::switchMusicIcon(const bool flag)
             delete m_audioDetector;
             m_audioDetector = nullptr;
         }
-        qDebug() << "music icon disabled";
+        qDebug() << "[Tray] Music icon disabled";
+    }
+}
+
+void TrayIcon::cleanup()
+{
+    if (m_instance)
+    {
+        delete m_instance;
+        m_instance = nullptr;
     }
 }
 

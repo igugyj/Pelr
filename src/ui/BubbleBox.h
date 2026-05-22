@@ -5,7 +5,6 @@
 #include <QTimer>
 #include <QString>
 #include <QMediaPlayer>
-#include <QAudioOutput>
 #include <QThread>
 
 class BubbleBox : public QLabel

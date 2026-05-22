@@ -23,11 +23,6 @@ void initTranslator(QApplication &a, const QString &path);
 
 int main(int argc, char *argv[])
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-#endif
-
     // ---- 基础初始化（应在 QApplication 之前完成，但注意不要依赖 QSettings 等） ----
     initFileSys();
     initLogFile();
@@ -51,13 +46,20 @@ int main(int argc, char *argv[])
     initTranslator(app, ":/translations");
 
     app.setApplicationName(DataManager::instance().Project_Name + " " + DataManager::instance().const_config_data.version);
-    app.setFont(DataManager::instance()._font); // 确保 DataManager 已加载字体
+    // 确保 DataManager 已加载字体
+    QFont main_font = DataManager::instance()._font;
+    main_font.setWeight(QFont::Medium);
+    app.setFont(main_font);
     app.setWindowIcon(QIcon(":/public/image/Pelr.png"));
 
     // 样式设置
     QStringList styles = QStyleFactory::keys();
-    if (styles.contains("Fusion", Qt::CaseInsensitive))
-        app.setStyle("Fusion");
+    for (auto &style : styles)
+    {
+        qDebug() << "[APP] Available style:" << style;
+    }
+    if (styles.contains("windows11", Qt::CaseInsensitive))
+        app.setStyle("windows11");
 
     // 许可证检查
     if (!CheckApplication::hasValidLicense())
@@ -65,18 +67,20 @@ int main(int argc, char *argv[])
         CheckApplication licenseDialog;
         if (licenseDialog.exec() != QDialog::Accepted || !licenseDialog.isLicenseAccepted())
         {
-            qDebug() << "License not accepted, exit";
+            qDebug() << "[APP] License not accepted, exit";
             return 1; // 非零退出码表示异常
         }
-        qDebug() << "License accepted";
+        qDebug() << "[APP] License accepted";
     }
+
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, TrayIcon::cleanup);
 
     TrayIcon::instance()->show();
 
     // ONNX 初始化（如可能耗时，可考虑异步，此处保持简单）
     if (!VoicevoxTTS::initializeOnnxRuntime())
     {
-        qWarning() << "Failed to initialize OnnxRuntime";
+        qWarning() << "[APP] Failed to initialize OnnxRuntime";
     }
 
     // 根据静默启动选项决定是否显示主窗口
@@ -99,6 +103,6 @@ void initTranslator(QApplication &a, const QString &path)
     TranslationManager::instance()->addTranslationPath(path);
     QString sysLang = TranslationManager::instance()->detectSystemLanguage();
     TranslationManager::instance()->setLanguage("en_US");
-    qDebug() << "System language:" << sysLang;
-    qDebug() << "Translator initialized";
+    qDebug() << "[APP] System language:" << sysLang;
+    qDebug() << "[APP] Translator initialized";
 }

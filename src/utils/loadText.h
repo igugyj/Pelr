@@ -25,7 +25,7 @@ static bool checkFileExists(const QString &filePath)
     QFileInfo fileInfo(filePath);
     if (!fileInfo.exists())
     {
-        qWarning() << "File not found:" << filePath;
+        qWarning() << "[TextLoader] File not found:" << filePath;
         return false;
     }
     return true;
@@ -37,7 +37,7 @@ static QString getRandomTextFromFile(const QString &filePath, const QString &key
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qWarning() << "Cannot open file:" << filePath << "-" << file.errorString();
+        qWarning() << "[TextLoader] Cannot open file:" << filePath << "-" << file.errorString();
         return QString();
     }
 
@@ -47,21 +47,21 @@ static QString getRandomTextFromFile(const QString &filePath, const QString &key
     QJsonDocument doc = QJsonDocument::fromJson(data);
     if (doc.isNull())
     {
-        qWarning() << "JSON parse failed for file:" << filePath;
+        qWarning() << "[TextLoader] JSON parse failed for file:" << filePath;
         return QString();
     }
 
     QJsonObject root = doc.object();
     if (!root.contains(keyName) || !root[keyName].isArray())
     {
-        qWarning() << "JSON format error or missing key '" << keyName << "' in file:" << filePath;
+        qWarning() << "[TextLoader] JSON format error or missing key '" << keyName << "' in file:" << filePath;
         return QString();
     }
 
     QJsonArray targetArray = root[keyName].toArray();
     if (targetArray.isEmpty())
     {
-        qWarning() << "Array for key '" << keyName << "' is empty in file:" << filePath;
+        qWarning() << "[TextLoader] Array for key '" << keyName << "' is empty in file:" << filePath;
         return QString();
     }
 
@@ -84,7 +84,7 @@ static QString loadText(const QString &keyName)
         {
             return text;
         }
-        qWarning() << "User file is invalid, fallback to default file.";
+        qWarning() << "[TextLoader] User file is invalid, fallback to default file.";
     }
 
     // 2. 尝试默认文件
@@ -95,11 +95,11 @@ static QString loadText(const QString &keyName)
         {
             return text;
         }
-        qWarning() << "Default file is invalid or missing key.";
+        qWarning() << "[TextLoader] Default file is invalid or missing key.";
     }
 
     // 3. 都失败则返回硬编码默认语句
-    qWarning() << "No valid text source for key '" << keyName << "', using fallback.";
+    qWarning() << "[TextLoader] No valid text source for key '" << keyName << "', using fallback.";
     return fallbackText;
 }
 
@@ -116,7 +116,7 @@ static void initUserTextFile()
     {
         if (!dir.mkpath("user"))
         {
-            qCritical() << "Failed to create user directory.";
+            qCritical() << "[TextLoader] Failed to create user directory.";
             return;
         }
     }
@@ -131,23 +131,23 @@ static void initUserTextFile()
         {
             if (!QFile::copy(_bdefault, _auser))
             {
-                qCritical() << "Failed to copy default file to user directory.";
+                qCritical() << "[TextLoader] Failed to copy default file to user directory.";
                 return;
             }
-            qDebug() << "User text file created at" << _auser;
+            qDebug() << "[TextLoader] User text file created at" << _auser;
         }
         else
         {
-            qCritical() << "Default text file not found, cannot initialize user file.";
+            qCritical() << "[TextLoader] Default text file not found, cannot initialize user file.";
             return;
         }
     }
     else
     {
-        qDebug() << "User text file already exists, opening directly.";
+        qDebug() << "[TextLoader] User text file already exists, opening directly.";
     }
 
     // 调用外部打开文件的模块
     launchByPath(_auser);
-    qDebug() << "Please open file for editing:" << _auser;
+    qDebug() << "[TextLoader] Please open file for editing:" << _auser;
 }

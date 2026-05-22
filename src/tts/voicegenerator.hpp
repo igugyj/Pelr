@@ -12,6 +12,7 @@
 #include <QJsonObject>
 #include <QCryptographicHash>
 #include <QMediaPlayer>
+#include <QAudioOutput>
 #include <QDebug>
 #include "data.hpp"
 #include "launcher.hpp"
@@ -102,11 +103,11 @@ public:
         // 如果新文件与当前播放文件相同，且正在播放，则停止并从头播放（不删除）
         if (m_currentPlayFile == filePath)
         {
-            if (m_player->state() == QMediaPlayer::PlayingState)
+            if (m_player->playbackState() == QMediaPlayer::PlayingState)
             {
                 m_player->stop();
             }
-            m_player->setMedia(QUrl::fromLocalFile(filePath));
+            m_player->setSource(QUrl::fromLocalFile(filePath));
             m_player->play();
             return;
         }
@@ -121,13 +122,13 @@ public:
         m_currentPlayFile = filePath;
         if (!QFile::exists(filePath))
         {
-            qWarning() << "[VoiceGenerator] File does not exist:" << filePath;
+            qWarning() << "[VoiceGen] File does not exist:" << filePath;
             emit errorOccurred(tr("音频文件不存在: %1").arg(filePath));
             return;
         }
 
-        m_player->setVolume(DataManager::instance().getBasicData().volume);
-        m_player->setMedia(QUrl::fromLocalFile(filePath));
+        m_audioOutput->setVolume(DataManager::instance().getBasicData().volume / 100.0);
+        m_player->setSource(QUrl::fromLocalFile(filePath));
         m_player->play();
     }
 
@@ -148,13 +149,13 @@ private slots:
     // 翻译成功后的处理
     void onTranslationFinished(const QString &translatedText)
     {
-        qDebug() << "Translation successful:" << translatedText;
+        qDebug() << "[VoiceGen] Translation successful:" << translatedText;
         doGenerateVoice(m_pendingConfig, translatedText);
     }
 
     void onTranslationError(const QString &errorMessage)
     {
-        qWarning() << "Translation failed:" << errorMessage;
+        qWarning() << "[VoiceGen] Translation failed:" << errorMessage;
         emit errorOccurred("Translation failed: " + errorMessage);
         doGenerateVoice(m_pendingConfig, m_pendingText); // 回退原文合成
     }
@@ -165,9 +166,11 @@ private:
         m_manager = new QNetworkAccessManager(this);
 
         m_player = new QMediaPlayer(this);
-        m_player->setVolume(50);
+        m_audioOutput = new QAudioOutput();
+        m_player->setAudioOutput(m_audioOutput);
+        m_audioOutput->setVolume(0.5);
 
-        connect(m_player, &QMediaPlayer::stateChanged, this, [this](QMediaPlayer::State state)
+        connect(m_player, &QMediaPlayer::playbackStateChanged, this, [this](QMediaPlayer::PlaybackState state)
                 {
             if (state == QMediaPlayer::StoppedState) {
                 // 播放完毕后自动删除临时文件
@@ -206,7 +209,7 @@ private:
         {
             int styleId = config.voicevox_style_id;
             double speed = config.voicevox_speed;
-            QtConcurrent::run([this, config, text, styleId, speed]()
+            (void)QtConcurrent::run([this, config, text, styleId, speed]()
                               {
             QString filePath = VoicevoxTTS::instance().synthesizeToFile(config, text, styleId, speed);
             if (filePath.isEmpty()) {
@@ -231,7 +234,7 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "voice generate response:" << json;
+            qDebug() << "[VoiceGen] Voice generate response:" << json;
             QString filePath = json["file_path"].toString();
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
@@ -261,7 +264,7 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "OpenAI TTS response:" << json;
+            qDebug() << "[VoiceGen] OpenAI TTS response:" << json;
             QString filePath = json["file_path"].toString();
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
@@ -286,14 +289,12 @@ private:
 
     void onConnectionRefused()
     {
-        if (!DataManager::instance().getTTSConfig().isRunTTSServerOnStartUp)
-            return;
-        qDebug() << "TTS server refused connection, trying to launch it...";
-        launchByPath(DataManager::instance().const_config_data.tts_server);
+        qDebug() << "[VoiceGen] TTS server connection refused";
     }
 
     QNetworkAccessManager *m_manager;
     QMediaPlayer *m_player;
+    QAudioOutput *m_audioOutput;
     TTSConfig m_pendingConfig; // 暂存等待翻译完成的配置
     QString m_pendingText;     // 暂存待翻译的原始文本
     QString m_currentPlayFile; // 当前正在播放（或刚播完）的文件路径

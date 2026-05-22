@@ -67,7 +67,7 @@ void KeyboardOverlay::clearAllTiles() {
 }
 
 void KeyboardOverlay::recomputeTargets() {
-    QFont font = DataManager::instance()._font;
+    QFont font = qApp->font();
     font.setBold(true);
     font.setPointSize(20);
     QFontMetrics fm(font);
@@ -161,7 +161,7 @@ void KeyboardOverlay::drawTile(QPainter &painter, const TileEntry &entry, qreal 
     painter.save();
     painter.setOpacity(entry.opacity);
 
-    QFont font = DataManager::instance()._font;
+    QFont font = qApp->font();
     font.setBold(true);
     font.setPointSize(20);
     painter.setFont(font);
