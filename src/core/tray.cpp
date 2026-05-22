@@ -106,11 +106,15 @@ TrayIcon::TrayIcon(QObject *parent)
     menu->addMenu(MenuOpen);
     menu->addSeparator();
     menu->addAction(action_quit);
-
+    // 字体
+    QFont font = qApp->font();
+    font.setWeight(QFont::Medium);
+    menu->setFont(font);
     // 设置托盘图标的菜单
     this->setContextMenu(menu);
 
     qDebug() << "TrayIcon singleton initialized";
+
     // 显示托盘图标
     this->show();
     switchMusicIcon(DataManager::instance().getBasicData().isMusicIcon);
@@ -150,7 +154,7 @@ QPixmap TrayIcon::createMusicIcon() const
     }
 
     // 设置字体和颜色
-    QFont font(DataManager::instance()._font);
+    QFont font(qApp->font());
     font.setPointSize(64);
     font.setBold(true);
     painter.setFont(font);

@@ -29,7 +29,7 @@ ChatBoxOnModel::ChatBoxOnModel(QLineEdit *parent)
     // 样式
     setLineStyle();
     // 字体
-    QFont font = DataManager::instance()._font;
+    QFont font = qApp->font();
     font.setPointSize((int)18 * (DataManager::instance().getBasicData().model_size / 150));
     font.setWeight(QFont::Normal);
     // font.setBold(true);

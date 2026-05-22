@@ -49,7 +49,7 @@ BubbleBox::BubbleBox(QLabel *parent) : QLabel(parent)
     setAlignment(Qt::AlignCenter);
     // 设置“显示时不激活”属性
     setAttribute(Qt::WA_ShowWithoutActivating, true);
-    QFont font = DataManager::instance()._font;
+    QFont font = qApp->font();
     font.setPointSize((int)12 * (DataManager::instance().getBasicData().model_size / 150));
     font.setWeight(QFont::Normal);
     // font.setItalic(true);

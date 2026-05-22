@@ -15,8 +15,8 @@ mainWidget::mainWidget(QWidget *parent) : QWidget(parent), ui(new Ui::mainWidget
 
 void mainWidget::initUI()
 {
-    this->setWindowIcon(QIcon(":/public/image/Pelr.png"));
-    this->setWindowTitle("Pelr");
+    this->setWindowIcon(qApp->windowIcon());
+    this->setWindowTitle(qApp->applicationName());
     // QFile styleFile(":/thirdParty/QSS/Ubuntu.qss");
     // if (styleFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
     //     QString styleSheet = QLatin1String(styleFile.readAll());

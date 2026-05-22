@@ -330,15 +330,21 @@ void SettingWidget::connectSignals()
     connect(ui->horizontalSlider, &QSlider::valueChanged, [&]()
             { ui->label_7->setText(QString::number(ui->horizontalSlider->value())); });
     connect(ui->label_7, &DoubleClickableLabel::doubleClicked, [&]()
-            { ui->horizontalSlider->setValue(150); });
+            {
+                ConfigData temp ;
+                ui->horizontalSlider->setValue(temp.model_size); });
     connect(ui->horizontalSlider_2, &QSlider::valueChanged, [&]()
             { ui->label_8->setText(QString::number(ui->horizontalSlider_2->value())); });
     connect(ui->label_8, &DoubleClickableLabel::doubleClicked, [&]()
-            { ui->horizontalSlider_2->setValue(30); });
+            {                 ConfigData temp ;
+
+                ui->horizontalSlider_2->setValue(temp.FPS); });
     connect(ui->horizontalSlider_3, &QSlider::valueChanged, [&]()
             { ui->label_9->setText(QString::number(ui->horizontalSlider_3->value())); });
     connect(ui->label_9, &DoubleClickableLabel::doubleClicked, [&]()
-            { ui->horizontalSlider_3->setValue(50); });
+            {                 ConfigData temp ;
+
+                ui->horizontalSlider_3->setValue(temp.volume); });
     connect(ui->comboBox_3, &QComboBox::currentTextChanged, this, &SettingWidget::onLogLevelChanged);
     // color
     connect(ui->pushButton_17, &QPushButton::clicked, [&]()

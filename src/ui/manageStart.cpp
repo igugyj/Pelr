@@ -54,12 +54,17 @@ void ManageStartWidget::initWidget()
     ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);  // 设置选择行为为选择整行
     ui->treeView->setAlternatingRowColors(true);                        // 设置交替行背景色
     ui->treeView->setColumnWidth(4, 300);
+
     for (int i = 0; i < 5; ++i)
     {
         ui->treeView->header()->setSectionResizeMode(i, QHeaderView::Interactive); // 可交互
     }
     loadMenuData();
 
+    QFont font = qApp->font();
+    font.setWeight(QFont::Medium);
+    ui->treeView->setFont(font);
+    qDebug() << "treeView font:" << QFontInfo(ui->treeView->font()).family();
     qDebug() << "manageStartWidget init";
 }
 

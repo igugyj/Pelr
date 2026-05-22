@@ -46,13 +46,20 @@ int main(int argc, char *argv[])
     initTranslator(app, ":/translations");
 
     app.setApplicationName(DataManager::instance().Project_Name + " " + DataManager::instance().const_config_data.version);
-    app.setFont(DataManager::instance()._font); // 确保 DataManager 已加载字体
+    // 确保 DataManager 已加载字体
+    QFont main_font = DataManager::instance()._font;
+    main_font.setWeight(QFont::Medium);
+    app.setFont(main_font);
     app.setWindowIcon(QIcon(":/public/image/Pelr.png"));
 
     // 样式设置
     QStringList styles = QStyleFactory::keys();
-    if (styles.contains("Fusion", Qt::CaseInsensitive))
-        app.setStyle("Fusion");
+    for (auto &style : styles)
+    {
+        qDebug() << "Available style:" << style;
+    }
+    if (styles.contains("windows11", Qt::CaseInsensitive))
+        app.setStyle("windows11");
 
     // 许可证检查
     if (!CheckApplication::hasValidLicense())
