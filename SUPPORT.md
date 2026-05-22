@@ -1,43 +1,43 @@
-# 获取帮助
+# Getting Help
 
-感谢您使用 Pelr！我们很乐意帮助您解决问题。为了最高效地获得支持，请遵循以下指南。
+[简体中文](docs/SUPPORT.md)
 
-## 首先，请自助排查
+Thank you for using Pelr! We are happy to help you resolve any issues. For the most efficient support, please follow the guidelines below.
 
-大多数常见问题都能在现有文档中找到答案。在提问前，请先尝试：
+## Self-Service First
 
-1. **仔细阅读 [README.md](README.md)**：其中包含了最重要的安装、配置和基本使用说明。
-2. **查阅 [Wiki 文档](https://github.com/igugyj/Pelr/docs)**：我们提供了更详细的用户手册和常见问题解答（FAQ）。
-3. **搜索现有的 Issues 和 Discussions**：您遇到的问题可能已经被其他人提出并得到了解决。请在 [Issues](https://github.com/igugyj/Pelr/issues) 搜索关键词。
+Most common questions can be answered in existing documentation. Before asking, please try:
 
-## 报告错误（Bug）
+1. **Read [README.md](README.md)** - contains installation, configuration, and basic usage instructions
+2. **Check [docs](docs/)** - provides detailed user manuals and FAQs
+3. **Search existing Issues and Discussions** - your issue may have been raised and resolved already. Search [Issues](https://github.com/igugyj/Pelr/issues)
 
-如果您确信发现了一个未报告的错误，请 [创建一个新的 Issue](https://github.com/igugyj/Pelr/issues/new)。
+## Reporting a Bug
 
-**为了帮助我们快速理解和解决问题，请在报告中包含以下信息：**
+If you believe you have found an unreported bug, please [create a new Issue](https://github.com/igugyj/Pelr/issues/new).
 
-* **清晰的描述**：发生了什么问题？您预期的行为是什么？
-* **复现步骤**：请详细说明如何重现这个问题。
-  * 例如：1. 打开应用 2. 点击 X 按钮 3. 看到 Y 错误
-* **版本信息**：您使用的 Pelr 版本、Windows 操作系统版本。
-* **错误日志**：如果应用生成了日志文件（服务端/客户端 日志文件位于: log），请附上相关的日志内容。
-* **截图/屏幕录制**：如果有助于说明问题，请提供截图或屏幕录制。
+**To help us quickly understand and resolve the problem, please include:**
 
-**一个信息丰富的 Issue 能极大地加快解决问题的速度！**
+- **Clear description**: What happened? What did you expect?
+- **Reproduction steps**: Detail how to reproduce the issue
+  - e.g., 1. Open app 2. Click X button 3. See Y error
+- **Version info**: Pelr version, Windows version
+- **Log files**: If the app generated log files (log directory), please attach relevant content
+- **Screenshots/recordings**: If helpful, provide visual aids
 
-## 贡献
+**A well-documented Issue greatly accelerates resolution!**
 
-如果您想直接贡献代码来修复问题或添加功能，请阅读我们的 [贡献指南](CONTRIBUTING.md)。
+## Contributing
 
-## 重要提示
+If you would like to contribute code to fix an issue or add a feature, please read our [contributing guide](CONTRIBUTING.md).
 
->[!CAUTION]
->
->**请不要在任何平台上传 `user`文件夹中的任何内容**
+## Important Notes
 
-* **请不要在 Issue 中泄露您的任何私密信息**，例如讯飞 API 密钥、密码等。
-* **请不要**上传 **`user`** 文件夹中的任何内容！
-* 请保持友好和尊重。维护者和社区成员都是在自愿提供帮助。
+> [!CAUTION]
+> Do **not** upload the contents of the `user` folder to any platform.
 
----
-*我们通常会尽快处理问题，但无法提供即时响应。感谢您的理解与耐心。*
+- Do **not** disclose any private information in Issues, such as API keys or passwords
+- Do **not** upload contents of the `user` folder
+- Please remain respectful and courteous. Maintainers and community members are volunteering their time
+
+_We typically process issues as quickly as possible, but cannot guarantee immediate response. Thank you for your understanding and patience._

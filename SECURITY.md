@@ -1,48 +1,49 @@
-# 安全政策
+# Security Policy
 
->[!CAUTION]
->
->**请不要在任何平台上传 `user`文件夹中的任何内容**
+[简体中文](docs/SECURITY.md)
 
-Pelr 项目的维护者和社区非常重视所有安全问题。我们感谢安全研究人员和用户报告潜在的安全漏洞。
+> [!CAUTION]
+> Do **not** upload the contents of the `user` folder to any platform.
 
-## 支持的版本
+The Pelr project maintainers and community take all security issues seriously. We appreciate security researchers and users who report potential vulnerabilities.
 
-我们通常仅对最新发布的主要版本提供安全更新。请确保您使用的是 [最新版本](https://github.com/igugyj/Pelr/releases)。
+## Supported Versions
 
-## 报告漏洞
+We typically provide security updates only for the latest major release. Please ensure you are using the [latest version](https://github.com/igugyj/Pelr/releases).
 
-**请勿公开报告安全漏洞。** 为了保护我们的用户，请在问题修复之前**不要**在公共仓库、Issue 或 Discussion 中披露安全漏洞。
+## Reporting a Vulnerability
 
-如果您发现了一个安全漏洞，请通过电子邮件[联系我们](https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=pfolg@foxmail.com)。
+**Do not publicly report security vulnerabilities.** To protect our users, please **do not** disclose security vulnerabilities in public repositories, Issues, or Discussions.
 
-请尽量提供以下详细信息，以帮助我们更快地理解和验证问题：
+If you discover a security vulnerability, please contact us via email: <pfolg@foxmail.com>
 
-* 漏洞的类型和简要描述。
-* 受影响的组件和版本。
-* 详细的复现步骤（概念验证代码、截图或屏幕录制）。
-* 漏洞可能造成的潜在影响。
+Please include the following details to help us understand and verify the issue:
 
-## 我们的承诺
+- Type and brief description of the vulnerability
+- Affected components and versions
+- Detailed reproduction steps (proof-of-concept code, screenshots, or screen recordings)
+- Potential impact of the vulnerability
 
-在您通过上述私密渠道报告漏洞后，我们将：
+## Our Commitment
 
-1. **在 15 天内**确认收到您的报告。
-2. 与您保持沟通，共同评估和验证漏洞。
-3. 在修复过程中向您同步进展。
-4. 在修复发布后，公开致谢您的贡献（如果您愿意）。
+After you report a vulnerability through the private channel above, we will:
 
-## 披露流程
+1. **Acknowledge receipt within 15 days**
+2. Communicate with you to assess and verify the vulnerability
+3. Keep you updated on the progress of the fix
+4. Publicly acknowledge your contribution after the fix is released (if you wish)
 
-我们遵循负责任的披露流程：
+## Disclosure Process
 
-1. 安全问题被私下报告。
-2. 维护者确认问题并开始开发修复补丁。
-3. 修复补丁经过测试后，会发布新的版本。
-4. 在新版本发布后，我们会公开披露该漏洞的详细信息（通常在发布说明中），并感谢报告者。
+We follow a responsible disclosure process:
 
-## 致谢
+1. Security issue is reported privately
+2. Maintainer confirms the issue and begins developing a fix
+3. Fix is tested and a new release is published
+4. After the release, details of the vulnerability are publicly disclosed (typically in release notes), with credit to the reporter
 
-我们感谢所有帮助使 Pelr 更加安全的研究人员和用户。感谢您花费时间和精力遵循负责任的披露流程。
+## Acknowledgments
 
-[安全贡献者列表将在这里列出]
+We thank all researchers and users who help make Pelr more secure. We appreciate your time and effort in following responsible disclosure practices.
+
+[Security contributors will be listed here]

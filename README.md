@@ -1,299 +1,235 @@
-# Pelr - 工具向桌宠
+# Pelr - Desktop Pet with Practical Tools
+
+[简体中文](docs/README_zh.md)
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/igugyj/pelr?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/igugyj/pelr?style=social)
 ![GitHub issues](https://img.shields.io/github/issues/igugyj/pelr?style=social)
-<!-- [![Sync to Gitee](https://github.com/igugyj/pelr/actions/workflows/sync-to-gitee.yml/badge.svg?branch=master)](https://github.com/igugyj/pelr/actions/workflows/sync-to-gitee.yml) -->
 
-![](https://ziadoua.github.io/m3-Markdown-Badges/badges/C++/c++1.svg)
-![](https://ziadoua.github.io/m3-Markdown-Badges/badges/Qt/qt1.svg)
-![](https://ziadoua.github.io/m3-Markdown-Badges/badges/LicenceMIT/licencemit1.svg)
-![](https://ziadoua.github.io/m3-Markdown-Badges/badges/Windows/windows1.svg)
+![](https://img.shields.io/badge/C++-00599C?logo=c%2B%2B&logoColor=white)
+![](https://img.shields.io/badge/Qt-41CD52?logo=qt&logoColor=white)
+![](https://img.shields.io/badge/License-MIT-yellow)
+![](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)
 
-**Pelr** 是一款基于 Live2D 技术的智能桌面虚拟伙伴，集成了 AI 对话、语音合成、快捷启动、TODO功能和个性化桌面伴侣等功能，为您提供沉浸式的桌面体验。
+**Pelr** is a Live2D-based smart desktop companion that integrates AI chat, text-to-speech, quick launch, TODO management, and a customizable virtual pet experience.
 
 > [!NOTE]
+> This project is in development; functionality and stability may be limited.
 >
-> 本项目仍处于开发阶段，功能和稳定性可能有所不足，请谨慎使用。
->
-> This project is still in the development phase, and its functionality and stability may not be fully optimized. Please
-> use with caution.
->
-> 本项目为非盈利性开源项目，作者出于个人兴趣开发，任何人均可免费使用。
->
-> This is a non-profit, open-source project, developed out of personal interest by the author. It is free for anyone to use.
->
-> GitHub为唯一发布源，SourceForge、Gitee已废弃。
->
-> GitHub is the only release source, SourceForge and Gitee have been discontinued.
+> Non-profit open source project, free for anyone to use.
+> GitHub is the only release source. SourceForge and Gitee have been discontinued.
 
-## 主要特性
+> [!WARNING]
+> This project does NOT include Live2D Cubism Core. The Core DLL is prohibited from public distribution under Live2D's proprietary license.
+> You **must** download the SDK from the [Live2D website](https://www.live2d.com/en/sdk/download/native/) and place the Core directory in the project path yourself.
+> Pelr qualifies as an "expandable application." If you distribute compiled binaries, you are responsible for obtaining any required Live2D publishing license.
 
-* **Live2D 虚拟角色** - 支持 Live2D 模型 (仅支持 model3.json 格式)，提供生动的桌面伴侣体验
-* **智能对话** - 支持 OpenAI 兼容的 AI 服务，支持自然语言交互
-* **表情动作** - 支持模型（如果模型支持）自带的表情动作，提供丰富的表情切换
-* **语音合成** - 内置OpenAI-Edge-TTS、讯飞 TTS 和 voicevox 服务，提供高质量的语音反馈
-* **TODO功能** - 简单的TODO系统，可以添加事件，并提醒待办
-* **启动管理** -
-  可视化管理启动应用程序（内置功能，别于系统），启动Windows的任何文件、链接，继承自[QuickTray](https://github.com/Pfolg/QuickTray)
-* **键盘监听** - 显示按键状态，继承自[KeyMonitor](https://github.com/Pfolg/KeyMonitor)
-* **音乐托盘** - 托盘图标随系统音量转动，继承自[Rotating Rhythm](https://gitee.com/Pfolg/Rotating-Rhythm)
-* **天气服务** - OpenWeather 集成，实时获取天气信息
-* **高度可定制** - 丰富的设置选项，满足个性化需求
+## Features
 
-更多功能待开发...
+- **Live2D Character** - Supports model3.json format for an expressive desktop companion
+- **AI Chat** - OpenAI-compatible API for natural language interaction
+- **Expressions & Motions** - Play built-in expressions and motions if supported by the model
+- **Text-to-Speech** - Built-in support for Edge TTS, iFlytek TTS, and VOICEVOX
+- **TODO Manager** - Add events and receive reminders
+- **Launch Manager** - Visually manage startup items; launch any file or link (forked from [QuickTray](https://github.com/Pfolg/QuickTray))
+- **Keyboard Monitor** - Real-time display of key press states (forked from [KeyMonitor](https://github.com/Pfolg/KeyMonitor))
+- **Music Tray** - Tray icon rotates with system audio volume (forked from [Rotating Rhythm](https://gitee.com/Pfolg/Rotating-Rhythm))
+- **Weather Service** - Real-time weather via OpenWeather integration
+- **Highly Customizable** - Rich settings to suit personal preferences
 
-### 尚不支持的功能
+## Roadmap
 
-> 未来也不一定会支持
+- [ ] Lip sync
+- [ ] Hotkey support
+- [ ] Hot-reload user configuration
+- [ ] PMX model support (planning to integrate [saba](https://github.com/benikabocha/saba))
+- [ ] Multi-language UI (low priority)
 
-* 唇形同步
-* 运行系统命令
-* 快捷键
-* 热加载用户配置
-
-### TODO
-
-> 时间尚不充裕，择机编写
-
-* pmx支持(计划引入：benikabocha/saba)
-* 多语言支持(低优先级)
-
-### 预览
+## Preview
 
 <details>
-<summary>点击预览</summary>
+<summary>Click to expand</summary>
 <div style="display: flex; overflow-x: auto; gap: 10px; padding: 10px; background: #f5f5f5; border-radius: 8px;">
   <img src="repo_assets/p1.png" alt="preview1" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
   <img src="repo_assets/p2.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
 </div>
 </details>
 
-## 系统要求
+## System Requirements
 
-> [!NOTE]
->
-> 仅供参考
+- **OS**: Windows 10/11 (Windows only)
+- **CPU**: Dual-core or better
+- **RAM**: 4GB or more
+- **Storage**: At least 500MB free
+- **GPU**: OpenGL 3.0+ support
+- **Python**: 3.11 (optional, only needed for TTS server)
 
-* **操作系统**: Windows 10/11 (仅支持 Windows 平台)
-* **处理器**: 双核处理器或更高
-* **内存**: 4GB RAM 或更多
-* **存储空间**: 至少 500MB 可用空间
-* **显卡**: 支持 OpenGL 3.0 及以上
-* **Python**: 3.11 (可选的，仅用于 TTS 服务端)
+## Quick Start
 
-## 快速开始
+### Download & Install
 
-### 下载安装
-
-如何使用见[docs](docs\index.md)
+See [docs/index.md](docs/index.md) for usage instructions.
 
 ### TTS Server
 
-<https://github.com/igugyj/Pelr_tts_tr>
+Edge TTS and iFlytek TTS rely on an external Python server: [Pelr_tts_tr](https://github.com/igugyj/Pelr_tts_tr)
 
-根据开源许可规范，不提供该程序的打包版本，请参考该仓库的使用方法。
+Per open source license requirements, no pre-built package is provided. Please refer to that repository for setup.
 
-### 更新
+### Update
 
-【TODO】
+```sh
+git fetch && git pull
+```
 
-### 首次运行配置
+Update dependencies according to [CMakeLists.txt](CMakeLists.txt).
+
+### First-Time Setup
+
+1. **Set Live2D model path** (required)
+   - Configure in Settings -> Basic Settings
+   - Supports model3.json format
+   - Find models at: [Booth](https://booth.pm) | [Aplaybox](https://www.aplaybox.com/)
+
+2. **Configure TTS** (optional)
+   - Edge TTS is recommended (free, no configuration needed)
+   - Register at [iFlytek Open Platform](https://www.xfyun.cn/)
+   - Fill in API credentials in Settings -> TTS
+   - Start Python TTS server if needed
+
+3. **Set up AI service** (optional)
+   - Choose any OpenAI-compatible provider
 
 > [!CAUTION]
->
-> **请不要在任何平台上传 `user`文件夹中的任何内容**
+> Do **not** upload the contents of the `user` folder to any platform.
 
-1. **设置 Live2D 模型路径** (必需)
-   * 在设置 → 基本设置中配置模型路径
-   * 支持 model3.json 格式的 Live2D 模型
-   * 模型下载：[Booth](https://booth.pm) | [模之屋](https://www.aplaybox.com/)
+## Project Structure
 
-2. **配置 TTS 服务** (可选)
-   > 推荐使用免费简单的OpenAI-Edge-TTS，无需配置
-
-   * 申请[讯飞开放平台](https://www.xfyun.cn/)账号
-   * 在设置 → TTS配置中填写 API 凭证
-   * 根据需要自行启动 TTS 服务（Python <https://github.com/igugyj/Pelr_tts_tr>）
-
-3. **设置 AI 服务** (可选)
-   * 选择 OpenAI 兼容的 AI 服务
-
-## 项目结构
-
-[项目结构文档](docs/dev-structure.md)
+See [docs/dev-structure.md](docs/dev-structure.md) for details.
 
 <details>
-<summary>架构</summary>
+<summary>Architecture overview</summary>
 
 ```txt
 +---------------------------------------------------------------+
-|                        Pelr 桌面应用                           |
+|                        Pelr Desktop App                       |
 +---------------------------------------------------------------+
 |                                                                 |
-|  main.cpp (入口)                                               |
+|  main.cpp (entry point)                                       |
 |    |                                                            |
-|    +-- core          (系统托盘、启动管理、窗口控制)             |
-|    +-- ui            (Qt 界面：设置、聊天、TODO、编辑……)        |
-|    +-- ai            (OpenAI 兼容 API 对话)                     |
-|    +-- tts           (语音合成调度：voicevox/讯飞/Edge TTS)     |
-|    +-- translation   (翻译管理，使用 Qt Network)                |
-|    |       └── 腾讯翻译 (通过 Qt 调用腾讯云 API)               |
-|    |       └── LibreTranslate 等 (同上)                        |
-|    +-- keyboard      (键盘状态监听与提示)                       |
-|    +-- model         (Live2D 模型扩展、额外动作/文件)           |
-|    +-- utils         (日志、天气、网络、频谱分析……)             |
-|    |       └── kissfft 用于 AudioSpectrumDetector，            |
-|    |            实时分析系统音频 → 驱动托盘图标旋转             |
-|    +-- compatLApp    (Live2D 渲染封装层)                        |
+|    +-- core          (tray, window management, launcher)       |
+|    +-- ui            (Qt widgets: settings, chat, TODO, etc.)  |
+|    +-- ai            (OpenAI-compatible chat API)              |
+|    +-- tts           (TTS dispatch: voicevox/iflytek/Edge)    |
+|    +-- translation   (translation via Qt Network)              |
+|    |       └── Tencent Translation (Qt -> Tencent Cloud API)   |
+|    |       └── LibreTranslate etc. (same)                     |
+|    +-- keyboard      (keyboard state monitoring)               |
+|    +-- model         (Live2D model extensions, extra motions)  |
+|    +-- utils         (logging, weather, network, spectrum...)  |
+|    |       └── kissfft for AudioSpectrumDetector,             |
+|    |            real-time system audio analysis -> tray icon   |
+|    +-- compatLApp    (Live2D rendering wrapper)               |
 |                                                                 |
 +---------------------------------------------------------------+
-                              |
-                              | 依赖
-                              v
+                               |
+                               | depends on
+                               v
 +---------------------------------------------------------------+
-|                        第三方库                                |
+|                    Third-Party Libraries                       |
 +---------------------------------------------------------------+
 |                                                                 |
-|  Qt 6.10.1          (GUI、网络、多媒体、串口……)                  |
+|  Qt 6.10.1          (GUI, network, multimedia, serial...)       |
 |  Live2D Cubism Native Framework                               |
-|  Live2D Cubism Core (DLL)      (禁止分发，需自行获取)         |
-|  GLEW / GLFW       (OpenGL 环境)                               |
-|  kissfft           (轻量 FFT：音频频谱分析 → 音乐托盘)        |
-|  voicevox_core     (C API，本地 TTS 引擎)                     |
-|  ONNX Runtime      (随 voicevox_core 提供，推理)              |
-|  stb               (图像加载)                                  |
+|  Live2D Cubism Core (DLL)      (not distributable)            |
+|  GLEW / GLFW       (OpenGL environment)                        |
+|  kissfft           (lightweight FFT for audio spectrum)        |
+|  voicevox_core     (C API, local TTS engine)                  |
+|  ONNX Runtime      (bundled with voicevox_core)               |
+|  stb               (image loading)                             |
 |                                                                 |
 +---------------------------------------------------------------+
-                              |
-                              | 部分模块网络调用
-                              v
+                               |
+                               | network calls (some modules)
+                               v
 +---------------------------------------------------------------+
-|                    外部服务 / 辅助进程                         |
+|                   External Services / Helper Processes         |
 +---------------------------------------------------------------+
 |                                                                 |
-|   OpenAI 兼容 API    (AI 对话)                                |
-|   讯飞云 TTS API     (备选 TTS 后端)                          |
-|   OpenWeather API    (天气数据)                                |
-|   腾讯云翻译 API     (通过 Qt Network 直接访问)               |
-|   LibreTranslate 等   (同上)                                   |
+|   OpenAI-compatible API   (AI chat)                           |
+|   iFlytek Cloud TTS API  (optional TTS backend)               |
+|   OpenWeather API        (weather data)                       |
+|   Tencent Cloud Translation API (via Qt Network)              |
+|   LibreTranslate etc.    (same)                                |
 |                                                                 |
-|   Python TTS 服务 (独立进程，仅用于 Edge TTS 和部分翻译)      |
-|      ├── Edge TTS (OpenAI 兼容音频接口)                       |
-|      └── 讯飞 TTS 的 HTTP 封装 (部分场景)                     |
+|   Python TTS server (separate process, Edge TTS & some iFlytek)|
+|      ├── Edge TTS (OpenAI-compatible audio interface)          |
+|      └── iFlytek TTS HTTP wrapper (some scenarios)            |
 |                                                                 |
 +---------------------------------------------------------------+
 ```
 
 </details>
 
-项目文件结构：<https://pg25-lsae.eu.org/demos/SnapshotOfPelr/demo>
+## Tech Stack
 
-## 技术栈
+See [NOTICE](NOTICE) for third-party notices.
 
-[NOTICE](NOTICE)
+### C++ Core
 
-### C++ 核心组件
+- **Qt 6.10.1** - Cross-platform application framework
+- **OpenGL** - Graphics rendering (GLEW + GLFW)
+- **Live2D Cubism** - 2D animation engine (model3.json)
+- **STB** - Image processing
+- **VOICEVOX** - Free, medium-quality TTS engine
+- **kissfft** - Real-time spectrum analysis and audio detection
 
-* **Qt 6.10.1** - 跨平台应用框架
-* **OpenGL** - 图形渲染 (GLEW + GLFW)
-* **Live2D Cubism** - 2D 动画渲染引擎 (仅支持 model3.json 格式)
-* **STB 库** - 图像处理功能
-* **voicevox** - VOICEVOX 的核心 ，一款免费、中等质量的TTS
-* **kissfft** - 实时频谱分析与音频检测
+### Python Toolchain
 
-### Python 工具链
+Dependencies listed at [Pelr_tts_tr/requirements.txt](https://github.com/igugyj/Pelr_tts_tr/blob/main/requirements.txt)
 
-<https://github.com/igugyj/Pelr_tts_tr/blob/main/requirements.txt>
+## Usage Guide
 
-## 开发构建
+- **Main navigation**: Use the left sidebar to switch between modules
+- **Chat**: Send messages in the chat panel or double-click the character to open the dialog
+- **Launch Manager**: Manage custom launcher entries
 
-> [!TIP]
->
-> [简要开发指南](docs/dev-dev.md)
+See [docs/index.md](docs/index.md) for detailed instructions.
 
-## 使用指南
+## Development & Build
 
-> [!CAUTION]
->
-> **请不要在任何平台上传 `user`文件夹中的任何内容**
+Quick development guide at [docs/dev-dev.md](docs/dev-dev.md)
 
-> [!NOTE]
->
-> 详细功能说明请参阅 [docs](docs/index.md)
+## Contributing
 
-### 基本操作
+- [Report bugs & suggest features](https://github.com/igugyj/Pelr/issues)
+- [Submit a Pull Request](https://github.com/igugyj/Pelr/pulls)
+- [Project documentation](docs)
 
-* **主界面导航**: 使用左侧侧边栏切换功能模块
-* **聊天功能**: 在聊天界面输入消息或双击角色显示对话框
-* **启动项管理**: 管理自定义的启动程序
+## License
 
-## 参与贡献
+Different components use different licenses:
 
-我们欢迎各种形式的贡献！
+- Live2D Cubism SDK uses a [proprietary license](https://www.live2d.com/en/sdk/download/native/)
+- Qt framework uses [LGPL/GPL](https://www.qt.io/development/download)
+- Other third-party libraries: see [NOTICE](NOTICE)
+- Code written by the project author in `src` is licensed under MIT
+- `thirdParty/LAppLive2D` and `src/compatLApp` are derived from `CubismNativeSamples`, licensed under Live2D Open Software License
+- This project is governed by all of the above licenses
 
-* [报告 Bug & 提出新特性](https://github.com/igugyj/Pelr/issues)
-* [编写代码](https://github.com/igugyj/Pelr/pulls)
-* [提供反馈](https://github.com/igugyj/Pelr/issues)
-* [问题反馈](https://github.com/igugyj/Pelr/issues)
-* [项目文档](docs)
-* [帮助中心](https://support.github.com)
+## Acknowledgments
 
-## 许可证
-
-**注意**: 部分组件使用不同许可证：
-
-* Live2D Cubism SDK 使用[专有许可证](https://www.live2d.com/zh-CHS/sdk/download/native/)
-* Qt 框架使用 [LGPL/GPL 许可证](https://www.qt.io/development/download)
-* 其他第三方库详见 [NOTICE](NOTICE)
-* src 文件夹内由本项目开发者编写的部分采用 MIT 许可证
-* 项目中`thirdParty\LAppLive2D`, `src\compatLApp` 的源码由`CubismNativeSamples\Samples\OpenGL\Demo\proj.win.cmake\src`改写而来，是基于官方 Samples 的衍生品，遵循`Live2D Open Software License`。
-* 本项目受以上所有许可证约束。
-
-> [!CAUTION]
->
-> ### 重要法律与合规声明
->
-> **本项目不含Live2D Cubism Core**。根据Live2D专有软件许可协议，`Cubism Core` 禁止公开分发。使用者**必须**：
->
-> 1. 从 [Live2D官网](https://www.live2d.com/zh-CHS/sdk/download/native/) 自行下载SDK。
-> 2. 提取对应平台的 `Core` 目录，放置到项目指定位置。
-> 3. 确保自己的使用行为（尤其是商业及可扩展性应用）符合Live2D许可协议。
->
-> **Pelr** 的性质属于 **“可扩展性应用程序”** ，若由您自行编译后分发，**您**需自行承担获取Live2D出版许可的全部责任。
->
-> 本项目亦不会提供任何构建产物，用户若要使用，请自行构建。
->
-> 本项目提供的 Live2D 相关代码遵循其 **开放软件许可协议**。
->
-> src目录下的代码遵循 MIT 许可。
-
-## 致谢
-
-本项目基于以下出色的第三方库和服务构建，特此致谢：
-
-* [Live2D Cubism](https://www.live2d.com/) - 提供 Cubism Native Framework 与 Cubism Core，实现生动的 2D 动画表现
-* [Qt 框架](https://www.qt.io/) - 跨平台 C++ 开发框架
-* [GLEW](http://glew.sourceforge.net/) - OpenGL 扩展加载库
-* [GLFW](https://www.glfw.org/) - 用于创建窗口和处理 OpenGL 上下文的轻量库
-* [kissfft](https://github.com/mborgerding/kissfft) - 快速傅里叶变换库
-* [stb](https://github.com/nothings/stb) - 单头文件图像/音频处理库
-* [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - 免费中高质量的文本转语音引擎
-* [ONNX Runtime](https://onmicrosoft.com/) - 跨平台机器学习推理引擎（随 voicevox_core 集成）
-* [llama.cpp](https://github.com/ggml-org/llama.cpp) - 本地 AI 模型部署
-* [openai-edge-tts](https://github.com/travisvn/openai-edge-tts) - OpenAI 兼容的 Edge TTS 接口
-* 讯飞开放平台 - 高质量语音合成服务
-
-同时感谢以下社区与项目创始者的贡献：
-
-* [Hiroshiba Kazuyuki](https://github.com/Hiroshiba) - VOICEVOX 创始人
-* Live2D Inc. - Cubism 技术提供方
-* Qt 公司及 Qt 开源社区
-* 所有贡献者和使用者的支持与反馈
-
-## 技术支持
-
-* [问题反馈](https://github.com/igugyj/Pelr/issues)
-* [文档](docs)
-* [SUPPORT](SUPPORT.md)
-* [Security Policy](SECURITY.md)
+- [Live2D Cubism](https://www.live2d.com/) - Cubism Native Framework & Core for 2D animation
+- [Qt Framework](https://www.qt.io/) - Cross-platform C++ framework
+- [GLEW](http://glew.sourceforge.net/) - OpenGL extension loading
+- [GLFW](https://www.glfw.org/) - Window and OpenGL context management
+- [kissfft](https://github.com/mborgerding/kissfft) - Fast Fourier transform library
+- [stb](https://github.com/nothings/stb) - Single-header image processing library
+- [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - Free TTS engine
+- [ONNX Runtime](https://github.com/microsoft/onnxruntime) - Cross-platform ML inference engine
+- [llama.cpp](https://github.com/ggml-org/llama.cpp) - Local AI model deployment
+- [openai-edge-tts](https://github.com/travisvn/openai-edge-tts) - OpenAI-compatible Edge TTS interface
+- iFlytek Open Platform - High-quality TTS service
+- [Hiroshiba Kazuyuki](https://github.com/Hiroshiba) - VOICEVOX founder
+- Live2D Inc. - Cubism technology
+- All contributors and users for their support
