@@ -6,6 +6,7 @@
 #include <QString>
 #include <QMediaPlayer>
 #include <QThread>
+#include "llamaclient.h"
 
 class BubbleBox : public QLabel
 {
@@ -45,6 +46,9 @@ private:
 
     QString getPeriodText();
 
+public:
+    static constexpr int AI_RANDOM_ID = 3;
+
 public slots:
     void showTime();
 
@@ -53,6 +57,9 @@ public slots:
     void textSet(const QString &text);
 
     void RandomSentence();
+
+    void onRandomSentenceAI(const QString &text, int id);
+    void onRandomSentenceError(const QString &error, int id);
 
     void updateWindowLocation(int f_x, int f_y, int f_w, int f_h);
 

@@ -37,6 +37,10 @@ public:
     // 异步生成（使用历史，推荐）
     void generateTextAsync(const QString &prompt, const int &id, bool stream = false);
 
+    bool isConfigured() const;
+    void generateRandomAsync(const QString &prompt, const int &id);
+    void clearRandomHistory();
+
 signals:
     void textGenerated(const QString &text, int index);
     void errorOccurred(const QString &error, int index);
@@ -56,6 +60,7 @@ private:
     QString m_apiKey;
     QString m_model;
     QJsonArray m_messages;    // 完整消息历史（包含system）
+    QJsonArray m_randomMessages; // 随机语录独立历史
     int m_maxContextMessages; // 最大保留轮数，-1不限
 
     void applyContextCompression();

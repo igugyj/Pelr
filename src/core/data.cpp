@@ -122,6 +122,7 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
     obj["isRecordWindowLocation"] = d.isRecordWindowLocation;
     obj["isMusicIcon"] = d.isMusicIcon;
     obj["isShowThinkingBubble"] = d.isShowThinkingBubble;
+    obj["isLLMGreeting"] = d.isLLMGreeting;
     return obj;
 }
 
@@ -138,7 +139,7 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.color_bubble.background = bubble["background"].toString("#ff00ffff");
 
     QJsonObject tray = obj["color_tray"].toObject();
-    d.color_tray.forground = tray["forground"].toString("#002fff");
+    d.color_tray.forground = tray["forground"].toString("#ff00ff");
     d.color_tray.background = tray["background"].toString("#ff0000");
 
     QJsonObject interval = obj["RandomInterval"].toObject();
@@ -159,6 +160,7 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.isRecordWindowLocation = obj["isRecordWindowLocation"].toBool();
     d.isMusicIcon = obj["isMusicIcon"].toBool();
     d.isShowThinkingBubble = obj["isShowThinkingBubble"].toBool();
+    d.isLLMGreeting = obj["isLLMGreeting"].toBool();
     return d;
 }
 

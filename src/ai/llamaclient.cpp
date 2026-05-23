@@ -307,8 +307,135 @@ void LlamaClient::generateTextAsync(const QString &prompt, const int &id, bool s
     doGenerate(prompt, stream);
 }
 
+bool LlamaClient::isConfigured() const
+{
+    bool ok = !m_baseUrl.isEmpty() && !m_model.isEmpty();
+    qDebug() << "[AI] isConfigured:" << ok << "baseUrl:" << m_baseUrl << "model:" << m_model;
+    return ok;
+}
+
+void LlamaClient::clearRandomHistory()
+{
+    qDebug() << "[AI] clearRandomHistory: clearing" << m_randomMessages.size() << "messages";
+    m_randomMessages = QJsonArray();
+    for (const auto &v : m_messages)
+    {
+        if (v.toObject()["role"].toString() == "system")
+        {
+            m_randomMessages.append(v);
+            qDebug() << "[AI] clearRandomHistory: restored system prompt";
+            break;
+        }
+    }
+}
+
+void LlamaClient::generateRandomAsync(const QString &prompt, const int &id)
+{
+    qDebug() << "[AI] generateRandomAsync: id=" << id << "history_size=" << m_randomMessages.size();
+
+    QJsonArray msgs = m_randomMessages;
+
+    if (msgs.isEmpty())
+    {
+        qDebug() << "[AI] generateRandomAsync: no existing history, copying system prompt from chat history";
+        for (const auto &v : m_messages)
+        {
+            if (v.toObject()["role"].toString() == "system")
+            {
+                msgs.append(v);
+                break;
+            }
+        }
+    }
+
+    QJsonObject userMsg;
+    userMsg["role"] = "user";
+    userMsg["content"] = prompt;
+    msgs.append(userMsg);
+    m_randomMessages = msgs;
+
+    if (m_maxContextMessages >= 0)
+    {
+        QJsonArray compressed;
+        for (const auto &v : m_randomMessages)
+        {
+            if (v.toObject()["role"].toString() == "system")
+            {
+                compressed.append(v);
+                break;
+            }
+        }
+        QJsonArray history;
+        for (const auto &v : m_randomMessages)
+        {
+            if (v.toObject()["role"].toString() != "system")
+                history.append(v);
+        }
+        int keep = m_maxContextMessages * 2;
+        if (history.size() > keep)
+        {
+            QJsonArray recent;
+            for (int i = history.size() - keep; i < history.size(); ++i)
+                recent.append(history[i]);
+            history = recent;
+        }
+        for (const auto &v : history)
+            compressed.append(v);
+        msgs = compressed;
+    }
+
+    QNetworkRequest request(QUrl(m_baseUrl + "/chat/completions"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    if (!m_apiKey.isEmpty())
+        request.setRawHeader("Authorization", ("Bearer " + m_apiKey).toUtf8());
+
+    QJsonObject jsonBody;
+    jsonBody["model"] = m_model;
+    jsonBody["messages"] = msgs;
+    jsonBody["stream"] = false;
+
+    qDebug() << "[AI] generateRandomAsync: posting to" << m_baseUrl << "model:" << m_model;
+
+    QNetworkReply *reply = m_manager->post(request, QJsonDocument(jsonBody).toJson());
+    reply->setProperty("_randomOnce", true);
+    connect(reply, &QNetworkReply::finished, this, [this, reply, id]()
+            {
+        reply->deleteLater();
+        if (reply->error() != QNetworkReply::NoError)
+        {
+            qWarning() << "[AI] generateRandomAsync network error:" << reply->errorString();
+            emit errorOccurred(QString("Network error: %1").arg(reply->errorString()), id);
+            return;
+        }
+        QByteArray data = reply->readAll();
+        QJsonObject obj = QJsonDocument::fromJson(data).object();
+        QJsonArray choices = obj["choices"].toArray();
+        if (choices.isEmpty())
+        {
+            qWarning() << "[AI] generateRandomAsync: no choices in response";
+            emit errorOccurred("No choices in response", id);
+            return;
+        }
+        QJsonObject message = choices.first().toObject()["message"].toObject();
+        QString content = message["content"].toString();
+        if (content.isEmpty())
+        {
+            qWarning() << "[AI] generateRandomAsync: empty content";
+            emit errorOccurred("Empty content from AI", id);
+            return;
+        }
+        qDebug() << "[AI] generateRandomAsync success:" << content.left(40);
+        QJsonObject assistantMsg;
+        assistantMsg["role"] = "assistant";
+        assistantMsg["content"] = content;
+        m_randomMessages.append(assistantMsg);
+        emit textGenerated(content, id); });
+}
+
 void LlamaClient::onReplyFinished(QNetworkReply *reply)
 {
+    if (reply->property("_randomOnce").toBool())
+        return;
     if (reply->error() != QNetworkReply::NoError)
     {
         emit errorOccurred(QString("Network error: %1").arg(reply->errorString()), m_id);

@@ -339,7 +339,7 @@ void LAppModel::Update()
         if (idleCount == 0)
         {
             // Idle 动作缺失属于严重问题，每次 Finished 都报告一次（但不会每帧，因为 StartRandomMotion 后就不再 Finished）
-            LAppPal::PrintLogLn("[Update] WARNING: No Idle motions found. Model will stay static.");
+            // LAppPal::PrintLogLn("[Update] WARNING: No Idle motions found. Model will stay static.");
         }
         StartRandomMotion(MotionGroupIdle, PriorityIdle);
     }

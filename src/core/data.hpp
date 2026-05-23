@@ -60,6 +60,7 @@ struct ConfigData
     bool isRecordWindowLocation = false;
     bool isMusicIcon = false;
     bool isShowThinkingBubble = false;
+    bool isLLMGreeting = false;
 };
 
 struct constConfigData
