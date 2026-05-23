@@ -21,6 +21,7 @@
 #include "Motion/CubismPoseUpdater.hpp"
 #include "ExtraMotionManager.h"
 #include <QDebug>
+#include <QRandomGenerator>
 
 using namespace Live2D::Cubism::Framework;
 using namespace Live2D::Cubism::Framework::DefaultParameterId;
@@ -447,7 +448,7 @@ CubismMotionQueueEntryHandle LAppModel::StartRandomMotion(const csmChar *group, 
 {
     if (_modelSetting->GetMotionCount(group) == 0)
         return InvalidMotionQueueEntryHandleValue;
-    csmInt32 no = rand() % _modelSetting->GetMotionCount(group);
+    csmInt32 no = QRandomGenerator::global()->bounded(_modelSetting->GetMotionCount(group));
     return StartMotion(group, no, priority, onFinished, onBegan);
 }
 
@@ -493,7 +494,7 @@ void LAppModel::SetRandomExpression()
 {
     if (_expressions.GetSize() == 0)
         return;
-    csmInt32 no = rand() % _expressions.GetSize();
+    csmInt32 no = QRandomGenerator::global()->bounded(_expressions.GetSize());
     csmMap<csmString, ACubismMotion *>::const_iterator iter;
     csmInt32 i = 0;
     for (iter = _expressions.Begin(); iter != _expressions.End(); iter++)

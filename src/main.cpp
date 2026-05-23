@@ -3,8 +3,6 @@
 #include <QStyleFactory>
 #include <QIcon>
 #include <QDebug>
-#include <ctime>
-#include <cstdlib>
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -37,9 +35,6 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(messageHandler);
 #endif
 
-    // 随机数种子
-    std::srand(static_cast<unsigned>(std::time(nullptr)));
-
     QApplication app(argc, argv);
 
     // 尽早初始化翻译，让后续对话框可使用 tr()
@@ -58,8 +53,8 @@ int main(int argc, char *argv[])
     {
         qDebug() << "[APP] Available style:" << style;
     }
-    if (styles.contains("windows11", Qt::CaseInsensitive))
-        app.setStyle("windows11");
+    if (styles.contains("Fusion", Qt::CaseInsensitive))
+        app.setStyle("Fusion");
 
     // 许可证检查
     if (!CheckApplication::hasValidLicense())

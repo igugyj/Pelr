@@ -28,6 +28,7 @@
 // 键盘监听相关
 #include "globalinputlistener.h"
 #include "convertcodetostring.h"
+#include <QRandomGenerator>
 
 #define RECORD_FILE "user/record.dat"
 #define WINDOW_LOCATION_FILE "user/window_location.dat"
@@ -341,7 +342,7 @@ void GLCore::connectSignals()
         // 重置定时器
         int minTime = DataManager::instance().getBasicData().RandomInterval.first;
         int maxTime = DataManager::instance().getBasicData().RandomInterval.second;
-        int randomTime = rand() % (maxTime - minTime + 1) + minTime; //15-25min
+        int randomTime = QRandomGenerator::global()->bounded(maxTime - minTime + 1) + minTime; //15-25min
         qInfo() << "[GLCore] Next random sentence in " << QString::number(randomTime * 60 * 1000) << " s";
         randomSentenceTimer->start(randomTime * 60 * 1000); });
     if (DataManager::instance().getBasicData().isRandomSpeech)

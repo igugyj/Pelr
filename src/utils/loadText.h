@@ -65,7 +65,7 @@ static QString getRandomTextFromFile(const QString &filePath, const QString &key
         return QString();
     }
 
-    // Qt5 随机数生成器
+    // 使用 Qt 安全随机数生成器
     const int index = QRandomGenerator::global()->bounded(targetArray.size());
     return targetArray[index].toString();
 }
