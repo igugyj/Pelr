@@ -233,7 +233,7 @@ void BubbleBox::setThinkingText()
 
 void BubbleBox::textSet(const QString &text)
 {
-    m_text = text;
+    m_text = text.trimmed();
     if (!DataManager::instance().getBasicData().isSaying)
     {
         qDebug() << "[BubbleBox] No text-to-speech interface is used";
