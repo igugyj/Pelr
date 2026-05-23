@@ -88,6 +88,11 @@ BubbleBox::BubbleBox(QLabel *parent) : QLabel(parent)
                 show();
                 resetFadeTimer(); });
 
+    connect(LlamaClient::instance(), &LlamaClient::textGenerated,
+            this, &BubbleBox::onRandomSentenceAI);
+    connect(LlamaClient::instance(), &LlamaClient::errorOccurred,
+            this, &BubbleBox::onRandomSentenceError);
+
     fadeTimer = new QTimer(this);
     fadeTimer->setSingleShot(true);
     fadeTimer->setInterval(8000); // 8s
@@ -117,6 +122,23 @@ void BubbleBox::paintEvent(QPaintEvent *event)
 
 void BubbleBox::RandomSentence()
 {
+    const ConfigData basic = DataManager::instance().getBasicData();
+    if (basic.isLLMGreeting && LlamaClient::instance()->isConfigured())
+    {
+        qInfo() << "[BubbleBox] RandomSentence: using LLM greeting";
+        LlamaClient::instance()->generateRandomAsync(
+            QStringLiteral(
+                "Generate a short spontaneous sentence as yourself.\n"
+                "Greet the user, make a casual remark, or comment on something.\n"
+                "Vary the topic each time — don't repeat what you said before.\n"
+                "Keep it under 60 characters.\n"
+                "Never mention that you are an AI or language model.\n"
+                "Match the language of your role description above.\n"),
+            AI_RANDOM_ID);
+        setThinkingText();
+        return;
+    }
+    qInfo() << "[BubbleBox] RandomSentence: falling back to file";
     textSet(loadText("daily"));
 }
 
@@ -183,6 +205,22 @@ QString BubbleBox::GetSystemTime()
     return currentTime.toString("hh:mm");
 }
 
+void BubbleBox::onRandomSentenceAI(const QString &text, int id)
+{
+    if (id != AI_RANDOM_ID)
+        return;
+    qDebug() << "[BubbleBox] onRandomSentenceAI:" << text.left(50);
+    textSet(text);
+}
+
+void BubbleBox::onRandomSentenceError(const QString &error, int id)
+{
+    if (id != AI_RANDOM_ID)
+        return;
+    qWarning() << "[BubbleBox] onRandomSentenceError:" << error;
+    textSet(loadText("daily"));
+}
+
 void BubbleBox::setThinkingText()
 {
     fadeTimer->stop();
@@ -195,7 +233,7 @@ void BubbleBox::setThinkingText()
 
 void BubbleBox::textSet(const QString &text)
 {
-    m_text = text;
+    m_text = text.trimmed();
     if (!DataManager::instance().getBasicData().isSaying)
     {
         qDebug() << "[BubbleBox] No text-to-speech interface is used";

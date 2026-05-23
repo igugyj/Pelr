@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "0.1.3"
+#define VERSION "0.2.1"
 
 struct filePaths
 {
@@ -60,6 +60,7 @@ struct ConfigData
     bool isRecordWindowLocation = false;
     bool isMusicIcon = false;
     bool isShowThinkingBubble = false;
+    bool isLLMGreeting = false;
 };
 
 struct constConfigData

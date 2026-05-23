@@ -71,6 +71,7 @@ ConfigData SettingWidget::getAllValues()
     data.isRecordWindowLocation = ui->checkBox_11->isChecked();
     data.isMusicIcon = ui->checkBox_12->isChecked();
     data.isShowThinkingBubble = ui->checkBox_14->isChecked();
+    data.isLLMGreeting = ui->checkBox_13->isChecked();
 
     return data;
 }
@@ -254,6 +255,7 @@ void SettingWidget::setAllValues(const ConfigData &data)
     ui->checkBox_11->setChecked(data.isRecordWindowLocation);
     ui->checkBox_12->setChecked(data.isMusicIcon);
     ui->checkBox_14->setChecked(data.isShowThinkingBubble);
+    ui->checkBox_13->setChecked(data.isLLMGreeting);
 }
 
 SettingWidget::SettingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::setting)

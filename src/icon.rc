@@ -1,2 +1,2 @@
 // Pelr.rc 资源脚本文件 (Windows专属)
-IDI_ICON1 ICON "assets/image/Pelr.ico"
+IDI_ICON1 ICON "public/image/Pelr.ico"

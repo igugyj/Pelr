@@ -19,6 +19,7 @@ thirdParty/Framework
 thirdParty/glew
 thirdParty/glfw
 lib
+.history
 
 # need contain LICENCE/TERMS...
 !thirdParty/voicevox_core/c_api/LICENSE
