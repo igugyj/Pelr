@@ -1,42 +1,42 @@
-name: Feature Request
-description: Propose a new idea for the project
+name: 功能请求
+description: 为这个项目提出一个新想法
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thank you for suggesting a feature!
+        感谢您提出功能建议！
   - type: checkboxes
     id: checks
     attributes:
-      label: Prerequisite Check
+      label: 先决条件检查
       options:
-        - label: I have searched existing Issues to ensure there is no duplicate or similar feature request.
+        - label: 我已搜索过现有的 Issues，确保没有重复或相似的功能请求。
           required: true
   - type: textarea
     id: problem
     attributes:
-      label: Problem or Motivation
-      description: Is this feature request related to a problem? Please clearly describe the existing issue or inconvenience.
-      placeholder: When I..., I am always troubled because...
+      label: 问题或动机
+      description: 这个功能请求是否与某个问题相关？请清晰地描述现有的问题或不便之处。
+      placeholder: 当我在...时，总是感到困扰，因为...
     validations:
       required: true
   - type: textarea
     id: solution
     attributes:
-      label: Desired Solution
-      description: A clear and concise description of the solution or feature you would like.
-      placeholder: I hope the project could provide...
+      label: 期望的解决方案
+      description: 清晰简洁地描述你希望实现的解决方案或功能。
+      placeholder: 我希望这个项目能够提供...
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives
-      description: Describe any alternative solutions or features you have considered.
+      label: 备选方案
+      description: 描述你考虑过的任何替代解决方案或功能。
   - type: textarea
     id: additional
     attributes:
-      label: Additional Context
-      description: Add any other context or screenshots about the feature request here.
+      label: 附加上下文
+      description: 添加任何其他关于功能请求的上下文或截图。
