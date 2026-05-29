@@ -112,7 +112,10 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
     obj["isStartUp"] = d.isStartUp;
     obj["isListening"] = d.isListening;
     obj["isLookingMouse"] = d.isLookingMouse;
+    obj["LookingMouseStrength"] = d.LookingMouseStrength;
     obj["isStartStar"] = d.isStartStar;
+    obj["StarCheckTime"] = d.StarCheckTime;
+    obj["StarRunTimeout"] = d.StarRunTimeout;
     obj["isRandomSpeech"] = d.isRandomSpeech;
     obj["isSaying"] = d.isSaying;
     obj["isHourAlarm"] = d.isHourAlarm;
@@ -150,7 +153,10 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.isStartUp = obj["isStartUp"].toBool();
     d.isListening = obj["isListening"].toBool();
     d.isLookingMouse = obj["isLookingMouse"].toBool(true);
+    d.LookingMouseStrength = obj["LookingMouseStrength"].toDouble(1);
     d.isStartStar = obj["isStartStar"].toBool();
+    d.StarCheckTime = obj["StarCheckTime"].toInt(20);
+    d.StarRunTimeout = obj["StarRunTimeout"].toInt(1);
     d.isRandomSpeech = obj["isRandomSpeech"].toBool(true);
     d.isSaying = obj["isSaying"].toBool(true);
     d.isHourAlarm = obj["isHourAlarm"].toBool(true);

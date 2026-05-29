@@ -69,6 +69,8 @@ std::vector<QString> getPowerStatus()
 
 bool isSystemUptimeExceeds(const int thresholdMinutes)
 {
+    if (thresholdMinutes < 0)
+        return false;
     // 获取系统启动以来的毫秒数
     const ULONGLONG uptimeMillis = GetTickCount64();
     // 转换为分钟

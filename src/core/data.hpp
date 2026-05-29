@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "0.2.1"
+#define VERSION "0.2.3"
 
 struct filePaths
 {
@@ -50,7 +50,10 @@ struct ConfigData
     bool isStartUp = false;
     bool isListening = false;
     bool isLookingMouse = true;
+    float LookingMouseStrength = 1.0;
     bool isStartStar = false;
+    int StarCheckTime = 20;
+    int StarRunTimeout = 1;
     bool isRandomSpeech = true;
     bool isSaying = true;
     bool isHourAlarm = true;

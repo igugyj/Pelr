@@ -79,6 +79,7 @@ GLCore::GLCore(QWidget *parent) : QOpenGLWidget(parent)
         qDebug() << "[GLCore] Mouse tracking enabled";
         this->setMouseTracking(true);
     }
+    LAppLive2DManager::SetDragStrength(DataManager::instance().getBasicData().LookingMouseStrength);
     int step = DataManager::instance().getBasicData().model_size; // 150;
     resize(4 * step, 3 * step);
     initContextMenu();
@@ -493,10 +494,14 @@ void GLCore::startRunStarIfPoweredInThread()
         qWarning() << "[GLCore] Background task already running, skipping";
         return;
     }
+    if (DataManager::instance().getBasicData().StarCheckTime < 0)
+    {
+        qWarning() << "[GLCore] Check time is negative, skipping";
+        return;
+    }
     QString title = DataManager::instance().Project_Name + " " + QTime::currentTime().toString("hh:mm:ss");
-    // 如果开机时长大于20分钟，则return
-    // TODO 让用户自己设定
-    if (isSystemUptimeExceeds(20))
+    // 如果开机时长大于指定时长，则return
+    if (isSystemUptimeExceeds(DataManager::instance().getBasicData().StarCheckTime))
     {
         TrayIcon::showMessage(
             title,
@@ -506,7 +511,7 @@ void GLCore::startRunStarIfPoweredInThread()
     // 显示提示
     TrayIcon::showMessage(
         title,
-        tr("将在60秒后启动启动项"));
+        tr("将在 %1 分后启动启动项").arg(DataManager::instance().getBasicData().StarRunTimeout));
 
     // 设置完成信号与槽的连接
     connect(&m_watcher, &QFutureWatcher<void>::finished, this, &GLCore::onRunStarIfPoweredFinished);
@@ -532,11 +537,17 @@ void GLCore::onRunStarIfPoweredFinished()
 
 void GLCore::runStarIfPowered()
 {
-    qDebug() << "[GLCore] Run star if powered, wt 60s";
+    const int wt = DataManager::instance().getBasicData().StarRunTimeout * 60;
+    if (wt < 0)
+    {
+        qDebug() << "[GLCore] StarRunTimeout is negative, skip.";
+        return;
+    }
+    qDebug() << "[GLCore] Run star if powered, wait" << wt << "s";
     // 提前拷贝 future，避免访问 m_watcher 时对象已析构
     QFuture<void> future = m_watcher.future();
-    for (int i = 0; i < 60; ++i)
-    { // 1 min todo: 让用户自己定
+    for (int i = 0; i < wt; ++i)
+    {
         if (future.isCanceled())
         {
             qDebug() << "[GLCore] RunStarIfPowered cancelled";
