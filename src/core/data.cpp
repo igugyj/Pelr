@@ -39,6 +39,11 @@ void DataManager::writeTTSConfig(const TTSConfig &ttsc)
     obj["provider"] = ttsc.provider;
     obj["speaker_openai_edge_tts"] = ttsc.speaker_openai_edge_tts;
     obj["speed_openai_edge_tts"] = ttsc.speed_openai_edge_tts;
+    obj["openai_endpoint"] = ttsc.openai_endpoint;
+    obj["openai_apiKey"] = ttsc.openai_apiKey;
+    obj["openai_model"] = ttsc.openai_model;
+    obj["openai_voice"] = ttsc.openai_voice;
+    obj["openai_speed"] = ttsc.openai_speed;
     obj["iFlytek_APPID"] = ttsc.iFlytek_APPID;
     obj["iFlytek_APISecret"] = ttsc.iFlytek_APISecret;
     obj["iFlytek_APIKey"] = ttsc.iFlytek_APIKey;
@@ -112,7 +117,10 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
     obj["isStartUp"] = d.isStartUp;
     obj["isListening"] = d.isListening;
     obj["isLookingMouse"] = d.isLookingMouse;
+    obj["LookingMouseStrength"] = d.LookingMouseStrength;
     obj["isStartStar"] = d.isStartStar;
+    obj["StarCheckTime"] = d.StarCheckTime;
+    obj["StarRunTimeout"] = d.StarRunTimeout;
     obj["isRandomSpeech"] = d.isRandomSpeech;
     obj["isSaying"] = d.isSaying;
     obj["isHourAlarm"] = d.isHourAlarm;
@@ -129,28 +137,31 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
 ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
 {
     ConfigData d;
-    d.model_path = obj["model_path"].toString();
+    d.model_path = obj["model_path"].toString().trimmed();
     d.model_size = obj["model_size"].toInt(150);
     d.FPS = obj["FPS"].toInt(30);
     d.volume = obj["volume"].toInt(50);
 
     QJsonObject bubble = obj["color_bubble"].toObject();
-    d.color_bubble.forground = bubble["forground"].toString("#ffffffff");
-    d.color_bubble.background = bubble["background"].toString("#ff00ffff");
+    d.color_bubble.forground = bubble["forground"].toString("#ffffffff").trimmed();
+    d.color_bubble.background = bubble["background"].toString("#ff00ffff").trimmed();
 
     QJsonObject tray = obj["color_tray"].toObject();
-    d.color_tray.forground = tray["forground"].toString("#ff00ff");
-    d.color_tray.background = tray["background"].toString("#ff0000");
+    d.color_tray.forground = tray["forground"].toString("#ff00ff").trimmed();
+    d.color_tray.background = tray["background"].toString("#ff0000").trimmed();
 
     QJsonObject interval = obj["RandomInterval"].toObject();
     d.RandomInterval.first = interval["min"].toInt(10);
     d.RandomInterval.second = interval["max"].toInt(25);
 
-    d.music_tray_symbol = obj["music_tray_symbol"].toString("\u266B");
+    d.music_tray_symbol = obj["music_tray_symbol"].toString("\u266B").trimmed();
     d.isStartUp = obj["isStartUp"].toBool();
     d.isListening = obj["isListening"].toBool();
     d.isLookingMouse = obj["isLookingMouse"].toBool(true);
+    d.LookingMouseStrength = obj["LookingMouseStrength"].toDouble(1);
     d.isStartStar = obj["isStartStar"].toBool();
+    d.StarCheckTime = obj["StarCheckTime"].toInt(20);
+    d.StarRunTimeout = obj["StarRunTimeout"].toInt(1);
     d.isRandomSpeech = obj["isRandomSpeech"].toBool(true);
     d.isSaying = obj["isSaying"].toBool(true);
     d.isHourAlarm = obj["isHourAlarm"].toBool(true);
@@ -189,11 +200,11 @@ QList<MenuData> DataManager::deserializeMenuList(const QJsonArray &arr)
     {
         QJsonObject obj = v.toObject();
         MenuData m;
-        m.category = obj["category"].toString();
-        m.name = obj["name"].toString();
-        m.path = obj["path"].toString();
-        m.icon = obj["icon"].toString();
-        m.description = obj["description"].toString();
+        m.category = obj["category"].toString().trimmed();
+        m.name = obj["name"].toString().trimmed();
+        m.path = obj["path"].toString().trimmed();
+        m.icon = obj["icon"].toString().trimmed();
+        m.description = obj["description"].toString().trimmed();
         list.append(m);
     }
     return list;
@@ -226,10 +237,10 @@ QList<TodoData> DataManager::deserializeTodoList(const QJsonArray &arr)
         QJsonObject obj = v.toObject();
         TodoData t;
         t.category = obj["category"].toInt();
-        t.title = obj["title"].toString();
-        t.content = obj["content"].toString();
-        t.deadline = obj["deadline"].toString();
-        t.remarks = obj["remarks"].toString();
+        t.title = obj["title"].toString().trimmed();
+        t.content = obj["content"].toString().trimmed();
+        t.deadline = obj["deadline"].toString().trimmed();
+        t.remarks = obj["remarks"].toString().trimmed();
         t.isNotify = obj["isNotify"].toBool();
         list.append(t);
     }
@@ -298,33 +309,38 @@ void DataManager::readTTSConfig()
         qDebug() << "[Data] Invalid TTS provider:" << tts_config.provider << ", reset to 0";
         tts_config.provider = 0;
     }
-    tts_config.speaker_openai_edge_tts = obj["speaker_openai_edge_tts"].toString("zh-CN-XiaoxiaoNeural");
+    tts_config.speaker_openai_edge_tts = obj["speaker_openai_edge_tts"].toString("zh-CN-XiaoxiaoNeural").trimmed();
     tts_config.speed_openai_edge_tts = obj["speed_openai_edge_tts"].toDouble(1.0);
-    tts_config.iFlytek_APPID = obj["iFlytek_APPID"].toString();
-    tts_config.iFlytek_APISecret = obj["iFlytek_APISecret"].toString();
-    tts_config.iFlytek_APIKey = obj["iFlytek_APIKey"].toString();
-    tts_config.iFlytek_speaker = obj["iFlytek_speaker"].toString("x4_yezi");
+    tts_config.openai_endpoint = obj["openai_endpoint"].toString().trimmed();
+    tts_config.openai_apiKey = obj["openai_apiKey"].toString().trimmed();
+    tts_config.openai_model = obj["openai_model"].toString().trimmed();
+    tts_config.openai_voice = obj["openai_voice"].toString("alloy").trimmed();
+    tts_config.openai_speed = obj["openai_speed"].toDouble(1.0);
+    tts_config.iFlytek_APPID = obj["iFlytek_APPID"].toString().trimmed();
+    tts_config.iFlytek_APISecret = obj["iFlytek_APISecret"].toString().trimmed();
+    tts_config.iFlytek_APIKey = obj["iFlytek_APIKey"].toString().trimmed();
+    tts_config.iFlytek_speaker = obj["iFlytek_speaker"].toString("x4_yezi").trimmed();
 
     if (tts_config.provider == 1 && (tts_config.iFlytek_APPID.isEmpty() || tts_config.iFlytek_APISecret.isEmpty() || tts_config.iFlytek_APIKey.isEmpty()))
     {
         qDebug() << "[Data] iFlytek credentials missing, fallback to OpenAI TTS";
         tts_config.provider = 0;
     }
-    tts_config.voicevox_dict_dir = obj["voicevox_dict_dir"].toString();
-    tts_config.voicevox_model = obj["voicevox_model"].toString();
+    tts_config.voicevox_dict_dir = obj["voicevox_dict_dir"].toString().trimmed();
+    tts_config.voicevox_model = obj["voicevox_model"].toString().trimmed();
     tts_config.voicevox_style_id = obj["voicevox_style_id"].toInt(0);
     tts_config.voicevox_speed = obj["voicevox_speed"].toDouble(1.0);
     tts_config.tr_point = obj["tr_point"].toInt(1);
-    tts_config.tr_lang_libretranslate = obj["tr_lang_libretranslate"].toString();
-    tts_config.tr_libretranslate_port = obj["tr_libretranslate_port"].toString();
-    tts_config.tr_provider = obj["tr_provider"].toString();
-    tts_config.tr_lang_translators = obj["tr_lang_translators"].toString();
-    tts_config.tr_tx_secret_id = obj["tr_tx_secret_id"].toString();
-    tts_config.tr_tx_secret_key = obj["tr_tx_secret_key"].toString();
-    tts_config.tr_tx_region = obj["tr_tx_region"].toString();
+    tts_config.tr_lang_libretranslate = obj["tr_lang_libretranslate"].toString().trimmed();
+    tts_config.tr_libretranslate_port = obj["tr_libretranslate_port"].toString().trimmed();
+    tts_config.tr_provider = obj["tr_provider"].toString().trimmed();
+    tts_config.tr_lang_translators = obj["tr_lang_translators"].toString().trimmed();
+    tts_config.tr_tx_secret_id = obj["tr_tx_secret_id"].toString().trimmed();
+    tts_config.tr_tx_secret_key = obj["tr_tx_secret_key"].toString().trimmed();
+    tts_config.tr_tx_region = obj["tr_tx_region"].toString().trimmed();
     tts_config.tr_tx_project_id = obj["tr_tx_project_id"].toInt(0);
-    tts_config.tr_tx_source_lang = obj["tr_tx_source_lang"].toString("auto");
-    tts_config.tr_tx_target_lang = obj["tr_tx_target_lang"].toString();
+    tts_config.tr_tx_source_lang = obj["tr_tx_source_lang"].toString("auto").trimmed();
+    tts_config.tr_tx_target_lang = obj["tr_tx_target_lang"].toString().trimmed();
 }
 
 void DataManager::readLlamaData()
@@ -334,11 +350,11 @@ void DataManager::readLlamaData()
     QJsonObject obj = doc.object();
 
     llama_data.maxContextMessages = obj["maxContextMessages"].toInt(10);
-    llama_data.model = obj["model"].toString();
-    llama_data.systemPrompt = obj["systemPrompt"].toString("You are a friendly AI assistant.");
-    llama_data.baseUrl = obj["baseUrl"].toString();
-    llama_data.apiKey = obj["apiKey"].toString();
-    llama_data.promptFilePath = obj["promptFilePath"].toString();
+    llama_data.model = obj["model"].toString().trimmed();
+    llama_data.systemPrompt = obj["systemPrompt"].toString("You are a friendly AI assistant.").trimmed();
+    llama_data.baseUrl = obj["baseUrl"].toString().trimmed();
+    llama_data.apiKey = obj["apiKey"].toString().trimmed();
+    llama_data.promptFilePath = obj["promptFilePath"].toString().trimmed();
 }
 
 void DataManager::readOpenWeatherData()
@@ -347,12 +363,12 @@ void DataManager::readOpenWeatherData()
     if (!doc.isObject()) return;
     QJsonObject obj = doc.object();
 
-    openWeather_data.api_key = obj["api_key"].toString();
+    openWeather_data.api_key = obj["api_key"].toString().trimmed();
     if (openWeather_data.api_key.isEmpty())
     {
         qWarning() << "[Data] api_key in config file is empty or does not exist";
     }
-    openWeather_data.city = obj["city"].toString();
+    openWeather_data.city = obj["city"].toString().trimmed();
 }
 
 QFont DataManager::loadFont()

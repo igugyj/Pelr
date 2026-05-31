@@ -18,6 +18,8 @@ using namespace Csm;
 using namespace LAppDefine;
 using namespace std;
 
+Csm::csmFloat32 LAppLive2DManager::_dragStrength = 1.0f;
+
 namespace
 {
     LAppLive2DManager *s_instance = nullptr;
@@ -152,8 +154,16 @@ void LAppLive2DManager::SetRenderTargetSize(csmUint32 width, csmUint32 height)
     }
 }
 
+void LAppLive2DManager::SetDragStrength(csmFloat32 strength)
+{
+    _dragStrength = strength;
+    qDebug() << "[LApp] Drag strength: " << _dragStrength;
+}
+
 void LAppLive2DManager::OnDrag(csmFloat32 x, csmFloat32 y) const
 {
+    x *= _dragStrength;
+    y *= _dragStrength;
     for (csmUint32 i = 0; i < _models.GetSize(); ++i)
     {
         LAppModel *model = GetModel(i);

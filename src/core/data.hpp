@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "0.2.1"
+#define VERSION "0.4.1"
 
 struct filePaths
 {
@@ -50,7 +50,10 @@ struct ConfigData
     bool isStartUp = false;
     bool isListening = false;
     bool isLookingMouse = true;
+    float LookingMouseStrength = 1.0;
     bool isStartStar = false;
+    int StarCheckTime = 20;
+    int StarRunTimeout = 1;
     bool isRandomSpeech = true;
     bool isSaying = true;
     bool isHourAlarm = true;
@@ -127,6 +130,11 @@ struct TTSConfig
     int provider = 0;
     QString speaker_openai_edge_tts = "zh-CN-XiaoxiaoNeural";
     double speed_openai_edge_tts = 1.0;
+    QString openai_endpoint;
+    QString openai_apiKey;
+    QString openai_model = "tts-1";
+    QString openai_voice = "alloy";
+    double openai_speed = 1.0;
     QString iFlytek_APPID;
     QString iFlytek_APISecret;
     QString iFlytek_APIKey;
@@ -152,6 +160,7 @@ static QVector<QPair<QString, int>> TTSProviderList = {
     {"OpenAI-Edge-TTS", 0},
     {"iFlytek", 1},
     {"voicevox", 2},
+    {"OpenAI-Compatible", 3},
 };
 
 static QVector<QPair<QString, int>> Translators = {

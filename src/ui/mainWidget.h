@@ -6,6 +6,7 @@
 #include "manageStart.h"
 #include "setting.h"
 #include "todoWidget.h"
+#include "systemMonitorWidget.hpp"
 
 namespace Ui
 {
@@ -21,6 +22,7 @@ public:
     ManageStartWidget *Widget_ManageStart;
     SettingWidget *Widget_Setting;
     todoWidget *Widget_Todo;
+    SystemMonitorWidget *Widget_SystemMonitor;
     int point_x = 130;
     int point_y = 30;
 

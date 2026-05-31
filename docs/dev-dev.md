@@ -2,7 +2,7 @@
 
 ## Python
 
-自 `20260503.14` 起，Python TTS 服务器已从主项目分离，可作为可选组件进行配置。
+自 `0.4.1` 起，Python TTS 服务器已从主项目分离，可作为可选组件进行配置。
 
 仓库地址：<https://github.com/igugyj/Pelr_tts_tr>
 

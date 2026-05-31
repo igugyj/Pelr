@@ -30,6 +30,8 @@ public:
     Csm::csmUint32 GetModelNum() const;
     void SetViewMatrix(Live2D::Cubism::Framework::CubismMatrix44 *m);
 
+    static void SetDragStrength(Csm::csmFloat32 strength);
+
     // ---------- 自定义方法 ----------
     void LoadModelFromPath(const std::string &modelPath, const std::string &fileName);
     void LoadModelFromConfig();
@@ -38,6 +40,8 @@ public:
     virtual ~LAppLive2DManager();
 
 private:
+    static Csm::csmFloat32 _dragStrength;
+
     Csm::CubismMatrix44 *_viewMatrix;
     Csm::csmVector<LAppModel *> _models;
     Csm::csmInt32 _sceneIndex;

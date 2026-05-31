@@ -72,6 +72,68 @@ public:
                 { handleGenerateResponse(reply); });
     }
 
+    // 通过远端 OpenAI 兼容 API 合成语音
+    void generateVoiceOpenAICompat(const QString &text,
+                                   const QString &endpoint,
+                                   const QString &apiKey,
+                                   const QString &model,
+                                   const QString &voice,
+                                   double speed)
+    {
+        qDebug() << "[VoiceGen] OpenAI-Compatible: text=" << text.left(50)
+                 << "endpoint=" << endpoint << "model=" << model << "voice=" << voice << "speed=" << speed;
+
+        if (endpoint.isEmpty())
+        {
+            qWarning() << "[VoiceGen] OpenAI-Compatible endpoint is empty, aborting";
+            emit errorOccurred("OpenAI TTS endpoint not configured");
+            return;
+        }
+
+        QString hashInput = text + "|" + voice + "|" + model + "|" + QString::number(speed);
+        QByteArray hash = QCryptographicHash::hash(hashInput.toUtf8(), QCryptographicHash::Sha256).toHex();
+
+        QString voiceDir = DataManager::instance().const_config_data.VoiceFolder;
+        QDir().mkpath(voiceDir);
+        QString filePath = voiceDir + "/" + hash + ".wav";
+
+        if (QFile::exists(filePath))
+        {
+            qDebug() << "[VoiceGen] Reusing cached:" << filePath;
+            emit voiceGenerated(filePath);
+            return;
+        }
+
+        double finalSpeed = qBound(0.25, speed, 4.0);
+
+        QJsonObject json;
+        json["model"] = model;
+        json["input"] = text;
+        json["voice"] = voice;
+        json["response_format"] = "wav";
+        json["speed"] = finalSpeed;
+
+        QByteArray data = QJsonDocument(json).toJson();
+
+        QUrl url(endpoint.trimmed());
+        if (!url.isValid())
+        {
+            qWarning() << "[VoiceGen] Invalid URL:" << url.toString();
+            emit errorOccurred("Invalid OpenAI TTS URL: " + url.errorString());
+            return;
+        }
+
+        qDebug() << "[VoiceGen] POST" << url.toString();
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        if (!apiKey.isEmpty())
+            request.setRawHeader("Authorization", ("Bearer " + apiKey).toUtf8());
+
+        QNetworkReply *reply = m_manager->post(request, data);
+        connect(reply, &QNetworkReply::finished, this, [this, reply, filePath]()
+                { handleOpenAICompatResponse(reply, filePath); });
+    }
+
     // 新增：OpenAI 风格 TTS 调用（Edge TTS）
     void generateVoiceOpenAI(const QString &text, const QString &voice = "zh-CN-XiaoxiaoNeural",
                              double speed = 1.0)
@@ -196,16 +258,20 @@ private:
     // 统一执行 TTS 生成
     void doGenerateVoice(const TTSConfig &config, const QString &text)
     {
+        qDebug() << "[VoiceGen] doGenerateVoice provider=" << config.provider << "text=" << text.left(50);
         switch (config.provider)
         {
         case 0:
+            qDebug() << "[VoiceGen] Using Edge TTS (local Python server)";
             generateVoiceOpenAI(text, config.speaker_openai_edge_tts, config.speed_openai_edge_tts);
             break;
         case 1:
+            qDebug() << "[VoiceGen] Using iFlytek TTS";
             generateVoiceIFlytek(config.iFlytek_APPID, config.iFlytek_APIKey, config.iFlytek_APISecret,
                                  text, config.iFlytek_speaker);
             break;
         case 2:
+            qDebug() << "[VoiceGen] Using VOICEVOX";
         {
             int styleId = config.voicevox_style_id;
             double speed = config.voicevox_speed;
@@ -221,7 +287,17 @@ private:
             } });
             break;
         }
+        case 3:
+            qDebug() << "[VoiceGen] Using OpenAI-Compatible TTS";
+            generateVoiceOpenAICompat(text,
+                config.openai_endpoint,
+                config.openai_apiKey,
+                config.openai_model,
+                config.openai_voice,
+                config.openai_speed);
+            break;
         default:
+            qWarning() << "[VoiceGen] Unknown provider:" << config.provider;
             emit errorOccurred("Unknown TTS provider");
             break;
         }
@@ -282,6 +358,37 @@ private:
             {
                 onConnectionRefused();
             }
+            emit errorOccurred(QString("OpenAI TTS error: %1").arg(reply->errorString()));
+        }
+        reply->deleteLater();
+    }
+
+    void handleOpenAICompatResponse(QNetworkReply *reply, const QString &filePath)
+    {
+        if (reply->error() == QNetworkReply::NoError)
+        {
+            QByteArray audioData = reply->readAll();
+            if (audioData.isEmpty())
+            {
+                emit errorOccurred("OpenAI TTS returned empty audio data");
+            }
+            else
+            {
+                QFile file(filePath);
+                if (file.open(QIODevice::WriteOnly))
+                {
+                    file.write(audioData);
+                    file.close();
+                    emit voiceGenerated(filePath);
+                }
+                else
+                {
+                    emit errorOccurred("Failed to save audio file: " + filePath);
+                }
+            }
+        }
+        else
+        {
             emit errorOccurred(QString("OpenAI TTS error: %1").arg(reply->errorString()));
         }
         reply->deleteLater();
