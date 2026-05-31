@@ -29,12 +29,13 @@
 - **Live2D 虚拟角色** - 支持 model3.json 格式，提供生动的桌面伴侣体验
 - **智能对话** - 兼容 OpenAI 的 AI 服务，支持自然语言交互
 - **表情动作** - 支持模型自带的表情与动作切换
-- **语音合成** - 内置 Edge TTS、讯飞 TTS 和 VOICEVOX 服务
+- **语音合成** - 内置 Edge TTS、讯飞 TTS、VOICEVOX 和 OpenAI-Compatible TTS
 - **TODO 管理** - 添加事件并提醒待办
 - **启动管理** - 可视化管理系统启动项，支持启动任意文件与链接（继承自 [QuickTray](https://github.com/Pfolg/QuickTray)）
 - **键盘监听** - 实时显示按键状态（继承自 [KeyMonitor](https://github.com/Pfolg/KeyMonitor)）
 - **音乐托盘** - 托盘图标随系统音量旋转（继承自 [Rotating Rhythm](https://gitee.com/Pfolg/Rotating-Rhythm)）
 - **天气服务** - 集成 OpenWeather，实时获取天气信息
+- **系统监控** - 实时内存与磁盘占用监测，含详细占用分析
 - **高度可定制** - 丰富的设置选项，满足个性化需求
 
 ## Roadmap
@@ -53,6 +54,10 @@
   <img src="../repo_assets/p1.png" alt="preview1" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
   <img src="../repo_assets/p2.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
 </div>
+  <div style="display: flex; overflow-x: auto; gap: 10px; padding: 10px; background: #f5f5f5; border-radius: 8px;">
+  <img src="../repo_assets/p3.png" alt="system monitor" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="../repo_assets/p4.png" alt="TTS settings" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+</div>
 </details>
 
 ## 系统要求
@@ -62,7 +67,6 @@
 - **内存**: 4GB RAM 或更多
 - **存储空间**: 至少 500MB
 - **显卡**: 支持 OpenGL 3.0 及以上
-- **Python**: 3.11（可选，仅用于 TTS 服务端）
 
 ## 快速开始
 
@@ -70,11 +74,11 @@
 
 使用方法见 [docs/index.md](index.md)
 
-### TTS Server
+### TTS 后端
 
-Edge TTS 与讯飞 TTS 依赖外部 Python 服务：[Pelr_tts_tr](https://github.com/igugyj/Pelr_tts_tr)
-
-根据开源许可规范，不提供该程序的打包版本，请参考该仓库的使用方法。
+- **Edge TTS / 讯飞 TTS** — 依赖外部 Python 服务 [Pelr_tts_tr](https://github.com/igugyj/Pelr_tts_tr)，不提供打包版本
+- **VOICEVOX** — 本地 TTS 引擎（随程序分发）
+- **OpenAI-Compatible TTS** — 使用任意 OpenAI 兼容接口
 
 ### 更新
 
@@ -93,9 +97,9 @@ git fetch && git pull
 
 2. **配置 TTS 服务**（可选）
    - 推荐使用免费的 Edge TTS，无需额外配置
-   - 申请 [讯飞开放平台](https://www.xfyun.cn/) 账号
+   - 也支持 VOICEVOX 和 OpenAI-Compatible TTS
+   - 按需申请 [讯飞开放平台](https://www.xfyun.cn/) 账号
    - 在设置 -> TTS 配置中填写 API 凭证
-   - 按需启动 Python TTS 服务
 
 3. **设置 AI 服务**（可选）
    - 选择 OpenAI 兼容的 AI 服务提供商
@@ -118,15 +122,15 @@ git fetch && git pull
 |  main.cpp (入口)                                               |
 |    |                                                            |
 |    +-- core          (系统托盘、启动管理、窗口控制)             |
-|    +-- ui            (Qt 界面：设置、聊天、TODO、编辑……)        |
+|    +-- ui            (Qt 界面：设置、聊天、TODO、系统监控、编辑……)        |
 |    +-- ai            (OpenAI 兼容 API 对话)                     |
-|    +-- tts           (语音合成调度：voicevox/讯飞/Edge TTS)     |
+|    +-- tts           (语音合成调度：voicevox/讯飞/Edge TTS/OpenAI-Compatible)     |
 |    +-- translation   (翻译管理，使用 Qt Network)                |
 |    |       └── 腾讯翻译 (通过 Qt 调用腾讯云 API)               |
 |    |       └── LibreTranslate 等 (同上)                        |
 |    +-- keyboard      (键盘状态监听与提示)                       |
 |    +-- model         (Live2D 模型扩展、额外动作/文件)           |
-|    +-- utils         (日志、天气、网络、频谱分析……)             |
+|    +-- utils         (日志、天气、网络、频谱分析、存储信息、进程内存……)             |
 |    |       └── kissfft 用于 AudioSpectrumDetector，            |
 |    |            实时分析系统音频 -> 驱动托盘图标旋转            |
 |    +-- compatLApp    (Live2D 渲染封装层)                        |
@@ -157,6 +161,7 @@ git fetch && git pull
 +---------------------------------------------------------------+
 |                                                                 |
 |   OpenAI 兼容 API    (AI 对话)                                |
+|   OpenAI-Compatible TTS (备选 TTS 后端)                      |
 |   讯飞云 TTS API     (备选 TTS 后端)                          |
 |   OpenWeather API    (天气数据)                                |
 |   腾讯云翻译 API     (通过 Qt Network 直接访问)               |
@@ -184,7 +189,7 @@ git fetch && git pull
 - **VOICEVOX** - 免费中高质量 TTS
 - **kissfft** - 实时频谱分析与音频检测
 
-### Python 工具链
+### Python 工具链（可选）
 
 依赖列表见 [Pelr_tts_tr/requirements.txt](https://github.com/igugyj/Pelr_tts_tr/blob/main/requirements.txt)
 

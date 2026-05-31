@@ -29,12 +29,13 @@
 - **Live2D Character** - Supports model3.json format for an expressive desktop companion
 - **AI Chat** - OpenAI-compatible API for natural language interaction
 - **Expressions & Motions** - Play built-in expressions and motions if supported by the model
-- **Text-to-Speech** - Built-in support for Edge TTS, iFlytek TTS, and VOICEVOX
+- **Text-to-Speech** - Built-in support for Edge TTS, iFlytek TTS, VOICEVOX, and OpenAI-Compatible TTS
 - **TODO Manager** - Add events and receive reminders
 - **Launch Manager** - Visually manage startup items; launch any file or link (forked from [QuickTray](https://github.com/Pfolg/QuickTray))
 - **Keyboard Monitor** - Real-time display of key press states (forked from [KeyMonitor](https://github.com/Pfolg/KeyMonitor))
 - **Music Tray** - Tray icon rotates with system audio volume (forked from [Rotating Rhythm](https://gitee.com/Pfolg/Rotating-Rhythm))
 - **Weather Service** - Real-time weather via OpenWeather integration
+- **System Monitor** - Real-time memory and disk usage monitoring with detailed breakdown
 - **Highly Customizable** - Rich settings to suit personal preferences
 
 ## Roadmap
@@ -66,7 +67,6 @@
 - **RAM**: 4GB or more
 - **Storage**: At least 500MB free
 - **GPU**: OpenGL 3.0+ support
-- **Python**: 3.11 (optional, only needed for TTS server)
 
 ## Quick Start
 
@@ -74,11 +74,11 @@
 
 See [docs/index.md](docs/index.md) for usage instructions.
 
-### TTS Server
+### TTS Backends
 
-Edge TTS and iFlytek TTS rely on an external Python server: [Pelr_tts_tr](https://github.com/igugyj/Pelr_tts_tr)
-
-Per open source license requirements, no pre-built package is provided. Please refer to that repository for setup.
+- **Edge TTS / iFlytek TTS** — rely on an external Python server: [Pelr_tts_tr](https://github.com/igugyj/Pelr_tts_tr). Per open source license requirements, no pre-built package is provided.
+- **VOICEVOX** — local TTS engine (bundled)
+- **OpenAI-Compatible TTS** — uses any OpenAI-compatible API endpoint
 
 ### Update
 
@@ -97,9 +97,9 @@ Update dependencies according to [CMakeLists.txt](CMakeLists.txt).
 
 2. **Configure TTS** (optional)
    - Edge TTS is recommended (free, no configuration needed)
-   - Register at [iFlytek Open Platform](https://www.xfyun.cn/)
+   - VOICEVOX and OpenAI-Compatible TTS are also available
+   - Register at [iFlytek Open Platform](https://www.xfyun.cn/) if needed
    - Fill in API credentials in Settings -> TTS
-   - Start Python TTS server if needed
 
 3. **Set up AI service** (optional)
    - Choose any OpenAI-compatible provider
@@ -122,15 +122,15 @@ See [docs/dev-structure.md](docs/dev-structure.md) for details.
 |  main.cpp (entry point)                                       |
 |    |                                                            |
 |    +-- core          (tray, window management, launcher)       |
-|    +-- ui            (Qt widgets: settings, chat, TODO, etc.)  |
+|    +-- ui            (Qt widgets: settings, chat, TODO, system monitor, etc.)  |
 |    +-- ai            (OpenAI-compatible chat API)              |
-|    +-- tts           (TTS dispatch: voicevox/iflytek/Edge)    |
+|    +-- tts           (TTS dispatch: voicevox/iflytek/Edge/openai-compatible)    |
 |    +-- translation   (translation via Qt Network)              |
 |    |       └── Tencent Translation (Qt -> Tencent Cloud API)   |
 |    |       └── LibreTranslate etc. (same)                     |
 |    +-- keyboard      (keyboard state monitoring)               |
 |    +-- model         (Live2D model extensions, extra motions)  |
-|    +-- utils         (logging, weather, network, spectrum...)  |
+|    +-- utils         (logging, weather, network, spectrum, storage info, process memory...)  |
 |    |       └── kissfft for AudioSpectrumDetector,             |
 |    |            real-time system audio analysis -> tray icon   |
 |    +-- compatLApp    (Live2D rendering wrapper)               |
@@ -161,6 +161,7 @@ See [docs/dev-structure.md](docs/dev-structure.md) for details.
 +---------------------------------------------------------------+
 |                                                                 |
 |   OpenAI-compatible API   (AI chat)                           |
+|   OpenAI-compatible TTS   (optional TTS backend)              |
 |   iFlytek Cloud TTS API  (optional TTS backend)               |
 |   OpenWeather API        (weather data)                       |
 |   Tencent Cloud Translation API (via Qt Network)              |
@@ -188,7 +189,7 @@ See [NOTICE](NOTICE) for third-party notices.
 - **VOICEVOX** - Free, medium-quality TTS engine
 - **kissfft** - Real-time spectrum analysis and audio detection
 
-### Python Toolchain
+### Python Toolchain (optional)
 
 Dependencies listed at [Pelr_tts_tr/requirements.txt](https://github.com/igugyj/Pelr_tts_tr/blob/main/requirements.txt)
 
