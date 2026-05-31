@@ -53,9 +53,10 @@ void SettingWidget::onTTSProviderChanged()
     int index = ui->comboBox_4->currentIndex();
     qDebug() << "[Settings] TTS provider changed to" << index;
     QList<QGroupBox *> groupBoxes = {
-        ui->groupBox_2,
-        ui->groupBox_3,
-        ui->groupBox_4,
+        ui->groupBox_2, // OpenAI-Edge-TTS
+        ui->groupBox_3, // iFlytek
+        ui->groupBox_4, // voicevox
+        ui->groupBox_7, // openai
     };
     for (int i = 0; i < groupBoxes.size(); i++)
     {

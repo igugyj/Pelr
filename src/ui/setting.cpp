@@ -100,6 +100,12 @@ TTSConfig SettingWidget::getTTSConfigValue() const
     data.voicevox_model = ui->lineEdit_16->text();
     data.voicevox_style_id = ui->comboBox_6->currentData().toInt(); // 固定使用 userData 中的 ID
     data.voicevox_speed = ui->doubleSpinBox_2->value();
+    // OpenAI-Compatible
+    data.openai_endpoint = ui->lineEdit_25->text();
+    data.openai_apiKey = ui->lineEdit_26->text();
+    data.openai_model = ui->lineEdit_27->text();
+    data.openai_voice = ui->lineEdit_28->text();
+    data.openai_speed = ui->doubleSpinBox_4->value();
     // translate
     data.tr_lang_translators = ui->comboBox_5->currentText();
     data.tr_provider = ui->comboBox->currentText();
@@ -172,6 +178,12 @@ void SettingWidget::setTTSConfig(const TTSConfig &data) const
         if (ui->comboBox_6->count() > 0)
             ui->comboBox_6->setCurrentIndex(0);
     }
+    // OpenAI-Compatible
+    ui->lineEdit_25->setText(data.openai_endpoint);
+    ui->lineEdit_26->setText(data.openai_apiKey);
+    ui->lineEdit_27->setText(data.openai_model);
+    ui->lineEdit_28->setText(data.openai_voice);
+    ui->doubleSpinBox_4->setValue(data.openai_speed);
     // translate
     ui->comboBox_5->setCurrentText(data.tr_lang_translators);
     ui->comboBox->setCurrentText(data.tr_provider);
