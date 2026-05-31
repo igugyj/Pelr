@@ -219,6 +219,7 @@ void GLCore::initContextMenu()
             BubbleBox::instance()->hide();
             menuWidget->hide();
             modelChatBox->hide();
+            main_widget->raise();
             // 更新数据
             main_widget->Widget_Todo->loadAllData();
             qDebug() << "[GLCore] Show main_widget";

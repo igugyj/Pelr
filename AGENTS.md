@@ -21,7 +21,7 @@ Qt 6.10.1 at `D:/Qt/6.10.1/mingw_64`. Windows-only (Win10/11). No tests, no lint
 - `src/tts/` — TTS backends: voicevox, xunfei, Edge TTS (via external Python server).
 - `src/translation/` — Tencent/LibreTranslate API via Qt Network.
 - `src/keyboard/` — real-time key press state display.
-- `src/utils/` — logger, weather, audio spectrum (kissfft), license check, update/version checker.
+- `src/utils/` — logger, weather, audio spectrum (kissfft), license check, update/version checker, storage info (disk usage).
 - `src/model/` — Live2D model extension (extra motions, file management).
 - `src/compatLApp/` — shadows `CubismNativeSamples/Samples/Common/` classes via `include_directories(BEFORE)` + exclusion from GLOB.
 - `src/compatSDK/` — same shadow mechanism for `CubismNativeFramework/src/Rendering/OpenGL/` headers (forces `GL/glew.h` include before Framework headers).
