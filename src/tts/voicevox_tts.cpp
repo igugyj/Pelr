@@ -393,13 +393,6 @@ QString VoicevoxTTS::synthesizeToFile(const TTSConfig &config, const QString &te
         return {};
     }
 
-    QByteArray wav = synthesis(text, styleId);
-    if (wav.isEmpty())
-    {
-        qWarning() << "[VoicevoxTTS] synthesizeToFile: synthesis empty";
-        return {};
-    }
-
     // 构建哈希文件名：模型路径 + 文本 + speed + styleId
     QCryptographicHash hash(QCryptographicHash::Sha256);
     hash.addData(config.voicevox_model.toUtf8());
@@ -408,9 +401,22 @@ QString VoicevoxTTS::synthesizeToFile(const TTSConfig &config, const QString &te
     hash.addData(QByteArray::number(styleId));
     QString hashName = hash.result().toHex().left(16);
 
-    // 保存到程序目录下的 语音 文件夹
     QString dirPath = DataManager::instance().const_config_data.VoiceFolder;
     QString filePath = dirPath + "/" + hashName + ".wav";
+
+    // 缓存命中则直接返回已有文件
+    if (QFile::exists(filePath))
+    {
+        qDebug() << "[VoicevoxTTS] Reusing cached:" << filePath;
+        return filePath;
+    }
+
+    QByteArray wav = synthesis(text, styleId);
+    if (wav.isEmpty())
+    {
+        qWarning() << "[VoicevoxTTS] synthesizeToFile: synthesis empty";
+        return {};
+    }
 
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
