@@ -228,6 +228,7 @@ git fetch && git pull
 - [GLEW](http://glew.sourceforge.net/) - OpenGL 扩展加载库
 - [GLFW](https://www.glfw.org/) - 窗口与 OpenGL 上下文管理
 - [kissfft](https://github.com/mborgerding/kissfft) - 快速傅里叶变换库
+- [miniaudio](https://github.com/mackron/miniaudio) - 单文件音频解码库
 - [stb](https://github.com/nothings/stb) - 单头文件图像处理库
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - 免费中高质量 TTS 引擎
 - [ONNX Runtime](https://github.com/microsoft/onnxruntime) - 机器学习推理引擎

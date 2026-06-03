@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "0.5.0"
+#define VERSION "v0.5.0"
 
 struct filePaths
 {
@@ -152,7 +152,7 @@ struct TTSConfig
     QString tr_tx_secret_key;
     QString tr_tx_region;
     int tr_tx_project_id = 0;
-    QString tr_tx_source_lang;
+    QString tr_tx_source_lang = "auto";
     QString tr_tx_target_lang;
 };
 
