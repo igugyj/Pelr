@@ -25,6 +25,7 @@
 #include "ExtraMotionManager.h"
 #include "launcherMenu.hpp"
 #include "tray.h"
+#include "voicegenerator.hpp"
 // 键盘监听相关
 #include "globalinputlistener.h"
 #include "convertcodetostring.h"
@@ -405,6 +406,15 @@ void GLCore::connectSignals()
         qDebug() << "[GLCore] Starting app in star category";
         startRunStarIfPoweredInThread();
     }
+
+    // TTS 音频 → 模型口形同步
+    connect(VoiceGenerator::instance(), &VoiceGenerator::voiceGenerated,
+            this, [](const QString &filePath)
+            {
+                LAppLive2DManager *mgr = LAppLive2DManager::GetInstance();
+                if (mgr->GetModelNum() > 0)
+                    mgr->StartLipSync(Csm::csmString(filePath.toUtf8().constData()));
+            });
 }
 
 void GLCore::switchListener()

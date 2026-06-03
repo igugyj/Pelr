@@ -72,7 +72,6 @@ BubbleBox::BubbleBox(QLabel *parent) : QLabel(parent)
             this, [&](const QString &filePath)
             {
                 qDebug() << "[BubbleBox] Voice generated:" << filePath;
-                // 可以直接播放
                 VoiceGenerator::instance()->playVoice(filePath);
                 setText(m_text);
                 adjustSize();

@@ -101,6 +101,16 @@ add_library(kissfft STATIC
     thirdParty/kissfft/kiss_fftr.c
 )
 target_include_directories(kissfft PUBLIC thirdParty/kissfft)
+set_target_properties(kissfft PROPERTIES AUTOMOC OFF)
+
+# ============================================================================
+# 第三方库：miniaudio (轻量音频解码，TTS 口形同步)
+# ============================================================================
+add_library(miniaudio STATIC
+    thirdParty/miniaudio/miniaudio.c
+)
+target_include_directories(miniaudio PUBLIC thirdParty/miniaudio)
+set_target_properties(miniaudio PROPERTIES AUTOMOC OFF)
 
 # ============================================================================
 # 第三方库：GLEW (从源码编译)
@@ -112,6 +122,7 @@ target_include_directories(glew PUBLIC
     thirdParty/glew/include
 )
 target_compile_definitions(glew PRIVATE GLEW_STATIC)
+set_target_properties(glew PROPERTIES AUTOMOC OFF)
 
 # ============================================================================
 # 第三方库：GLFW (从源码编译)
@@ -127,6 +138,7 @@ target_include_directories(glfw PUBLIC
     thirdParty/glfw/include
 )
 target_compile_definitions(glfw PRIVATE _GLFW_WIN32)
+set_target_properties(glfw PROPERTIES AUTOMOC OFF)
 
 # 收集 Framework 源码，只保留 OpenGL 和公共代码
 file(GLOB_RECURSE CUBISM_FRAMEWORK_SRC_TEMP
@@ -139,6 +151,7 @@ list(FILTER CUBISM_FRAMEWORK_SRC_TEMP EXCLUDE REGEX ".*Vulkan.*\\.cpp")
 
 # 将 Framework 编译为静态库
 add_library(Framework STATIC ${CUBISM_FRAMEWORK_SRC_TEMP})
+set_target_properties(Framework PROPERTIES AUTOMOC OFF)
 
 # 头文件路径
 target_include_directories(Framework PUBLIC
@@ -241,6 +254,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
         Framework          # Cubism Framework 静态库
         kissfft
+        miniaudio          # 音频解码 (WAV/MP3)
         voicevox_core
         Qt6::Core
         Qt6::Gui

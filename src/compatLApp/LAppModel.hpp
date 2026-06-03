@@ -8,6 +8,7 @@
 #include "LAppWavFileHandler_Common.hpp"
 #include "LAppModel_Common.hpp"
 #include "ExtraFileManager.h"
+#include "TtsLipSync.hpp"
 
 /**
  * @brief 自定义模型类，支持额外动作/表情
@@ -54,12 +55,16 @@ public:
     bool HasExtraMotion(const csmChar *motionName) const;
     bool HasExtraExpression(const csmChar *expressionID) const;
 
+    void StartLipSync(const Csm::csmString &filePath);
+    void StopLipSync();
+
 protected:
     void DoDraw();
 
 private:
     void SetupModel(Csm::ICubismModelSetting *setting);
     void SetupTextures();
+    void setMouthParameter(Csm::csmFloat32 value);
     void PreloadMotionGroup(const Csm::csmChar *group);
     void ReleaseMotionGroup(const Csm::csmChar *group) const;
     void ReleaseMotions();
@@ -81,9 +86,12 @@ private:
     const Csm::CubismId *_idParamBodyAngleX;
     const Csm::CubismId *_idParamEyeBallX;
     const Csm::CubismId *_idParamEyeBallY;
+    const Csm::CubismId *_idParamMouthOpen;
 
     LAppWavFileHandler_Common _wavFileHandler;
     Csm::Rendering::CubismRenderTarget_OpenGLES2 _renderBuffer;
+
+    TtsLipSync _ttsSync;
 
     ExtraFileManager *_extraFileManager; // 额外文件管理器
 };

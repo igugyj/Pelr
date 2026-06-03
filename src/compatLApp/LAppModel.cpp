@@ -22,6 +22,7 @@
 #include "ExtraMotionManager.h"
 #include <QDebug>
 #include <QRandomGenerator>
+#include <QFile>
 
 using namespace Live2D::Cubism::Framework;
 using namespace Live2D::Cubism::Framework::DefaultParameterId;
@@ -43,6 +44,7 @@ LAppModel::LAppModel()
     _idParamBodyAngleX = CubismFramework::GetIdManager()->GetId(ParamBodyAngleX);
     _idParamEyeBallX = CubismFramework::GetIdManager()->GetId(ParamEyeBallX);
     _idParamEyeBallY = CubismFramework::GetIdManager()->GetId(ParamEyeBallY);
+    _idParamMouthOpen = CubismFramework::GetIdManager()->GetId(ParamMouthOpenY);
 }
 
 LAppModel::~LAppModel()
@@ -213,6 +215,12 @@ void LAppModel::SetupModel(ICubismModelSetting *setting)
             _lipSyncIds.PushBack(setting->GetLipSyncParameterId(i));
         CubismLipSyncUpdater *lipSync = CSM_NEW CubismLipSyncUpdater(_lipSyncIds, _wavFileHandler);
         _updateScheduler.AddUpdatableList(lipSync);
+        qDebug() << "[LApp] LipSync parameter count:" << count;
+        for (csmInt32 i = 0; i < count; i++)
+        {
+            const csmChar *idName = setting->GetLipSyncParameterId(i)->GetString().GetRawString();
+            qDebug() << "  [" << i << "]" << idName;
+        }
     }
 
     // Look
@@ -369,8 +377,39 @@ void LAppModel::Update()
 
     _updateScheduler.OnLateUpdate(_model, deltaTimeSeconds);
 
+    // TTS lip sync
+    float mouthValue;
+    if (_ttsSync.tick(deltaTimeSeconds, mouthValue))
+        setMouthParameter(mouthValue);
+
     _model->Update();
 }
+// ---------- TTS 口形同步 ----------
+void LAppModel::StartLipSync(const Csm::csmString &filePath)
+{
+    _ttsSync.start(QString::fromUtf8(filePath.GetRawString()));
+}
+
+void LAppModel::StopLipSync()
+{
+    _ttsSync.stop();
+    setMouthParameter(0.0f);
+    qDebug() << "[LApp] StopLipSync";
+}
+
+void LAppModel::setMouthParameter(csmFloat32 value)
+{
+    if (_lipSyncIds.GetSize() > 0)
+    {
+        for (auto it = _lipSyncIds.Begin(); it != _lipSyncIds.End(); ++it)
+            _model->SetParameterValue(*it, value);
+    }
+    else
+    {
+        _model->SetParameterValue(_idParamMouthOpen, value);
+    }
+}
+
 // ---------- 绘制 ----------
 void LAppModel::Draw(CubismMatrix44 &matrix)
 {
