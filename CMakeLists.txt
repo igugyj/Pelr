@@ -6,6 +6,7 @@ project(Pelr)
 
 # ====================== 全局配置开关 ======================
 set(DEBUG_MODE ON)           # ON: Debug, OFF: Release
+set(AUTO_UPDATE_TRANSLATIONS OFF)  # ON: 每次构建自动跑 lupdate 更新 .ts
 
 # 根据 DEBUG_MODE 设置构建类型和子系统
 if(DEBUG_MODE)
@@ -91,7 +92,16 @@ set(ALL_HEADER_FILES
 # ============================================================================
 
 # 生成翻译文件（.qm）
-qt_add_translation(QM_FILES ${TRANSLATION_FILES})
+set(QM_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/translations")
+qt_add_lupdate(${PROJECT_NAME}
+    TS_FILES ${TRANSLATION_FILES}
+    SOURCES ${ALL_CPP_SOURCES} ${ALL_HEADER_FILES} ${UI_FILES}
+)
+qt_add_translation(QM_FILES ${TRANSLATION_FILES} OUTPUT_DIRECTORY ${QM_OUTPUT_DIR})
+
+if(AUTO_UPDATE_TRANSLATIONS)
+    add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_lupdate)
+endif()
 
 # ============================================================================
 # 第三方库：kissfft
@@ -292,15 +302,6 @@ if (WIN32)
     else ()
         message(WARNING "Program icon file or RC script is missing, default icon will be used!")
     endif ()
-
-    # 复制翻译文件（.qm）到输出目录
-    set(QM_OUTPUT_DIR "$<TARGET_FILE_DIR:${PROJECT_NAME}>/translations")
-    foreach (qm_file ${QM_FILES})
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E make_directory ${QM_OUTPUT_DIR}
-                COMMAND ${CMAKE_COMMAND} -E copy ${qm_file} ${QM_OUTPUT_DIR}/
-                COMMENT "Copying translation file: ${qm_file}")
-    endforeach ()
 
     # 使用 windeployqt 自动部署 Qt 运行时（DLL、插件、翻译）
     if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
