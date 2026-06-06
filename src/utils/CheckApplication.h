@@ -14,6 +14,7 @@
 #include <QHostInfo>
 #include <QDateTime>
 #include <QDebug>
+#include "TranslationManager.h"
 
 class CheckApplication : public QDialog
 {
@@ -23,6 +24,8 @@ public:
     explicit CheckApplication(QWidget *parent = nullptr);
 
     bool isLicenseAccepted() const { return m_licenseAccepted; }
+
+    void retranslateUI();
 
     // 添加静态方法来检查许可证
     static bool hasValidLicense();
@@ -46,6 +49,7 @@ private:
 
     QString getCurrentVersion();
 
+    QLabel *m_titleLabel;
     QTextEdit *licenseText;
     QCheckBox *agreeCheckbox;
     QPushButton *acceptButton;

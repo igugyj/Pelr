@@ -15,6 +15,8 @@ public:
 
     void setModel(LAppModel *newModel);
 
+    void retranslateUI();
+
 private:
     ExtraMotionManager();
 

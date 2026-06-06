@@ -131,6 +131,7 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
     obj["isMusicIcon"] = d.isMusicIcon;
     obj["isShowThinkingBubble"] = d.isShowThinkingBubble;
     obj["isLLMGreeting"] = d.isLLMGreeting;
+    obj["language"] = d.language;
     return obj;
 }
 
@@ -172,6 +173,7 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.isMusicIcon = obj["isMusicIcon"].toBool();
     d.isShowThinkingBubble = obj["isShowThinkingBubble"].toBool();
     d.isLLMGreeting = obj["isLLMGreeting"].toBool();
+    d.language = obj["language"].toString().trimmed();
     return d;
 }
 

@@ -55,7 +55,7 @@ inline void write_log_level(const LogLevel level)
     if (!file.open(QIODevice::WriteOnly))
     {
         // 无法打开文件进行写入
-        QMessageBox::critical(nullptr, "Error", "写入数据失败！");
+        QMessageBox::critical(nullptr, "Error", "Failed to write data!");
         qCritical() << "[Log] Write data failed: can not open file" << LOG_LEVEL_FILE;
         return;
     }

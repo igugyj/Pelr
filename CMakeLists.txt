@@ -97,7 +97,7 @@ qt_add_lupdate(${PROJECT_NAME}
     TS_FILES ${TRANSLATION_FILES}
     SOURCES ${ALL_CPP_SOURCES} ${ALL_HEADER_FILES} ${UI_FILES}
 )
-qt_add_translation(QM_FILES ${TRANSLATION_FILES} OUTPUT_DIRECTORY ${QM_OUTPUT_DIR})
+qt_add_translation(QM_FILES ${TRANSLATION_FILES})
 
 if(AUTO_UPDATE_TRANSLATIONS)
     add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_lupdate)
@@ -283,6 +283,13 @@ target_link_libraries(${PROJECT_NAME}
 
 # 强制在 Qt OpenGL 头前包含 GLEW，避免符号冲突
 target_compile_options(${PROJECT_NAME} PRIVATE -include GL/glew.h)
+
+# 将 .qm 文件复制到 translations/ 子目录
+file(MAKE_DIRECTORY ${QM_OUTPUT_DIR})
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QM_FILES} ${QM_OUTPUT_DIR}
+    COMMENT "Copying .qm files to ${QM_OUTPUT_DIR}"
+)
 
 # ============================================================================
 # Windows 平台后处理

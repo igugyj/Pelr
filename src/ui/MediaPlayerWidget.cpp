@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include "TranslationManager.h"
 
 // ScrollLabel 实现
 ScrollLabel::ScrollLabel(QWidget *parent)
@@ -143,14 +144,17 @@ MediaPlayerWidget &MediaPlayerWidget::instance()
 
 MediaPlayerWidget::MediaPlayerWidget(QWidget *parent)
     : QWidget(parent), m_player(new QMediaPlayer(this)), m_videoWidget(nullptr),
-      m_openButton(new QPushButton("打开文件", this)), m_playPauseButton(new QPushButton("播放", this)),
-      m_stopButton(new QPushButton("停止", this)), m_positionSlider(new QSlider(Qt::Horizontal, this)),
+      m_openButton(new QPushButton(tr("Open File"), this)), m_playPauseButton(new QPushButton(tr("Play"), this)),
+      m_stopButton(new QPushButton(tr("Stop"), this)), m_positionSlider(new QSlider(Qt::Horizontal, this)),
       m_volumeSlider(new QSlider(Qt::Horizontal, this)), m_timeLabel(new QLabel("00:00/00:00", this)),
       m_fileNameLabel(new ScrollLabel(this)), m_positionTimer(new QTimer(this)), m_hasVideo(false),
       m_isSeeking(false)
 {
     setupUI();
     setupConnections();
+
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
 
     // 初始化播放器和音频输出
     m_audioOutput = new QAudioOutput();
@@ -162,7 +166,7 @@ MediaPlayerWidget::MediaPlayerWidget(QWidget *parent)
     m_positionTimer->setInterval(200); // 增加间隔减少更新频率
 
     // 设置窗口标题
-    setWindowTitle("媒体播放器");
+    setWindowTitle(tr("Media Player"));
 }
 
 MediaPlayerWidget::~MediaPlayerWidget()
@@ -181,17 +185,32 @@ void MediaPlayerWidget::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
+void MediaPlayerWidget::retranslateUI()
+{
+    m_openButton->setText(tr("Open File"));
+    m_stopButton->setText(tr("Stop"));
+    m_volumeLabel->setText(tr("Volume:"));
+    setWindowTitle(tr("Media Player"));
+    if (m_player->playbackState() == QMediaPlayer::PlayingState)
+        m_playPauseButton->setText(tr("Pause"));
+    else
+        m_playPauseButton->setText(tr("Play"));
+    if (m_currentMedia.isEmpty())
+        m_fileNameLabel->setText(tr("No media file selected"));
+    if (m_videoWidget)
+        m_videoWidget->setWindowTitle(tr("Video - Media Player"));
+}
+
 void MediaPlayerWidget::showLAVFiltersDownloadDialog()
 {
     QMessageBox msgBox(this);
-    msgBox.setWindowTitle("解码器问题");
+    msgBox.setWindowTitle(tr("Decoder Issue"));
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("无法播放此视频文件，可能是因为缺少合适的解码器。\n\n"
-                   "建议下载并安装 LAV Filters 以获得更好的视频格式支持。");
+    msgBox.setText(tr("Cannot play this video file. A suitable decoder may be missing.\n\nConsider downloading and installing LAV Filters for better format support."));
 
     // 添加按钮
-    QPushButton *downloadButton = msgBox.addButton("下载 LAV Filters", QMessageBox::ActionRole);
-    QPushButton *ignoreButton = msgBox.addButton("忽略", QMessageBox::RejectRole);
+    QPushButton *downloadButton = msgBox.addButton(tr("Download LAV Filters"), QMessageBox::ActionRole);
+    QPushButton *ignoreButton = msgBox.addButton(tr("Ignore"), QMessageBox::RejectRole);
 
     msgBox.exec();
     if (msgBox.clickedButton() == downloadButton)
@@ -209,7 +228,7 @@ void MediaPlayerWidget::setupUI()
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     // 文件名显示 - 支持滚动
-    m_fileNameLabel->setText("未选择媒体文件");
+    m_fileNameLabel->setText(tr("No media file selected"));
     mainLayout->addWidget(m_fileNameLabel);
 
     // 进度条和时间显示
@@ -223,7 +242,8 @@ void MediaPlayerWidget::setupUI()
     controlLayout->addWidget(m_openButton);
     controlLayout->addWidget(m_playPauseButton);
     controlLayout->addWidget(m_stopButton);
-    controlLayout->addWidget(new QLabel("音量:", this));
+    m_volumeLabel = new QLabel(tr("Volume:"), this);
+    controlLayout->addWidget(m_volumeLabel);
     controlLayout->addWidget(m_volumeSlider);
 
     mainLayout->addLayout(controlLayout);
@@ -286,7 +306,7 @@ void MediaPlayerWidget::playMedia(const QString &filePath)
     if (!checkFormatSupport(filePath))
     {
         qDebug() << "[MediaPlayer] Unsupported media format:" << filePath;
-        m_fileNameLabel->setText("不支持的媒体格式: " + QFileInfo(filePath).fileName());
+        m_fileNameLabel->setText(tr("Unsupported format: ") + QFileInfo(filePath).fileName());
         return;
     }
 
@@ -311,7 +331,7 @@ void MediaPlayerWidget::playMedia(const QString &filePath)
     m_player->setSource(QUrl::fromLocalFile(filePath));
 
     // 设置滚动文件名
-    QString displayName = "正在播放: " + QFileInfo(filePath).fileName();
+    QString displayName = tr("Now Playing: ") + QFileInfo(filePath).fileName();
     m_fileNameLabel->setText(displayName);
 
     m_playPauseButton->setEnabled(true);
@@ -343,7 +363,7 @@ void MediaPlayerWidget::onStop()
     m_positionTimer->stop();
     m_positionSlider->setValue(0);
     m_timeLabel->setText("00:00/00:00");
-    m_fileNameLabel->setText("未选择媒体文件");
+    m_fileNameLabel->setText(tr("No media file selected"));
     if (m_videoWidget && m_videoWidget->isVisible())
         m_videoWidget->hide();
     m_playPauseButton->setEnabled(false);
@@ -370,15 +390,15 @@ void MediaPlayerWidget::onStateChanged(QMediaPlayer::PlaybackState state)
     switch (state)
     {
     case QMediaPlayer::PlayingState:
-        m_playPauseButton->setText("暂停");
+        m_playPauseButton->setText(tr("Pause"));
         m_positionTimer->start();
         break;
     case QMediaPlayer::PausedState:
-        m_playPauseButton->setText("播放");
+        m_playPauseButton->setText(tr("Play"));
         m_positionTimer->stop();
         break;
     case QMediaPlayer::StoppedState:
-        m_playPauseButton->setText("播放");
+        m_playPauseButton->setText(tr("Play"));
         m_positionTimer->stop();
         m_positionSlider->setValue(0);
         updatePositionDisplay(0, m_player->duration());
@@ -496,7 +516,7 @@ void MediaPlayerWidget::setupVideoOutput()
     if (!m_videoWidget)
     {
         m_videoWidget = new QVideoWidget();
-        m_videoWidget->setWindowTitle("视频播放 - 媒体播放器");
+        m_videoWidget->setWindowTitle(tr("Video - Media Player"));
         m_videoWidget->resize(800, 600);
     }
     m_player->setVideoOutput(m_videoWidget);

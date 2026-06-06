@@ -30,6 +30,8 @@ public:
 
     void loadAllData();
 
+    void retranslateUI();
+
 private slots:
 
     void addTodoItem(QStandardItemModel *model);

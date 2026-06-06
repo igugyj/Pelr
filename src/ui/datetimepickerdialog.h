@@ -18,7 +18,7 @@ class DateTimePickerDialog : public QDialog
 public:
     explicit DateTimePickerDialog(QWidget *parent = nullptr,
                                   const QDateTime &initialDateTime = QDateTime::currentDateTime(),
-                                  const QString &title = "选择日期和时间");
+                                  const QString &title = "Select Date and Time");
 
     ~DateTimePickerDialog();
 
@@ -45,7 +45,14 @@ private:
 
     void setupShortcuts();
 
-    QDateEdit *m_dateEdit; // 改为 QDateEdit
+    QPushButton *m_todayBtn;
+    QPushButton *m_tomorrowBtn;
+    QPushButton *m_nextWeekBtn;
+    QLabel *m_labelDate;
+    QLabel *m_labelTime;
+    QLabel *m_labelSelectDate;
+    QLabel *m_labelSelectTime;
+    QDateEdit *m_dateEdit;
     QTimeEdit *m_timeEdit;
     QDateTime m_selectedDateTime;
 };

@@ -81,7 +81,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>系统监控</string>
+         <string>System Monitor</string>
         </property>
         <property name="text">
          <string/>
@@ -129,7 +129,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>聊天</string>
+         <string>Chat</string>
         </property>
         <property name="text">
          <string/>
@@ -219,7 +219,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>启动项</string>
+         <string>Startup</string>
         </property>
         <property name="text">
          <string/>
@@ -261,7 +261,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>设置</string>
+         <string>Settings</string>
         </property>
         <property name="text">
          <string/>

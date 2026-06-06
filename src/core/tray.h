@@ -37,6 +37,8 @@ public:
     QAction *action_quit;
     QAction *action_keyListener;
 
+    void retranslateUI();
+
     QIcon m_appIcon = QIcon(":/public/image/Pelr.png");
 
 private:
@@ -48,6 +50,11 @@ private:
     static TrayIcon *m_instance;
 
     QMenu *menu;
+    QMenu *m_menuOpen;
+    QAction *m_actionOpenDirPath;
+    QAction *m_actionOpenUserPath;
+    QAction *m_actionOpenLogPath;
+    QAction *m_actionStartApp;
     bool m_silentMode = false;
 
     QPixmap createMusicIcon() const;

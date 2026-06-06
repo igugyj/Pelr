@@ -2,19 +2,31 @@
 #include "ExtraMotionManager.h"
 #include <QDebug>
 #include "LAppDefine.hpp"
+#include "TranslationManager.h"
+#include "custommenu.h"
 using namespace LAppDefine;
 ExtraMotionManager *ExtraMotionManager::instance = nullptr;
 
 ExtraMotionManager::ExtraMotionManager()
     : CustomMenu(nullptr), model(nullptr)
 {
-    setTitle(tr("额外内容"));
+    setTitle(tr("Extra Content"));
 
-    motionMenu = new QMenu(tr("动作"), this);
-    expressionMenu = new QMenu(tr("表情"), this);
+    motionMenu = new CustomMenu(tr("Motions"), this);
+    expressionMenu = new CustomMenu(tr("Expressions"), this);
 
     addMenu(motionMenu);
     addMenu(expressionMenu);
+
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &)
+            { retranslateUI(); });
+}
+
+void ExtraMotionManager::retranslateUI()
+{
+    setTitle(tr("Extra Content"));
+    refreshMenu();
 }
 
 ExtraMotionManager::~ExtraMotionManager()
@@ -51,7 +63,7 @@ void ExtraMotionManager::refreshMenu()
 
     if (!model)
     {
-        QAction *noModelAction = new QAction(tr("没有加载模型"), this);
+        QAction *noModelAction = new QAction(tr("No Model Loaded"), this);
         noModelAction->setEnabled(false);
         motionMenu->addAction(noModelAction);
         return;
@@ -76,7 +88,7 @@ void ExtraMotionManager::refreshMenu()
         motionMenu->addAction(action);
         motionCount++;
     }
-    motionMenu->setTitle(tr("动作 (%1)").arg(motionCount));
+    motionMenu->setTitle(tr("Motions (%1)").arg(motionCount));
 
     // 添加表情
     int expressionCount = 0;
@@ -96,5 +108,5 @@ void ExtraMotionManager::refreshMenu()
         expressionMenu->addAction(action);
         expressionCount++;
     }
-    expressionMenu->setTitle(tr("表情 (%1)").arg(expressionCount));
+    expressionMenu->setTitle(tr("Expressions (%1)").arg(expressionCount));
 }

@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <launcherMenu.hpp>
 #include "NotificationWidget.h"
+#include "TranslationManager.h"
 using MessageType = NotificationWidget::MessageType;
 ManageStartWidget::ManageStartWidget(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::manageStart),
@@ -14,6 +15,13 @@ ManageStartWidget::ManageStartWidget(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
     initWidget();
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
+}
+
+void ManageStartWidget::retranslateUI()
+{
+    ui->retranslateUi(this);
 }
 
 void ManageStartWidget::initWidget()
@@ -73,7 +81,7 @@ void ManageStartWidget::deleteSelectedItem()
     QModelIndex currentIndex = ui->treeView->currentIndex();
     if (!currentIndex.isValid())
     {
-        NotificationWidget::showNotification(tr("Warning"), tr("请先选择一个项目!"), 5000, MessageType::Warning);
+        NotificationWidget::showNotification(tr("Warning"), tr("Please select an item first!"), 5000, MessageType::Warning);
         qWarning() << "[ManageStart] Index is invalid";
         return;
     }
@@ -95,7 +103,7 @@ void ManageStartWidget::deleteSelectedItem()
 
     // 确认对话框
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr("Confirmation"), tr("确定要删除选中的项目吗?"),
+    reply = QMessageBox::question(this, tr("Confirmation"), tr("Are you sure you want to delete the selected item?"),
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes)
@@ -151,14 +159,14 @@ void ManageStartWidget::saveMenuData()
         QFileInfo fileInfo(data[i].path);
         if (!fileInfo.exists() && data[i].category != "Link")
             NotificationWidget::showNotification(
-                tr("Warning"), tr("项目 %1 \n的路径不存在：%2").arg(data[i].name).arg(data[i].path), 5000, MessageType::Warning);
+                tr("Warning"), tr("Item %1 path does not exist: %2").arg(data[i].name).arg(data[i].path), 5000, MessageType::Warning);
         qDebug() << "[ManageStart] Save data:" << data[i].category << " " << data[i].name << " " << data[i].path << " "
                  << data[i].icon << " " << data[i].description;
     }
     DataManager::instance().writeData<QList<MenuData>>(data);
     isSaved = true;
     launcherMenu::instance()->refreshMenu();
-    NotificationWidget::showNotification(tr("Information"), tr("保存成功！"));
+    NotificationWidget::showNotification(tr("Information"), tr("Saved!"));
 }
 
 void ManageStartWidget::getAllItems(QList<MenuData> &data)

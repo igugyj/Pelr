@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>待办事项</string>
+   <string>Todo</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_main">
    <property name="leftMargin">
@@ -102,7 +102,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>添加</string>
+             <string>Add</string>
             </property>
             <property name="text">
              <string/>
@@ -128,7 +128,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>完成</string>
+             <string>Complete</string>
             </property>
             <property name="text">
              <string/>
@@ -154,7 +154,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>删除</string>
+             <string>Delete</string>
             </property>
             <property name="text">
              <string/>
@@ -180,7 +180,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>清空</string>
+             <string>Clear All</string>
             </property>
             <property name="text">
              <string/>
@@ -213,14 +213,14 @@
           <item>
            <widget class="QCheckBox" name="checkBox">
             <property name="text">
-             <string>提醒</string>
+             <string>Remind</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="checkBox_2">
             <property name="text">
-             <string>弹窗消息</string>
+             <string>Popup Message</string>
             </property>
            </widget>
           </item>
@@ -262,7 +262,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>添加</string>
+             <string>Add</string>
             </property>
             <property name="text">
              <string/>
@@ -314,7 +314,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>删除</string>
+             <string>Delete</string>
             </property>
             <property name="text">
              <string/>
@@ -340,7 +340,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>清空</string>
+             <string>Clear All</string>
             </property>
             <property name="text">
              <string/>

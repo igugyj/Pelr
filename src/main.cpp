@@ -96,8 +96,16 @@ void initTranslator(QApplication &a, const QString &path)
 {
     TranslationManager::setApplication(&a);
     TranslationManager::instance()->addTranslationPath(path);
-    QString sysLang = TranslationManager::instance()->detectSystemLanguage();
-    TranslationManager::instance()->setLanguage("en_US");
-    qDebug() << "[APP] System language:" << sysLang;
+
+    // 1. 优先读取配置
+    QString lang = DataManager::instance().getBasicData().language;
+
+    // 2. 配置为空 → 检测系统语言
+    if (lang.isEmpty())
+        lang = TranslationManager::instance()->detectSystemLanguage();
+
+    // 3. 不支持 → 默认英语
+    TranslationManager::instance()->setLanguage(lang);
+    qDebug() << "[APP] Language set to:" << lang;
     qDebug() << "[APP] Translator initialized";
 }

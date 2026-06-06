@@ -183,7 +183,7 @@ public:
         if (!QFile::exists(filePath))
         {
             qWarning() << "[VoiceGen] File does not exist:" << filePath;
-            emit errorOccurred(tr("音频文件不存在: %1").arg(filePath));
+            emit errorOccurred(tr("Audio file not found: %1").arg(filePath));
             return;
         }
 

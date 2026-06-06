@@ -37,16 +37,8 @@ TranslationManager *TranslationManager::instance()
 
 void TranslationManager::initLanguages()
 {
-    // 支持的语言列表（代码 : 显示名称）
     m_languages["en_US"] = tr("English");
     m_languages["zh_CN"] = tr("简体中文");
-    m_languages["zh_TW"] = tr("繁體中文");
-    m_languages["ja_JP"] = tr("日本語");
-    m_languages["ko_KR"] = tr("한국어");
-    m_languages["fr_FR"] = tr("Français");
-    m_languages["de_DE"] = tr("Deutsch");
-    m_languages["ru_RU"] = tr("Русский");
-    m_languages["es_ES"] = tr("Español");
 }
 
 void TranslationManager::addTranslationPath(const QString &path)
@@ -61,10 +53,12 @@ QString TranslationManager::findTranslationFile(const QString &languageCode)
 {
     QStringList possibleNames;
     possibleNames << QString("%1.qm").arg(languageCode);
+    possibleNames << QString("language_%1.qm").arg(languageCode);
     possibleNames << QString("languages_%1.qm").arg(languageCode);
     possibleNames << QString("qt_%1.qm").arg(languageCode);
-    possibleNames << QString("%1.ts").arg(languageCode);           // 也支持.ts文件
-    possibleNames << QString("languages_%1.ts").arg(languageCode); // 也支持.ts文件
+    possibleNames << QString("%1.ts").arg(languageCode);
+    possibleNames << QString("language_%1.ts").arg(languageCode);
+    possibleNames << QString("languages_%1.ts").arg(languageCode);
 
     // 搜索所有路径
     for (const QString &path : m_translationPaths)

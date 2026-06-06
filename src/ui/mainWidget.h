@@ -34,6 +34,8 @@ public:
 
     void initUI();
 
+    void retranslateUI();
+
     void showEvent(QShowEvent *event) override;
 
 private:

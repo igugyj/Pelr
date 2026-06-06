@@ -86,7 +86,7 @@ void ChatBoxOnModel::onErrorOccurred(const QString &error, const int &id)
         return;
     qDebug() << "[ChatBox] Error:" << error;
     // 处理错误
-    BubbleBox::instance()->textSet(tr("错误：%1").arg(error));
+    BubbleBox::instance()->textSet(tr("Error: %1").arg(error));
 }
 
 void ChatBoxOnModel::setLineStyle()

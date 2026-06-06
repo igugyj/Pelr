@@ -306,16 +306,11 @@
         <file>public/IconaMoon/Arrow/Arrow Bottom Left 2 - 24x24.png</file>
     </qresource>
     <qresource>
-        <file>translations/language_en_US.ts</file>
-        <file>translations/language_zh_CN.ts</file>
-    </qresource>
-    <qresource>
         <file>public/font/MapleMono-NF-CN-Medium.ttf</file>
     </qresource>
     <qresource>
         <file>public/style/menu.qss</file>
     </qresource>
-    <qresource/>
     <qresource>
         <file>THANBKS.md</file>
         <file>public/image/Pelr.png</file>
