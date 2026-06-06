@@ -40,10 +40,9 @@
 
 ## Roadmap
 
-- [ ] Hotkey support
-- [ ] Hot-reload user configuration
+- [ ] ~~Hotkey support~~
+- [ ] ~~Hot-reload user configuration~~
 - [ ] PMX model support (planning to integrate [saba](https://github.com/benikabocha/saba))
-- [ ] Multi-language UI (low priority)
 
 ## Preview
 
