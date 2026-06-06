@@ -16,6 +16,9 @@ CheckApplication::CheckApplication(QWidget *parent)
     // 延迟许可证验证到 showEvent
     setupUI();
     setModal(true);
+
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
 }
 
 void CheckApplication::showEvent(QShowEvent *event)
@@ -79,51 +82,47 @@ bool CheckApplication::hasValidLicense()
 
 void CheckApplication::setupUI()
 {
-    setWindowTitle(tr("MIT 许可证确认"));
+    setWindowTitle(tr("MIT License Agreement"));
     setFixedSize(800, 600);
 
     // 创建控件
-    QLabel *titleLabel = new QLabel(tr("MIT 许可证"), this);
-    QFont titleFont = titleLabel->font();
+    m_titleLabel = new QLabel(tr("MIT License"), this);
+    QFont titleFont = m_titleLabel->font();
     titleFont.setBold(true);
     titleFont.setPointSize(14);
-    titleLabel->setFont(titleFont);
-    titleLabel->setAlignment(Qt::AlignCenter);
+    m_titleLabel->setFont(titleFont);
+    m_titleLabel->setAlignment(Qt::AlignCenter);
 
     // MIT 许可证文本
     licenseText = new QTextEdit(this);
     licenseText->setReadOnly(true);
 
     QString LicenseText = tr(
-                              "MIT 许可证\n\n"
-                              "版权所有 (C) 2007 自由软件基金会 <https://fsf.org/>\n\n"
-                              "特此免费授予任何获得本软件及相关文档文件（“软件”）副本的人不受限制地处理本软件的权限，\n"
-                              "包括但不限于使用、复制、修改、合并、发布、分发、再许可和/或销售软件副本的权利，\n"
-                              "以及允许获得软件的人这样做，但须符合以下条件：\n\n"
-                              "上述版权声明和本许可声明应包含在本软件的所有副本或重要部分中。\n\n"
-                              "本软件“按原样”提供，不提供任何明示或暗示的保证，包括但不限于适销性、\n"
-                              "特定用途适用性和非侵权性的保证。在任何情况下，作者或版权持有人均不对任何索赔、\n"
-                              "损害或其他责任负责，无论是在合同、侵权或其他方面，由软件或软件的使用或其他交易引起或与之相关。\n\n"
-                              "本程序使用 MIT 许可证。\n\n"
-                              "用户: %1\n"
-                              "版本: %2")
+                              "MIT License\n\n"
+                              "Copyright (c) 2007 Free Software Foundation <https://fsf.org/>\n\n"
+                              "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\n"
+                              "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n"
+                              "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n"
+                              "This program is licensed under the MIT License.\n\n"
+                              "User: %1\n"
+                              "Version: %2")
                               .arg(m_username)
                               .arg(m_version);
 
     licenseText->setPlainText(LicenseText);
 
     // 同意复选框
-    agreeCheckbox = new QCheckBox(tr("我理解并接受上述 MIT 许可证条款"), this);
+    agreeCheckbox = new QCheckBox(tr("I understand and accept the above MIT License terms"), this);
 
     // 按钮
-    acceptButton = new QPushButton(tr("接受"), this);
-    rejectButton = new QPushButton(tr("拒绝"), this);
+    acceptButton = new QPushButton(tr("Accept"), this);
+    rejectButton = new QPushButton(tr("Reject"), this);
 
     acceptButton->setEnabled(false);
 
     // 布局
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(titleLabel);
+    mainLayout->addWidget(m_titleLabel);
     mainLayout->addWidget(licenseText);
     mainLayout->addWidget(agreeCheckbox);
 
@@ -138,6 +137,27 @@ void CheckApplication::setupUI()
             { acceptButton->setEnabled(state == Qt::Checked); });
     connect(acceptButton, &QPushButton::clicked, this, &CheckApplication::onAcceptClicked);
     connect(rejectButton, &QPushButton::clicked, this, &CheckApplication::onRejectClicked);
+}
+
+void CheckApplication::retranslateUI()
+{
+    setWindowTitle(tr("MIT License Agreement"));
+    m_titleLabel->setText(tr("MIT License"));
+    QString LicenseText = tr(
+                              "MIT License\n\n"
+                              "Copyright (c) 2007 Free Software Foundation <https://fsf.org/>\n\n"
+                              "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\n"
+                              "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n"
+                              "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n"
+                              "This program is licensed under the MIT License.\n\n"
+                              "User: %1\n"
+                              "Version: %2")
+                              .arg(m_username)
+                              .arg(m_version);
+    licenseText->setPlainText(LicenseText);
+    agreeCheckbox->setText(tr("I understand and accept the above MIT License terms"));
+    acceptButton->setText(tr("Accept"));
+    rejectButton->setText(tr("Reject"));
 }
 
 bool CheckApplication::validateExistingLicense()

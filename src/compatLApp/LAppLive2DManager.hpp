@@ -33,6 +33,9 @@ public:
     static void SetDragStrength(Csm::csmFloat32 strength);
 
     // ---------- 自定义方法 ----------
+    void StartLipSync(const Csm::csmString &wavFilePath);
+    void StartLipSync(Csm::csmUint32 modelIndex, const Csm::csmString &wavFilePath);
+
     void LoadModelFromPath(const std::string &modelPath, const std::string &fileName);
     void LoadModelFromConfig();
 

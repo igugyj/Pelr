@@ -19,6 +19,9 @@ UpdateDialog::UpdateDialog(const VersionCheckSummary &summary, QWidget *parent)
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     resize(600, 450);
 
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
+
     // 收集成功的源
     for (const auto &res : summary.results)
     {
@@ -55,7 +58,8 @@ void UpdateDialog::setupUi()
 
     // 本地版本信息
     QHBoxLayout *localLayout = new QHBoxLayout();
-    localLayout->addWidget(new QLabel(tr("Current version:")));
+    m_labelCurrentVersion = new QLabel(tr("Current version:"));
+    localLayout->addWidget(m_labelCurrentVersion);
     m_localVersionLabel = new QLabel(m_summary.localVersion);
     m_localVersionLabel->setStyleSheet("font-weight: bold;");
     localLayout->addWidget(m_localVersionLabel);
@@ -83,7 +87,8 @@ void UpdateDialog::setupUi()
 
     // 源选择下拉框
     QHBoxLayout *sourceLayout = new QHBoxLayout();
-    sourceLayout->addWidget(new QLabel(tr("Source:")));
+    m_labelSource = new QLabel(tr("Source:"));
+    sourceLayout->addWidget(m_labelSource);
     m_sourceComboBox = new QComboBox();
     for (const auto &src : m_successfulSources)
     {
@@ -103,8 +108,8 @@ void UpdateDialog::setupUi()
             this, &UpdateDialog::onSourceSelectionChanged);
 
     // 发布说明浏览器
-    QLabel *bodyLabel = new QLabel(tr("Release Notes:"));
-    m_mainLayout->addWidget(bodyLabel);
+    m_labelReleaseNotes = new QLabel(tr("Release Notes:"));
+    m_mainLayout->addWidget(m_labelReleaseNotes);
     m_bodyBrowser = new QTextBrowser();
     m_bodyBrowser->setOpenExternalLinks(true);
     m_bodyBrowser->setPlaceholderText(tr("No release notes available."));
@@ -124,6 +129,23 @@ void UpdateDialog::setupUi()
     buttonLayout->addWidget(m_closeButton);
 
     m_mainLayout->addLayout(buttonLayout);
+}
+
+void UpdateDialog::retranslateUI()
+{
+    setWindowTitle(tr("Check for Updates"));
+    m_labelCurrentVersion->setText(tr("Current version:"));
+    m_labelSource->setText(tr("Source:"));
+    m_labelReleaseNotes->setText(tr("Release Notes:"));
+    if (m_summary.anyNewerVersion)
+        m_statusLabel->setText(tr("New version available!"));
+    else if (m_summary.anySuccess)
+        m_statusLabel->setText(tr("You are using the latest version."));
+    else
+        m_statusLabel->setText(tr("Check failed. Please try again later."));
+    m_bodyBrowser->setPlaceholderText(tr("No release notes available."));
+    m_downloadButton->setText(tr("Download"));
+    m_closeButton->setText(tr("Close"));
 }
 
 void UpdateDialog::onSourceSelectionChanged(int index)

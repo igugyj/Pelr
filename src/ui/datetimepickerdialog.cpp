@@ -3,6 +3,7 @@
 #include <QShortcut>
 #include <QKeySequence>
 #include <QApplication>
+#include "TranslationManager.h"
 
 DateTimePickerDialog::DateTimePickerDialog(
     QWidget *parent,
@@ -13,6 +14,9 @@ DateTimePickerDialog::DateTimePickerDialog(
     setWindowTitle(title);
     setupUI();
     setupShortcuts();
+
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
 }
 
 DateTimePickerDialog::~DateTimePickerDialog()
@@ -31,27 +35,28 @@ void DateTimePickerDialog::setupUI()
 
     // 快速选择按钮
     QHBoxLayout *quickSelectLayout = new QHBoxLayout();
-    QPushButton *todayBtn = new QPushButton(tr("今天"), this);
-    QPushButton *tomorrowBtn = new QPushButton(tr("明天"), this);
-    QPushButton *nextWeekBtn = new QPushButton(tr("下周"), this);
+    m_todayBtn = new QPushButton(tr("Today"), this);
+    m_tomorrowBtn = new QPushButton(tr("Tomorrow"), this);
+    m_nextWeekBtn = new QPushButton(tr("Next Week"), this);
 
     // 设置按钮尺寸
-    todayBtn->setFixedHeight(30);
-    tomorrowBtn->setFixedHeight(30);
-    nextWeekBtn->setFixedHeight(30);
+    m_todayBtn->setFixedHeight(30);
+    m_tomorrowBtn->setFixedHeight(30);
+    m_nextWeekBtn->setFixedHeight(30);
 
-    connect(todayBtn, &QPushButton::clicked, this, &DateTimePickerDialog::onTodayClicked);
-    connect(tomorrowBtn, &QPushButton::clicked, this, &DateTimePickerDialog::onTomorrowClicked);
-    connect(nextWeekBtn, &QPushButton::clicked, this, &DateTimePickerDialog::onNextWeekClicked);
+    connect(m_todayBtn, &QPushButton::clicked, this, &DateTimePickerDialog::onTodayClicked);
+    connect(m_tomorrowBtn, &QPushButton::clicked, this, &DateTimePickerDialog::onTomorrowClicked);
+    connect(m_nextWeekBtn, &QPushButton::clicked, this, &DateTimePickerDialog::onNextWeekClicked);
 
-    quickSelectLayout->addWidget(todayBtn);
-    quickSelectLayout->addWidget(tomorrowBtn);
-    quickSelectLayout->addWidget(nextWeekBtn);
+    quickSelectLayout->addWidget(m_todayBtn);
+    quickSelectLayout->addWidget(m_tomorrowBtn);
+    quickSelectLayout->addWidget(m_nextWeekBtn);
     quickSelectLayout->addStretch();
 
     // 日期选择 - 使用 QDateEdit
     QHBoxLayout *dateLayout = new QHBoxLayout();
-    dateLayout->addWidget(new QLabel(tr("日期:"), this));
+    m_labelDate = new QLabel(tr("Date:"), this);
+    dateLayout->addWidget(m_labelDate);
 
     m_dateEdit = new QDateEdit(this);
     m_dateEdit->setDate(m_selectedDateTime.date());
@@ -64,7 +69,8 @@ void DateTimePickerDialog::setupUI()
 
     // 时间选择
     QHBoxLayout *timeLayout = new QHBoxLayout();
-    timeLayout->addWidget(new QLabel(tr("时间:"), this));
+    m_labelTime = new QLabel(tr("Time:"), this);
+    timeLayout->addWidget(m_labelTime);
 
     m_timeEdit = new QTimeEdit(this);
     m_timeEdit->setTime(m_selectedDateTime.time());
@@ -103,9 +109,11 @@ void DateTimePickerDialog::setupUI()
 
     // 添加到主布局
     mainLayout->addLayout(quickSelectLayout);
-    mainLayout->addWidget(new QLabel(tr("选择日期:"), this));
+    m_labelSelectDate = new QLabel(tr("Select Date:"), this);
+    mainLayout->addWidget(m_labelSelectDate);
     mainLayout->addLayout(dateLayout);
-    mainLayout->addWidget(new QLabel(tr("选择时间:"), this));
+    m_labelSelectTime = new QLabel(tr("Select Time:"), this);
+    mainLayout->addWidget(m_labelSelectTime);
     mainLayout->addLayout(timeLayout);
     mainLayout->addStretch(); // 添加弹性空间
     mainLayout->addWidget(buttonBox);
@@ -175,4 +183,12 @@ void DateTimePickerDialog::onNextWeekClicked()
 
 void DateTimePickerDialog::retranslateUI()
 {
+    setWindowTitle(tr("Select Date and Time"));
+    m_todayBtn->setText(tr("Today"));
+    m_tomorrowBtn->setText(tr("Tomorrow"));
+    m_nextWeekBtn->setText(tr("Next Week"));
+    m_labelDate->setText(tr("Date:"));
+    m_labelTime->setText(tr("Time:"));
+    m_labelSelectDate->setText(tr("Select Date:"));
+    m_labelSelectTime->setText(tr("Select Time:"));
 }

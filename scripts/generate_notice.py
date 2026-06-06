@@ -161,6 +161,15 @@ THIRD_PARTY_LIBS = [
         "extra_notes": "",
     },
     {
+        "name": "miniaudio",
+        "version": "0.11.25",
+        "license_type": "Public Domain (www.unlicense.org) & MIT No Attribution",
+        "copyright": "David Reid",
+        "homepage": "https://github.com/mackron/miniaudio",
+        "license_path": "thirdParty/miniaudio/LICENSE",
+        "extra_notes": "",
+    },
+    {
         "name": "stb",
         "version": "Latest",
         "license_type": "MIT / Public Domain",

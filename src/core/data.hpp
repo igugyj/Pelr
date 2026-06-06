@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "0.4.1"
+#define VERSION "v0.6.1"
 
 struct filePaths
 {
@@ -64,6 +64,7 @@ struct ConfigData
     bool isMusicIcon = false;
     bool isShowThinkingBubble = false;
     bool isLLMGreeting = false;
+    QString language;
 };
 
 struct constConfigData
@@ -152,7 +153,7 @@ struct TTSConfig
     QString tr_tx_secret_key;
     QString tr_tx_region;
     int tr_tx_project_id = 0;
-    QString tr_tx_source_lang;
+    QString tr_tx_source_lang = "auto";
     QString tr_tx_target_lang;
 };
 

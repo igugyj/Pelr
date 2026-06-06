@@ -71,7 +71,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>清除</string>
+         <string>Clear</string>
         </property>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
@@ -184,7 +184,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>发送</string>
+         <string>Send</string>
         </property>
         <property name="text">
          <string/>

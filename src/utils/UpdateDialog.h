@@ -4,6 +4,7 @@
 
 #include <QDialog>
 #include "VersionChecker.h"
+#include "TranslationManager.h"
 
 class QTextBrowser;
 class QPushButton;
@@ -20,6 +21,8 @@ public:
 
     ~UpdateDialog();
 
+    void retranslateUI();
+
 private slots:
     void onDownloadClicked();
 
@@ -35,6 +38,9 @@ private:
 
     QLabel *m_localVersionLabel;
     QLabel *m_statusLabel;
+    QLabel *m_labelCurrentVersion;
+    QLabel *m_labelSource;
+    QLabel *m_labelReleaseNotes;
     QComboBox *m_sourceComboBox;
     QTextBrowser *m_bodyBrowser;
     QPushButton *m_downloadButton;

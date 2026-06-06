@@ -8,11 +8,19 @@
 #include <QDateTimeEdit>
 #include "datetimepickerdialog.h"
 #include "data.hpp"
+#include "TranslationManager.h"
 
 todoWidget::todoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::todoWidget)
 {
     ui->setupUi(this);
     initWidget();
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
+}
+
+void todoWidget::retranslateUI()
+{
+    ui->retranslateUi(this);
 }
 
 void todoWidget::onTableViewDoubleClicked(const QModelIndex &index)
@@ -63,7 +71,7 @@ void todoWidget::initWidget()
 
     // 设置表头
     QStringList header;
-    header << "标题" << "内容" << "截止时间" << "备注" << "提醒";
+    header << tr("Title") << tr("Content") << tr("Deadline") << tr("Notes") << tr("Reminder");
     model_todo->setHorizontalHeaderLabels(header);
     model_done->setHorizontalHeaderLabels(header);
     // 设置模型
@@ -154,7 +162,7 @@ void todoWidget::moveItem(QTableView *view)
     }
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirmation",
-                                  QString("确定移动选中的 %1 个项目吗?")
+                                  tr("Are you sure you want to move the selected %1 item(s)?")
                                       .arg(selectedRows.size()),
                                   QMessageBox::Yes | QMessageBox::No);
 
@@ -224,7 +232,7 @@ void todoWidget::deleteSelectedItem(QTableView *view)
     }
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirmation",
-                                  QString("确定删除选中的 %1 个项目吗?")
+                                  tr("Are you sure you want to delete the selected %1 item(s)?")
                                       .arg(selectedRows.size()),
                                   QMessageBox::Yes | QMessageBox::No);
 

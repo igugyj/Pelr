@@ -29,7 +29,7 @@
 - **Live2D 虚拟角色** - 支持 model3.json 格式，提供生动的桌面伴侣体验
 - **智能对话** - 兼容 OpenAI 的 AI 服务，支持自然语言交互
 - **表情动作** - 支持模型自带的表情与动作切换
-- **语音合成** - 内置 Edge TTS、讯飞 TTS、VOICEVOX 和 OpenAI-Compatible TTS
+- **语音合成与唇形同步** - 内置 Edge TTS、讯飞 TTS、VOICEVOX 和 OpenAI-Compatible TTS，播放语音时模型自动模拟嘴部动作
 - **TODO 管理** - 添加事件并提醒待办
 - **启动管理** - 可视化管理系统启动项，支持启动任意文件与链接（继承自 [QuickTray](https://github.com/Pfolg/QuickTray)）
 - **键盘监听** - 实时显示按键状态（继承自 [KeyMonitor](https://github.com/Pfolg/KeyMonitor)）
@@ -40,11 +40,9 @@
 
 ## Roadmap
 
-- [ ] 唇形同步
-- [ ] 快捷键支持
-- [ ] 热加载用户配置
+- [ ] ~~快捷键支持~~
+- [ ] ~~热加载用户配置~~
 - [ ] PMX 模型支持（计划引入 [saba](https://github.com/benikabocha/saba)）
-- [ ] 多语言 UI（低优先级）
 
 ## 预览
 
@@ -229,6 +227,7 @@ git fetch && git pull
 - [GLEW](http://glew.sourceforge.net/) - OpenGL 扩展加载库
 - [GLFW](https://www.glfw.org/) - 窗口与 OpenGL 上下文管理
 - [kissfft](https://github.com/mborgerding/kissfft) - 快速傅里叶变换库
+- [miniaudio](https://github.com/mackron/miniaudio) - 单文件音频解码库
 - [stb](https://github.com/nothings/stb) - 单头文件图像处理库
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - 免费中高质量 TTS 引擎
 - [ONNX Runtime](https://github.com/microsoft/onnxruntime) - 机器学习推理引擎

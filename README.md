@@ -29,7 +29,7 @@
 - **Live2D Character** - Supports model3.json format for an expressive desktop companion
 - **AI Chat** - OpenAI-compatible API for natural language interaction
 - **Expressions & Motions** - Play built-in expressions and motions if supported by the model
-- **Text-to-Speech** - Built-in support for Edge TTS, iFlytek TTS, VOICEVOX, and OpenAI-Compatible TTS
+- **Text-to-Speech & Lip Sync** - Built-in support for Edge TTS, iFlytek TTS, VOICEVOX, and OpenAI-Compatible TTS. The model's mouth moves automatically when playing audio.
 - **TODO Manager** - Add events and receive reminders
 - **Launch Manager** - Visually manage startup items; launch any file or link (forked from [QuickTray](https://github.com/Pfolg/QuickTray))
 - **Keyboard Monitor** - Real-time display of key press states (forked from [KeyMonitor](https://github.com/Pfolg/KeyMonitor))
@@ -40,11 +40,9 @@
 
 ## Roadmap
 
-- [ ] Lip sync
-- [ ] Hotkey support
-- [ ] Hot-reload user configuration
+- [ ] ~~Hotkey support~~
+- [ ] ~~Hot-reload user configuration~~
 - [ ] PMX model support (planning to integrate [saba](https://github.com/benikabocha/saba))
-- [ ] Multi-language UI (low priority)
 
 ## Preview
 
@@ -229,6 +227,7 @@ Different components use different licenses:
 - [GLEW](http://glew.sourceforge.net/) - OpenGL extension loading
 - [GLFW](https://www.glfw.org/) - Window and OpenGL context management
 - [kissfft](https://github.com/mborgerding/kissfft) - Fast Fourier transform library
+- [miniaudio](https://github.com/mackron/miniaudio) - Single-file audio decoding library
 - [stb](https://github.com/nothings/stb) - Single-header image processing library
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - Free TTS engine
 - [ONNX Runtime](https://github.com/microsoft/onnxruntime) - Cross-platform ML inference engine

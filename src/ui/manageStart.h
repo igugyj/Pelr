@@ -36,6 +36,8 @@ public:
 
     void loadMenuData();
 
+    void retranslateUI();
+
 public slots:
     void saveMenuData();
 

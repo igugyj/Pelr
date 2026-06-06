@@ -124,4 +124,7 @@ private:
     QString m_currentMedia;
     bool m_hasVideo;
     bool m_isSeeking;
+    QLabel *m_volumeLabel;
+
+    void retranslateUI();
 };

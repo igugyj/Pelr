@@ -34,7 +34,7 @@ QPair<QList<QString>, QList<QString>> EditorWidget::getAllInfo()
     QList<QString> category;
     if (name.isEmpty() || path.isEmpty())
     {
-        NotificationWidget::showNotification(tr("Warning"), tr("名称和路径不能为空"), 5000, MessageType::Warning);
+        NotificationWidget::showNotification(tr("Warning"), tr("Name and path cannot be empty"), 5000, MessageType::Warning);
         return {};
     }
     if (ui->checkBox->isChecked())
@@ -55,7 +55,7 @@ QPair<QList<QString>, QList<QString>> EditorWidget::getAllInfo()
     }
     if (category.isEmpty())
     {
-        NotificationWidget::showNotification(tr("Warning"), tr("至少选择一个分类"), 5000, MessageType::Warning);
+        NotificationWidget::showNotification(tr("Warning"), tr("Select at least one category"), 5000, MessageType::Warning);
         return {};
     }
     return {category, {name, path, icon, desc}};

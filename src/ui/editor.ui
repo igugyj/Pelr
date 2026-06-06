@@ -82,7 +82,7 @@
              </font>
             </property>
             <property name="text">
-             <string>随程序启动（Star）</string>
+             <string>Launch with Program (Star)</string>
             </property>
            </widget>
           </item>
@@ -153,7 +153,7 @@
              </font>
             </property>
             <property name="text">
-             <string>浏览</string>
+             <string>Browse</string>
             </property>
            </widget>
           </item>
@@ -188,7 +188,7 @@
              </font>
             </property>
             <property name="text">
-             <string>浏览</string>
+             <string>Browse</string>
             </property>
            </widget>
           </item>
@@ -226,7 +226,7 @@
           </font>
          </property>
          <property name="text">
-          <string>提交</string>
+          <string>Submit</string>
          </property>
         </widget>
        </item>

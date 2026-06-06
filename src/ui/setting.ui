@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>设置</string>
+   <string>Settings</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -41,7 +41,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Pelr 设置界面</string>
+         <string>Pelr Settings</string>
         </property>
        </widget>
       </item>
@@ -68,7 +68,7 @@
       <item>
        <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>保存</string>
+         <string>Save</string>
         </property>
        </widget>
       </item>
@@ -91,7 +91,7 @@
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>基本</string>
+       <string>Basic</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
@@ -126,7 +126,7 @@
              <item row="0" column="0">
               <widget class="QLabel" name="label_3">
                <property name="text">
-                <string>Live2D模型路径</string>
+                <string>Live2D Model Path</string>
                </property>
               </widget>
              </item>
@@ -136,14 +136,14 @@
              <item row="0" column="2">
               <widget class="QPushButton" name="pushButton_2">
                <property name="text">
-                <string>浏览</string>
+                <string>Browse</string>
                </property>
               </widget>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_4">
                <property name="text">
-                <string>模型大小</string>
+                <string>Model Size</string>
                </property>
               </widget>
              </item>
@@ -191,7 +191,7 @@
              <item row="3" column="0">
               <widget class="QLabel" name="label_6">
                <property name="text">
-                <string>音量</string>
+                <string>Volume</string>
                </property>
               </widget>
              </item>
@@ -215,7 +215,7 @@
              <item row="4" column="0">
               <widget class="QLabel" name="label_28">
                <property name="text">
-                <string>语言</string>
+                <string>Language</string>
                </property>
               </widget>
              </item>
@@ -225,7 +225,7 @@
              <item row="5" column="0">
               <widget class="QLabel" name="label_32">
                <property name="text">
-                <string>日志等级</string>
+                <string>Log Level</string>
                </property>
               </widget>
              </item>
@@ -235,7 +235,7 @@
              <item row="6" column="0">
               <widget class="QLabel" name="label_31">
                <property name="text">
-                <string>说话间隔/分钟</string>
+                <string>Speech Interval (min)</string>
                </property>
               </widget>
              </item>
@@ -244,7 +244,7 @@
                <item>
                 <widget class="QLabel" name="label_29">
                  <property name="text">
-                  <string>下限</string>
+                  <string>Min</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -264,7 +264,7 @@
                <item>
                 <widget class="QLabel" name="label_30">
                  <property name="text">
-                  <string>上限</string>
+                  <string>Max</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -288,35 +288,35 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_24">
                 <property name="text">
-                 <string>气泡颜色设置</string>
+                 <string>Bubble Colors</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
                <widget class="QPushButton" name="pushButton_17">
                 <property name="text">
-                 <string>气泡颜色设置 - 背景</string>
+                 <string>Bubble Color - Background</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
                <widget class="QPushButton" name="pushButton_18">
                 <property name="text">
-                 <string>气泡颜色设置 - 前景</string>
+                 <string>Bubble Color - Foreground</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="1">
                <widget class="QPushButton" name="pushButton_19">
                 <property name="text">
-                 <string>音乐托盘颜色 - 静默</string>
+                 <string>Music Icon Color - Inactive</string>
                 </property>
                </widget>
               </item>
               <item row="3" column="1">
                <widget class="QPushButton" name="pushButton_20">
                 <property name="text">
-                 <string>音乐托盘颜色 - 活动</string>
+                 <string>Music Icon Color - Active</string>
                 </property>
                </widget>
               </item>
@@ -326,28 +326,28 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_25">
                 <property name="text">
-                 <string>气泡颜色设置</string>
+                 <string>Bubble Color</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_34">
                 <property name="text">
-                 <string>音乐托盘颜色</string>
+                 <string>Music Icon Colors</string>
                 </property>
                </widget>
               </item>
               <item row="3" column="0">
                <widget class="QLabel" name="label_35">
                 <property name="text">
-                 <string>音乐托盘颜色</string>
+                 <string>Music Icon Color</string>
                 </property>
                </widget>
               </item>
               <item row="4" column="0">
                <widget class="QLabel" name="label_36">
                 <property name="text">
-                 <string>音乐托盘符号</string>
+                 <string>Music Icon Symbol</string>
                 </property>
                </widget>
               </item>
@@ -375,7 +375,7 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>布尔项</string>
+       <string>Toggles</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
@@ -396,21 +396,21 @@
            <item>
             <widget class="QCheckBox" name="checkBox">
              <property name="text">
-              <string>随系统启动</string>
+              <string>Start with System</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_2">
              <property name="text">
-              <string>启动时监听按键</string>
+              <string>Listen for Keys on Startup</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_3">
              <property name="text">
-              <string>视线跟随鼠标</string>
+              <string>Eye Tracking</string>
              </property>
             </widget>
            </item>
@@ -420,7 +420,7 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_59">
                 <property name="text">
-                 <string>强度</string>
+                 <string>Strength</string>
                 </property>
                </widget>
               </item>
@@ -440,7 +440,7 @@
            <item>
             <widget class="QCheckBox" name="checkBox_4">
              <property name="text">
-              <string>启动「Star」</string>
+              <string>Launch &quot;Star&quot; Items</string>
              </property>
             </widget>
            </item>
@@ -450,14 +450,14 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_57">
                 <property name="text">
-                 <string>有效检测时长(min)</string>
+                 <string>Detection Duration (min)</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
                <widget class="QSpinBox" name="spinBox_5">
                 <property name="toolTip">
-                 <string>-1为不检测</string>
+                 <string>-1 disables check</string>
                 </property>
                 <property name="minimum">
                  <number>-1</number>
@@ -470,14 +470,14 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_58">
                 <property name="text">
-                 <string>线程启动时长(min)</string>
+                 <string>Launch Delay (min)</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
                <widget class="QSpinBox" name="spinBox_6">
                 <property name="toolTip">
-                 <string>-1为不启动</string>
+                 <string>-1 disables launch</string>
                 </property>
                 <property name="minimum">
                  <number>-1</number>
@@ -493,70 +493,70 @@
            <item>
             <widget class="QCheckBox" name="checkBox_5">
              <property name="text">
-              <string>随机说话</string>
+              <string>Random Speech</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_6">
              <property name="text">
-              <string>启用语音</string>
+              <string>Enable Voice</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_7">
              <property name="text">
-              <string>报时功能</string>
+              <string>Hourly Chime</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_8">
              <property name="text">
-              <string>置顶</string>
+              <string>Always on Top</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_9">
              <property name="text">
-              <string>弹窗报时功能</string>
+              <string>Tray Hourly Chime</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_10">
              <property name="text">
-              <string>以静默模式启动</string>
+              <string>Silent Boot</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_11">
              <property name="text">
-              <string>记录窗口位置</string>
+              <string>Remember Window Position</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_12">
              <property name="text">
-              <string>音乐托盘</string>
+              <string>Music Icon</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_14">
              <property name="text">
-              <string>显示思考气泡</string>
+              <string>Show Thinking Bubble</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_13">
              <property name="text">
-              <string>AI问候</string>
+              <string>AI Greeting</string>
              </property>
             </widget>
            </item>
@@ -605,7 +605,7 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_26">
                 <property name="text">
-                 <string>TTS选择</string>
+                 <string>TTS Selection</string>
                 </property>
                </widget>
               </item>
@@ -618,13 +618,13 @@
            <item>
             <widget class="QGroupBox" name="groupBox_2">
              <property name="title">
-              <string>OpenAI-Edge-TTS - 通用 云端</string>
+              <string>OpenAI-Edge-TTS</string>
              </property>
              <layout class="QFormLayout" name="formLayout_7">
               <item row="0" column="0">
                <widget class="QLabel" name="label_27">
                 <property name="text">
-                 <string>发言人</string>
+                 <string>Speaker</string>
                 </property>
                </widget>
               </item>
@@ -638,7 +638,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_33">
                 <property name="text">
-                 <string>速度</string>
+                 <string>Speed</string>
                 </property>
                </widget>
               </item>
@@ -664,7 +664,7 @@
               <item row="2" column="1">
                <widget class="QPushButton" name="pushButton_7">
                 <property name="text">
-                 <string>如何设置发言人</string>
+                 <string>How to set up speaker</string>
                 </property>
                 <property name="icon">
                  <iconset resource="../../Resource.qrc">
@@ -678,7 +678,7 @@
            <item>
             <widget class="QGroupBox" name="groupBox_7">
              <property name="title">
-              <string>OpenAI-Compatible 通用 云端</string>
+              <string>OpenAI-Compatible</string>
              </property>
              <layout class="QFormLayout" name="formLayout_12">
               <item row="0" column="0">
@@ -769,7 +769,7 @@
            <item>
             <widget class="QGroupBox" name="groupBox_3">
              <property name="title">
-              <string>iFlytek TTS - 通用 云端</string>
+              <string>iFlytek TTS</string>
              </property>
              <layout class="QFormLayout" name="formLayout_8">
               <item row="0" column="0">
@@ -817,7 +817,7 @@
               <item row="3" column="0">
                <widget class="QLabel" name="label_13">
                 <property name="text">
-                 <string>发言人</string>
+                 <string>Speaker</string>
                 </property>
                </widget>
               </item>
@@ -827,14 +827,14 @@
               <item row="4" column="0">
                <widget class="QLabel" name="label_14">
                 <property name="text">
-                 <string>获取API</string>
+                 <string>Get API</string>
                 </property>
                </widget>
               </item>
               <item row="4" column="1">
                <widget class="QPushButton" name="pushButton_3">
                 <property name="text">
-                 <string>讯飞开放平台 在线语音合成</string>
+                 <string>iFlytek Speech Synthesis</string>
                 </property>
                 <property name="icon">
                  <iconset resource="../../Resource.qrc">
@@ -851,13 +851,13 @@
               <bool>true</bool>
              </property>
              <property name="title">
-              <string>voicevox - 日语 本地</string>
+              <string>voicevox (Japanese, Local)</string>
              </property>
              <layout class="QFormLayout" name="formLayout_2">
               <item row="0" column="0">
                <widget class="QLabel" name="label_41">
                 <property name="text">
-                 <string>辞书目录</string>
+                 <string>Dictionary Directory</string>
                 </property>
                </widget>
               </item>
@@ -867,14 +867,14 @@
               <item row="1" column="1">
                <widget class="QPushButton" name="pushButton_24">
                 <property name="text">
-                 <string>浏览</string>
+                 <string>Browse</string>
                 </property>
                </widget>
               </item>
               <item row="3" column="0">
                <widget class="QLabel" name="label_42">
                 <property name="text">
-                 <string>模型文件</string>
+                 <string>Model File</string>
                 </property>
                </widget>
               </item>
@@ -884,14 +884,14 @@
               <item row="4" column="1">
                <widget class="QPushButton" name="pushButton_25">
                 <property name="text">
-                 <string>浏览</string>
+                 <string>Browse</string>
                 </property>
                </widget>
               </item>
               <item row="6" column="0">
                <widget class="QLabel" name="label_43">
                 <property name="text">
-                 <string>语音风格</string>
+                 <string>Voice Style</string>
                 </property>
                </widget>
               </item>
@@ -901,7 +901,7 @@
               <item row="7" column="0">
                <widget class="QLabel" name="label_44">
                 <property name="text">
-                 <string>语速</string>
+                 <string>Speech Speed</string>
                 </property>
                </widget>
               </item>
@@ -927,14 +927,14 @@
               <item row="8" column="0">
                <widget class="QLabel" name="label_45">
                 <property name="text">
-                 <string>测试</string>
+                 <string>Test</string>
                 </property>
                </widget>
               </item>
               <item row="8" column="1">
                <widget class="QPushButton" name="pushButton_26">
                 <property name="text">
-                 <string>测试</string>
+                 <string>Test</string>
                 </property>
                </widget>
               </item>
@@ -947,7 +947,7 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_46">
                 <property name="text">
-                 <string>翻译选择</string>
+                 <string>Translation Settings</string>
                 </property>
                </widget>
               </item>
@@ -960,13 +960,13 @@
            <item>
             <widget class="QGroupBox" name="groupBox">
              <property name="title">
-              <string>TTS Server - 通用 云端 (translators)</string>
+              <string>TTS Server (translators)</string>
              </property>
              <layout class="QFormLayout" name="formLayout_3">
               <item row="0" column="0">
                <widget class="QLabel" name="label_38">
                 <property name="text">
-                 <string>供应商</string>
+                 <string>Provider</string>
                 </property>
                </widget>
               </item>
@@ -980,7 +980,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_39">
                 <property name="text">
-                 <string>语言</string>
+                 <string>Language</string>
                 </property>
                </widget>
               </item>
@@ -994,7 +994,7 @@
               <item row="3" column="1">
                <widget class="QPushButton" name="pushButton_21">
                 <property name="text">
-                 <string>刷新 供应商和语言</string>
+                 <string>Refresh Providers &amp; Languages</string>
                 </property>
                 <property name="icon">
                  <iconset resource="../../Resource.qrc">
@@ -1005,21 +1005,21 @@
               <item row="7" column="0">
                <widget class="QLabel" name="label_40">
                 <property name="text">
-                 <string>测试</string>
+                 <string>Test</string>
                 </property>
                </widget>
               </item>
               <item row="7" column="1">
                <widget class="QLineEdit" name="lineEdit_14">
                 <property name="placeholderText">
-                 <string>请输入测试文本</string>
+                 <string>Enter test text</string>
                 </property>
                </widget>
               </item>
               <item row="9" column="1">
                <widget class="QPushButton" name="pushButton_23">
                 <property name="text">
-                 <string>测试</string>
+                 <string>Test</string>
                 </property>
                 <property name="icon">
                  <iconset resource="../../Resource.qrc">
@@ -1033,7 +1033,7 @@
            <item>
             <widget class="QGroupBox" name="groupBox_6">
              <property name="title">
-              <string>Tencent - 通用 云端</string>
+              <string>Tencent (Cloud)</string>
              </property>
              <layout class="QFormLayout" name="formLayout_9">
               <item row="0" column="0">
@@ -1125,14 +1125,14 @@
               <item row="6" column="0">
                <widget class="QLabel" name="label_55">
                 <property name="text">
-                 <string>测试</string>
+                 <string>Test</string>
                 </property>
                </widget>
               </item>
               <item row="6" column="1">
                <widget class="QLineEdit" name="lineEdit_24">
                 <property name="placeholderText">
-                 <string>请输入测试文本</string>
+                 <string>Enter test text</string>
                 </property>
                </widget>
               </item>
@@ -1142,7 +1142,7 @@
                  <enum>QFrame::Shape::Box</enum>
                 </property>
                 <property name="text">
-                 <string>&lt;测试结果&gt;</string>
+                 <string>&lt;Test Result&gt;</string>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -1158,7 +1158,7 @@
               <item row="8" column="1">
                <widget class="QPushButton" name="pushButton_29">
                 <property name="text">
-                 <string>测试</string>
+                 <string>Test</string>
                 </property>
                 <property name="icon">
                  <iconset resource="../../Resource.qrc">
@@ -1172,13 +1172,13 @@
            <item>
             <widget class="QGroupBox" name="groupBox_5">
              <property name="title">
-              <string>libretranslate - 本地 自定义 </string>
+              <string>LibreTranslate (Local)</string>
              </property>
              <layout class="QFormLayout" name="formLayout_6">
               <item row="0" column="0">
                <widget class="QLabel" name="label_47">
                 <property name="text">
-                 <string>端口</string>
+                 <string>Port</string>
                 </property>
                </widget>
               </item>
@@ -1188,7 +1188,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_48">
                 <property name="text">
-                 <string>语言</string>
+                 <string>Language</string>
                 </property>
                </widget>
               </item>
@@ -1239,7 +1239,7 @@
        <item row="3" column="0">
         <widget class="QLabel" name="label_18">
          <property name="text">
-          <string>最大历史消息数</string>
+          <string>Max History Messages</string>
          </property>
         </widget>
        </item>
@@ -1253,7 +1253,7 @@
        <item row="3" column="2">
         <widget class="QSpinBox" name="spinBox_3">
          <property name="toolTip">
-          <string>-1表示无限制</string>
+          <string>-1 means unlimited</string>
          </property>
          <property name="statusTip">
           <string/>
@@ -1269,7 +1269,7 @@
           <string>You are a friendly AI assistant.</string>
          </property>
          <property name="placeholderText">
-          <string>在此输入提示词，如果设定了提示词文件则此项不生效</string>
+          <string>Enter system prompt here. If a prompt file is set, this is ignored.</string>
          </property>
         </widget>
        </item>
@@ -1290,7 +1290,7 @@
        <item row="5" column="0">
         <widget class="QLabel" name="label_17">
          <property name="text">
-          <string>自定义提示词</string>
+          <string>Custom Prompt</string>
          </property>
         </widget>
        </item>
@@ -1304,7 +1304,7 @@
        <item row="4" column="0">
         <widget class="QLabel" name="label_37">
          <property name="text">
-          <string>提示词文件</string>
+          <string>Prompt File</string>
          </property>
         </widget>
        </item>
@@ -1314,14 +1314,14 @@
           <item>
            <widget class="QLineEdit" name="lineEdit_13">
             <property name="placeholderText">
-             <string>如果设定了此项则自定义提示词不生效</string>
+             <string>If set, the custom prompt above is ignored.</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_15">
             <property name="text">
-             <string>选择</string>
+             <string>Choose</string>
             </property>
            </widget>
           </item>
@@ -1345,7 +1345,7 @@
        <item row="3" column="1">
         <widget class="QLabel" name="label_23">
          <property name="text">
-          <string>此功能在国内网络环境下可能无法使用。</string>
+          <string>This feature may be inaccessible in mainland China.</string>
          </property>
         </widget>
        </item>
@@ -1373,14 +1373,14 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label_22">
          <property name="text">
-          <string>获取OpenWeather API</string>
+          <string>Get OpenWeather API</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label_20">
          <property name="text">
-          <string>城市</string>
+          <string>City</string>
          </property>
         </widget>
        </item>
@@ -1404,7 +1404,7 @@
      </widget>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
-       <string>关于</string>
+       <string>About</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0">
@@ -1413,28 +1413,28 @@
           <item row="5" column="0">
            <widget class="QPushButton" name="pushButton_5">
             <property name="text">
-             <string>语音目录</string>
+             <string>Voice Directory</string>
             </property>
            </widget>
           </item>
           <item row="6" column="0">
            <widget class="QPushButton" name="pushButton_13">
             <property name="text">
-             <string>程序文件夹</string>
+             <string>Program Folder</string>
             </property>
            </widget>
           </item>
           <item row="7" column="0">
            <widget class="QPushButton" name="pushButton_10">
             <property name="text">
-             <string>检查更新</string>
+             <string>Check for Updates</string>
             </property>
            </widget>
           </item>
           <item row="8" column="0">
            <widget class="QPushButton" name="pushButton_11">
             <property name="text">
-             <string>重置应用</string>
+             <string>Reset App</string>
             </property>
            </widget>
           </item>
@@ -1475,14 +1475,14 @@
           <item row="4" column="0">
            <widget class="QPushButton" name="pushButton_12">
             <property name="text">
-             <string>自定义语录库</string>
+             <string>Custom Phrases</string>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
            <widget class="QPushButton" name="pushButton_16">
             <property name="text">
-             <string>文档支持</string>
+             <string>Documentation</string>
             </property>
            </widget>
           </item>
@@ -1493,7 +1493,7 @@
      </widget>
      <widget class="QWidget" name="tab_7">
       <attribute name="title">
-       <string>开源许可</string>
+       <string>Open Source License</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>

@@ -257,3 +257,18 @@ void LAppLive2DManager::SetViewMatrix(CubismMatrix44 *m)
     for (int i = 0; i < 16; ++i)
         _viewMatrix->GetArray()[i] = m->GetArray()[i];
 }
+
+// ---------- TTS 口形同步代理 ----------
+void LAppLive2DManager::StartLipSync(const Csm::csmString &wavFilePath)
+{
+    StartLipSync(0, wavFilePath);
+}
+
+void LAppLive2DManager::StartLipSync(Csm::csmUint32 modelIndex, const Csm::csmString &wavFilePath)
+{
+    LAppModel *model = GetModel(modelIndex);
+    if (model)
+        model->StartLipSync(wavFilePath);
+    else
+        qWarning() << "[LAppLive2DManager] No model at index" << modelIndex;
+}

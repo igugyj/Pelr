@@ -6,11 +6,19 @@
 #include <QIcon>
 #include <QDebug>
 #include <QMessageBox>
+#include "TranslationManager.h"
 
 mainWidget::mainWidget(QWidget *parent) : QWidget(parent), ui(new Ui::mainWidget)
 {
     ui->setupUi(this);
     initUI();
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
+}
+
+void mainWidget::retranslateUI()
+{
+    ui->retranslateUi(this);
 }
 
 void mainWidget::initUI()
@@ -69,7 +77,7 @@ void mainWidget::closeEvent(QCloseEvent *event)
     {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, tr("Confirmation"),
-                                      tr("您的更改尚未保存，是否要保存？"),
+                                      tr("Your changes have not been saved. Do you want to save?"),
                                       QMessageBox::Yes | QMessageBox::No);
 
         if (reply == QMessageBox::Yes)

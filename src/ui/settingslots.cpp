@@ -80,7 +80,7 @@ void SettingWidget::selectModelPath()
     // 确保文件夹存在
     if (!dir.exists())
         QDir().mkpath(folder);
-    QString path = QFileDialog::getOpenFileName(this, tr("选择模型文件"), folder, "*.model3.json");
+    QString path = QFileDialog::getOpenFileName(this, tr("Select Model File"), folder, "*.model3.json");
     if (!path.isEmpty())
     {
         ui->lineEdit->setText(path);
@@ -98,9 +98,9 @@ void SettingWidget::onChooseVoicevoxModel()
 {
     QString filePath = QFileDialog::getOpenFileName(
         this,
-        tr("选择音声模型文件"),
+        tr("Select Voice Model File"),
         "voicevox_core",
-        tr("VVM 文件 (*.vvm);;所有文件 (*)"));
+        tr("VVM Files (*.vvm);;All Files (*)"));
     if (filePath.isEmpty())
         return;
 
@@ -110,7 +110,7 @@ void SettingWidget::onChooseVoicevoxModel()
     {
         NotificationWidget::showNotification(
             tr("Warning"),
-            tr("模型加载失败，请检查模型文件是否正确，并重新加载。"), 5000, MessageType::Warning);
+            tr("Model loading failed. Please check the model file and reload."), 5000, MessageType::Warning);
         qDebug() << "[Settings] Model load failed:" << filePath;
         return;
     }
@@ -125,7 +125,7 @@ void SettingWidget::onChooseVoicevoxModel()
                  << ui->comboBox_6->currentData().toInt();
     }
 
-    NotificationWidget::showNotification(tr("Information"), tr("模型加载成功，风格列表已更新。"), 2000);
+    NotificationWidget::showNotification(tr("Information"), tr("Model loaded successfully. Style list updated."), 2000);
 }
 
 // 刷新风格下拉框（comboBox_6）
@@ -138,7 +138,7 @@ void SettingWidget::refreshVoicevoxStyles()
     const auto speakers = VoicevoxTTS::instance().getSpeakers();
     if (speakers.isEmpty())
     {
-        ui->comboBox_6->addItem(tr("(无可用风格)"), -1);
+        ui->comboBox_6->addItem(tr("(No available styles)"), -1);
         ui->comboBox_6->blockSignals(false);
         qWarning() << "[Settings] No speakers/styles available after loading model";
         return;
@@ -182,7 +182,7 @@ void SettingWidget::loadVoicevoxDict(const QString &dir)
     if (!VoicevoxTTS::instance().initialize(dir))
     {
         qWarning() << "[Settings] Failed to initialize VoicevoxTTS:" << dir;
-        NotificationWidget::showNotification(tr("Warning"), tr("辞书加载失败，请检查路径是否正确，并确保该路径下有有效的字典文件"), 5000, NotificationWidget::Warning);
+        NotificationWidget::showNotification(tr("Warning"), tr("Dictionary loading failed. Please check the path and ensure it contains valid dictionary files."), 5000, NotificationWidget::Warning);
         return;
     }
 
@@ -208,7 +208,7 @@ void SettingWidget::onChooseVoicevoxDict()
 {
     QString dir = QFileDialog::getExistingDirectory(
         this,
-        tr("选择辞书目录"),
+        tr("Select Dictionary Directory"),
         "voicevox_core",
         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -216,6 +216,22 @@ void SettingWidget::onChooseVoicevoxDict()
     {
         loadVoicevoxDict(dir);
     }
+}
+void SettingWidget::loadNotice()
+{
+    // NOTICE
+    QFile NOTICE(":/NOTICE");
+    QString content_NOTICE;
+    if (NOTICE.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream in(&NOTICE);
+
+        content_NOTICE = in.readAll();
+        NOTICE.close();
+    }
+    ui->textBrowser->setPlainText(QString("%1").arg(content_NOTICE));
+    ui->textBrowser->setReadOnly(true);
+    ui->textBrowser->setOpenExternalLinks(true);
 }
 void SettingWidget::onTestVoicevox()
 {
@@ -232,7 +248,7 @@ void SettingWidget::onTestVoicevox()
     {
         NotificationWidget::showNotification(
             tr("Warning"),
-            tr("应用配置失败，请检查辞书目录和模型文件是否正确。"),
+            tr("Failed to apply configuration. Please check the dictionary directory and model file."),
             5000, MessageType::Warning);
         return;
     }
@@ -240,9 +256,9 @@ void SettingWidget::onTestVoicevox()
     QVector<int> validIds = VoicevoxTTS::instance().getStyleIds();
     if (!validIds.contains(cfg.voicevox_style_id))
     {
-        QString msg = tr("当前选中的风格无效（ID: %1），可用风格: %2")
+        QString msg = tr("Current style is invalid (ID: %1), available styles: %2")
                           .arg(cfg.voicevox_style_id)
-                          .arg(validIds.isEmpty() ? tr("无") : QString::number(validIds.first()));
+                          .arg(validIds.isEmpty() ? tr("None") : QString::number(validIds.first()));
         NotificationWidget::showNotification(tr("Warning"), msg, 5000, MessageType::Warning);
         return;
     }
@@ -250,7 +266,7 @@ void SettingWidget::onTestVoicevox()
     QByteArray wav = VoicevoxTTS::instance().testSynthesis(cfg);
     if (wav.isEmpty())
     {
-        NotificationWidget::showNotification(tr("Warning"), tr("语音合成失败，请检查日志。"), 5000, MessageType::Warning);
+        NotificationWidget::showNotification(tr("Warning"), tr("TTS failed. Please check the logs."), 5000, MessageType::Warning);
         return;
     }
 
@@ -263,7 +279,7 @@ void SettingWidget::onTestVoicevox()
     QFile file(testFile);
     if (!file.open(QIODevice::WriteOnly))
     {
-        NotificationWidget::showNotification(tr("Warning"), tr("无法写入临时文件。"), 5000, MessageType::Warning);
+        NotificationWidget::showNotification(tr("Warning"), tr("Cannot write temporary file."), 5000, MessageType::Warning);
         return;
     }
     file.write(wav);

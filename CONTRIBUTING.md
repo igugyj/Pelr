@@ -108,7 +108,7 @@ src/
 ├── ui/                   # Qt .ui form files (processed by AUTOUIC)
 ├── ai/                   # OpenAI-compatible chat API integration
 ├── tts/                  # TTS backends (voicevox, xunfei, Edge TTS)
-├── utils/                # Logger, weather, audio spectrum (kissfft)
+├── utils/                # Logger, weather, audio spectrum (kissfft), audio decoder (miniaudio), TTS lip sync
 └── model/                # Live2D model extensions (extra motions, file mgmt)
 ```
 
@@ -186,6 +186,7 @@ Examples:
 | GLEW | Modified BSD License | Yes (downloaded by setup script) |
 | GLFW | zlib/libpng | Yes (downloaded by setup script) |
 | kissfft | BSD-3-Clause | Yes (git submodule) |
+| miniaudio | MIT | Yes (git submodule) |
 | voicevox_core | OSS (MIT, Apache 2.0) | No — must be downloaded separately |
 | ONNX Runtime | MIT | No — bundled with voicevox_core |
 

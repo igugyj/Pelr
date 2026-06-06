@@ -6,6 +6,7 @@
 #include "data.hpp"
 #include <QWidget>
 #include "DoubleClickableLabel.h"
+#include "TranslationManager.h"
 #include "VersionChecker.h"
 #include <QtWidgets/QSlider>
 #include "pyLang.h"
@@ -28,6 +29,8 @@ public:
     ConfigData getAllValues();
 
     void setAllValues(const ConfigData &data);
+
+    void retranslateUI();
 
     void setTTSConfig(const TTSConfig &data) const;
     void setLlamaData(const LlamaData &llm) const;
@@ -66,9 +69,11 @@ private slots:
     void onChooseVoicevoxDict();
     void loadVoicevoxDict(const QString &dir);
     void onTestVoicevox();
+    void loadNotice();
 
 private:
     PyLang *m_langClient;
     VersionChecker *m_versionChecker;
     Ui::setting *ui;
+    bool m_isUpdatingLanguage = false;
 };

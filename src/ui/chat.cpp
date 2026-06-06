@@ -8,6 +8,7 @@
 #include <QSizePolicy>
 #include <QScrollBar>
 #include "data.hpp"
+#include "TranslationManager.h"
 
 ChatWidget::ChatWidget(QWidget *parent) : QWidget(parent), ui(new Ui::chat)
 {
@@ -21,6 +22,8 @@ ChatWidget::ChatWidget(QWidget *parent) : QWidget(parent), ui(new Ui::chat)
             this, &ChatWidget::onTextGenerated);
     connect(LlamaClient::instance(), &LlamaClient::errorOccurred,
             this, &ChatWidget::onErrorOccurred);
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
     connect(ui->pushButton_2, &QPushButton::clicked, [&]()
             {
                 // 删除旧的内容部件
@@ -106,7 +109,7 @@ void ChatWidget::onErrorOccurred(const QString &error, const int &id)
         return;
     qDebug() << "[Chat] ErrorOccurred:" << error;
     // 处理错误
-    addMessage(tr("错误：%1").arg(error), true);
+    addMessage(tr("Error: %1").arg(error), true);
 }
 
 void ChatWidget::retranslateUI()

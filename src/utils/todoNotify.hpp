@@ -40,7 +40,7 @@ public:
             if (now == item.deadline && is_notify && item.title != newest_title && item.isNotify)
             {
                 // 发送提醒
-                QString msg = tr("您的事件：「%1」即将截止，请及时完成！\n%2").arg(item.title).arg(now);
+                QString msg = tr("Your event \"%1\" is due soon! Please complete it.\n%2").arg(item.title).arg(now);
                 // 如果是待办事项，则显示气泡提示
                 if (item.category == 1)
                     BubbleBox::instance()->textSet(msg);
@@ -49,7 +49,7 @@ public:
                 {
                     QMetaObject::invokeMethod(qApp, [msg]()
                                               { NotificationWidget::showNotification(
-                                                    tr("待办事项提醒"), msg,
+                                                    tr("Todo Reminder"), msg,
                                                     10000, NotificationWidget::Information); }, Qt::QueuedConnection);
                 }
                 qDebug() << "[TODO] Notify:" << msg;
@@ -66,7 +66,7 @@ public:
         if (data.isEmpty())
         {
             qDebug() << "[TODO] TODO data is empty";
-            BubbleBox::instance()->textSet(tr("还没有待办事项哦！"));
+            BubbleBox::instance()->textSet(tr("No todo items yet!"));
             return;
         }
         const QDateTime now = QDateTime::currentDateTime();
@@ -92,10 +92,10 @@ public:
         if (nearestEvent.title.isEmpty())
         {
             qInfo() << "[TODO] NearestEvent.title isEmpty";
-            BubbleBox::instance()->textSet(tr("还没有最近的待办事项哦！"));
+            BubbleBox::instance()->textSet(tr("No recent todo items!"));
             return;
         }
-        QString rem = tr("最近的一次待办事项是「%1」，截止时间是：%2").arg(nearestEvent.title).arg(nearestEvent.deadline);
+        QString rem = tr("The nearest todo item is \"%1\", deadline: %2").arg(nearestEvent.title).arg(nearestEvent.deadline);
         BubbleBox::instance()->textSet(rem);
     }
 };

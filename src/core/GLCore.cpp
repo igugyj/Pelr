@@ -25,6 +25,8 @@
 #include "ExtraMotionManager.h"
 #include "launcherMenu.hpp"
 #include "tray.h"
+#include "voicegenerator.hpp"
+#include "TranslationManager.h"
 // 键盘监听相关
 #include "globalinputlistener.h"
 #include "convertcodetostring.h"
@@ -174,31 +176,31 @@ void GLCore::initContextMenu()
 {
     qInfo() << "[GLCore] Init context menu";
     // 实时显示键盘and鼠标按键状态 switch on/off
-    switchListenerButton = new QPushButton(tr("按键监听"), this);
+    switchListenerButton = new QPushButton(tr("Key Listener"), this);
     connect(switchListenerButton, &QPushButton::clicked, this, &GLCore::switchListener);
 
     // 聊天
-    RandomSentenceButton = new QPushButton(tr("说点什么"), this);
+    RandomSentenceButton = new QPushButton(tr("Say Something"), this);
     connect(RandomSentenceButton, &QPushButton::clicked, [&]()
             { BubbleBox::instance()->RandomSentence(); });
 
     // 启动 把Quick Tray的功能移植到这里
-    QuickStartButton = new QPushButton(tr("启动"), this);
+    QuickStartButton = new QPushButton(tr("Launch"), this);
     launcherMenu *launcher_menu = launcherMenu::instance(this);
     QuickStartButton->setMenu(launcher_menu);
 
     // 询问天气（按钮）/询问电源状态/询问按键数（废弃）
     QMenu *QuestionMenu = new CustomMenu(this);
 
-    askWeather = new QAction(tr("天气"), QuestionMenu);
+    askWeather = new QAction(tr("Weather"), QuestionMenu);
     connect(askWeather, &QAction::triggered, [&]()
             { onAskWeather(); });
-    askPowerStatus = new QAction(tr("电源状态"), QuestionMenu);
+    askPowerStatus = new QAction(tr("Power Status"), QuestionMenu);
     connect(askPowerStatus, &QAction::triggered, [&]()
             {
         std::vector<QString> powerStatus = getPowerStatus();
         if (!powerStatus.empty()) {
-            QString msg = tr("主人，这是您电脑目前的电源状态：\nAC: %1\nPercentage: %2%\nBattery State: %3").arg(
+            QString msg = tr("Master, here is your PC's power status:\nAC: %1\nPercentage: %2%\nBattery State: %3").arg(
                 powerStatus[0]).arg(powerStatus[1]).arg(powerStatus[2]);
             BubbleBox::instance()->textSet(msg);
         } });
@@ -207,11 +209,11 @@ void GLCore::initContextMenu()
     connect(askLatestNextTodoEvent, &QAction::triggered, [&]()
             { TodoNotify::instance().askLatestNextEvent(); });
     QuestionMenu->addActions({askLatestNextTodoEvent, askWeather, askPowerStatus});
-    QuestionButton = new QPushButton(tr("问个问题"), this);
+    QuestionButton = new QPushButton(tr("Ask a Question"), this);
     QuestionButton->setMenu(QuestionMenu);
 
     // 设置界面
-    SettingButton = new QPushButton(tr("界面"), this);
+    SettingButton = new QPushButton(tr("Settings"), this);
     connect(SettingButton, &QPushButton::clicked, [&]()
             {
         if (main_widget->isHidden()) {
@@ -232,7 +234,7 @@ void GLCore::initContextMenu()
     EmotionButton->setMenu(ExtraMotionManager::getInstance());
 
     // 媒体播放
-    MediaButton = new QPushButton(tr("媒体播放"), this);
+    MediaButton = new QPushButton(tr("Media Player"), this);
     connect(MediaButton, &QPushButton::clicked, this, &GLCore::onPlayMedia);
     // 以一定次序添加按钮
     menuWidget->mainLayout->addWidget(SettingButton);
@@ -405,6 +407,19 @@ void GLCore::connectSignals()
         qDebug() << "[GLCore] Starting app in star category";
         startRunStarIfPoweredInThread();
     }
+
+    // 语言热切换
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
+
+    // TTS 音频 → 模型口形同步
+    connect(VoiceGenerator::instance(), &VoiceGenerator::voiceGenerated,
+            this, [](const QString &filePath)
+            {
+                LAppLive2DManager *mgr = LAppLive2DManager::GetInstance();
+                if (mgr->GetModelNum() > 0)
+                    mgr->StartLipSync(Csm::csmString(filePath.toUtf8().constData()));
+            });
 }
 
 void GLCore::switchListener()
@@ -506,13 +521,13 @@ void GLCore::startRunStarIfPoweredInThread()
     {
         TrayIcon::showMessage(
             title,
-            tr("开机时间过长，不启动启动项"));
+            tr("Uptime too long, skipping startup items"));
         return;
     }
     // 显示提示
     TrayIcon::showMessage(
         title,
-        tr("将在 %1 分后启动启动项").arg(DataManager::instance().getBasicData().StarRunTimeout));
+        tr("Will launch startup items in %1 min").arg(DataManager::instance().getBasicData().StarRunTimeout));
 
     // 设置完成信号与槽的连接
     connect(&m_watcher, &QFutureWatcher<void>::finished, this, &GLCore::onRunStarIfPoweredFinished);
@@ -796,16 +811,16 @@ void GLCore::retranslateUI()
         qDebug() << "[GLCore] UI part is null, can not retranslate ui by " << typeid(*this).name();
         return;
     }
-    switchListenerButton->setText(tr("按键监听"));
-    RandomSentenceButton->setText(tr("说点什么"));
-    QuickStartButton->setText(tr("启动"));
-    askWeather->setText(tr("天气"));
-    askPowerStatus->setText(tr("电源状态"));
+    switchListenerButton->setText(tr("Key Listener"));
+    RandomSentenceButton->setText(tr("Say Something"));
+    QuickStartButton->setText(tr("Launch"));
+    askWeather->setText(tr("Weather"));
+    askPowerStatus->setText(tr("Power Status"));
     askLatestNextTodoEvent->setText(tr("TODO"));
-    QuestionButton->setText(tr("问个问题"));
-    SettingButton->setText(tr("界面"));
+    QuestionButton->setText(tr("Ask a Question"));
+    SettingButton->setText(tr("Settings"));
     EmotionButton->setText(tr("EMO"));
-    MediaButton->setText(tr("媒体播放"));
+    MediaButton->setText(tr("Media Player"));
     qDebug() << "[GLCore] Retranslate ui:" << typeid(*this).name();
 }
 

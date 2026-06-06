@@ -5,7 +5,9 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTimer>
+#include <QGroupBox>
 #include "DiskUsageRing.hpp"
+#include "TranslationManager.h"
 
 class SystemMonitorWidget : public QWidget
 {
@@ -14,6 +16,8 @@ class SystemMonitorWidget : public QWidget
 public:
     explicit SystemMonitorWidget(QWidget *parent = nullptr);
     ~SystemMonitorWidget();
+
+    void retranslateUI();
 
 private:
     void setupUI();
@@ -45,6 +49,12 @@ private:
     QLabel *m_labelMemPrivate;
     QLabel *m_labelMemVirtual;
 
+    QLabel *m_titleLabel;
+    QGroupBox *m_memGroup;
+    QGroupBox *m_diskGroup;
+    QLabel *m_labelTtsCache;
+    QLabel *m_labelLog;
+    QLabel *m_labelUserData;
     QPushButton *m_btnClearTts;
     QPushButton *m_btnClearLog;
 

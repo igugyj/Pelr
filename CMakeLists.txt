@@ -6,6 +6,7 @@ project(Pelr)
 
 # ====================== 全局配置开关 ======================
 set(DEBUG_MODE ON)           # ON: Debug, OFF: Release
+set(AUTO_UPDATE_TRANSLATIONS OFF)  # ON: 每次构建自动跑 lupdate 更新 .ts
 
 # 根据 DEBUG_MODE 设置构建类型和子系统
 if(DEBUG_MODE)
@@ -91,7 +92,16 @@ set(ALL_HEADER_FILES
 # ============================================================================
 
 # 生成翻译文件（.qm）
+set(QM_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/translations")
+qt_add_lupdate(${PROJECT_NAME}
+    TS_FILES ${TRANSLATION_FILES}
+    SOURCES ${ALL_CPP_SOURCES} ${ALL_HEADER_FILES} ${UI_FILES}
+)
 qt_add_translation(QM_FILES ${TRANSLATION_FILES})
+
+if(AUTO_UPDATE_TRANSLATIONS)
+    add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_lupdate)
+endif()
 
 # ============================================================================
 # 第三方库：kissfft
@@ -101,6 +111,16 @@ add_library(kissfft STATIC
     thirdParty/kissfft/kiss_fftr.c
 )
 target_include_directories(kissfft PUBLIC thirdParty/kissfft)
+set_target_properties(kissfft PROPERTIES AUTOMOC OFF)
+
+# ============================================================================
+# 第三方库：miniaudio (轻量音频解码，TTS 口形同步)
+# ============================================================================
+add_library(miniaudio STATIC
+    thirdParty/miniaudio/miniaudio.c
+)
+target_include_directories(miniaudio PUBLIC thirdParty/miniaudio)
+set_target_properties(miniaudio PROPERTIES AUTOMOC OFF)
 
 # ============================================================================
 # 第三方库：GLEW (从源码编译)
@@ -112,6 +132,7 @@ target_include_directories(glew PUBLIC
     thirdParty/glew/include
 )
 target_compile_definitions(glew PRIVATE GLEW_STATIC)
+set_target_properties(glew PROPERTIES AUTOMOC OFF)
 
 # ============================================================================
 # 第三方库：GLFW (从源码编译)
@@ -127,6 +148,7 @@ target_include_directories(glfw PUBLIC
     thirdParty/glfw/include
 )
 target_compile_definitions(glfw PRIVATE _GLFW_WIN32)
+set_target_properties(glfw PROPERTIES AUTOMOC OFF)
 
 # 收集 Framework 源码，只保留 OpenGL 和公共代码
 file(GLOB_RECURSE CUBISM_FRAMEWORK_SRC_TEMP
@@ -139,6 +161,7 @@ list(FILTER CUBISM_FRAMEWORK_SRC_TEMP EXCLUDE REGEX ".*Vulkan.*\\.cpp")
 
 # 将 Framework 编译为静态库
 add_library(Framework STATIC ${CUBISM_FRAMEWORK_SRC_TEMP})
+set_target_properties(Framework PROPERTIES AUTOMOC OFF)
 
 # 头文件路径
 target_include_directories(Framework PUBLIC
@@ -241,6 +264,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
         Framework          # Cubism Framework 静态库
         kissfft
+        miniaudio          # 音频解码 (WAV/MP3)
         voicevox_core
         Qt6::Core
         Qt6::Gui
@@ -260,6 +284,13 @@ target_link_libraries(${PROJECT_NAME}
 # 强制在 Qt OpenGL 头前包含 GLEW，避免符号冲突
 target_compile_options(${PROJECT_NAME} PRIVATE -include GL/glew.h)
 
+# 将 .qm 文件复制到 translations/ 子目录
+file(MAKE_DIRECTORY ${QM_OUTPUT_DIR})
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QM_FILES} ${QM_OUTPUT_DIR}
+    COMMENT "Copying .qm files to ${QM_OUTPUT_DIR}"
+)
+
 # ============================================================================
 # Windows 平台后处理
 # ============================================================================
@@ -278,15 +309,6 @@ if (WIN32)
     else ()
         message(WARNING "Program icon file or RC script is missing, default icon will be used!")
     endif ()
-
-    # 复制翻译文件（.qm）到输出目录
-    set(QM_OUTPUT_DIR "$<TARGET_FILE_DIR:${PROJECT_NAME}>/translations")
-    foreach (qm_file ${QM_FILES})
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E make_directory ${QM_OUTPUT_DIR}
-                COMMAND ${CMAKE_COMMAND} -E copy ${qm_file} ${QM_OUTPUT_DIR}/
-                COMMENT "Copying translation file: ${qm_file}")
-    endforeach ()
 
     # 使用 windeployqt 自动部署 Qt 运行时（DLL、插件、翻译）
     if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)

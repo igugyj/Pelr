@@ -77,6 +77,8 @@ ConfigData SettingWidget::getAllValues()
     data.StarCheckTime = ui->spinBox_5->value();
     data.StarRunTimeout = ui->spinBox_6->value();
 
+    data.language = ui->comboBox_2->currentData().toString();
+
     return data;
 }
 
@@ -276,6 +278,18 @@ void SettingWidget::setAllValues(const ConfigData &data)
     ui->doubleSpinBox_3->setValue(data.LookingMouseStrength);
     ui->spinBox_5->setValue(data.StarCheckTime);
     ui->spinBox_6->setValue(data.StarRunTimeout);
+
+    QString langCode = data.language.isEmpty()
+                           ? TranslationManager::instance()->currentLanguage()
+                           : data.language;
+    int langIdx = ui->comboBox_2->findData(langCode);
+    if (langIdx >= 0)
+    {
+        m_isUpdatingLanguage = true;
+        ui->comboBox_2->setCurrentIndex(langIdx);
+        m_isUpdatingLanguage = false;
+    }
+    loadNotice();
 }
 
 SettingWidget::SettingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::setting)
@@ -290,19 +304,6 @@ SettingWidget::SettingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::sett
     ui->horizontalSlider_2->setRange(15, 120); // FPS
     ui->horizontalSlider_3->setRange(0, 100);  // volume
 
-    // NOTICE
-    QFile NOTICE(":/NOTICE");
-    QString content_NOTICE;
-    if (NOTICE.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream in(&NOTICE);
-
-        content_NOTICE = in.readAll();
-        NOTICE.close();
-    }
-    ui->textBrowser->setPlainText(QString("%1").arg(content_NOTICE));
-    ui->textBrowser->setReadOnly(true);
-    ui->textBrowser->setOpenExternalLinks(true);
     // 初始化日志等级选择
     struct LogLevelItem
     {
@@ -311,11 +312,11 @@ SettingWidget::SettingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::sett
     };
 
     QVector<LogLevelItem> logLevels = {
-        {tr("调试信息"), LogLevel::Debug},
-        {tr("普通信息"), LogLevel::Info},
-        {tr("警告"), LogLevel::Warning},
-        {tr("严重错误"), LogLevel::Critical},
-        {tr("致命错误"), LogLevel::Fatal}};
+        {tr("Debug"), LogLevel::Debug},
+        {tr("Info"), LogLevel::Info},
+        {tr("Warning"), LogLevel::Warning},
+        {tr("Critical"), LogLevel::Critical},
+        {tr("Fatal"), LogLevel::Fatal}};
 
     ui->comboBox_3->clear();
     for (const auto &item : logLevels)
@@ -331,6 +332,17 @@ SettingWidget::SettingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::sett
     for (const auto &item : Translators)
     {
         ui->comboBox_7->addItem(item.first, item.second);
+    }
+
+    // 填充语言选择
+    ui->comboBox_2->clear();
+    QStringList codes = TranslationManager::instance()->availableLanguages();
+    QMap<QString, QString> langDisplayNames;
+    langDisplayNames["en_US"] = "English";
+    langDisplayNames["zh_CN"] = "简体中文";
+    for (const QString &code : codes)
+    {
+        ui->comboBox_2->addItem(langDisplayNames.value(code, code), code);
     }
 
     // 连接信号槽
@@ -476,9 +488,9 @@ void SettingWidget::connectSignals()
                 // 打开文件选择对话框，支持多种文本格式（包括 .md, .txt, .json 等）
                 QString path = QFileDialog::getOpenFileName(
                     this,
-                    tr("选择提示词文件"),
+                    tr("Select Prompt File"),
                     QString(), // 默认目录，可设为最近使用的路径
-                    tr("文本文件 (*.txt *.md *.json);;所有文件 (*)"));
+                    tr("Text Files (*.txt *.md *.json);;All Files (*)"));
 
                 if (path.isEmpty())
                     return; // 用户取消
@@ -525,7 +537,7 @@ void SettingWidget::connectSignals()
     connect(ui->pushButton, &QPushButton::clicked, [&]()
             {
         saveData();
-        NotificationWidget::showNotification(tr("Information"), tr("保存成功！\n下次应用启动生效。")); });
+        NotificationWidget::showNotification(tr("Information"), tr("Saved!\nWill take effect on next startup.")); });
     // 检查更新
     connect(ui->pushButton_10, &QPushButton::clicked, [&]()
             { m_versionChecker->checkVersionMatch(DataManager::instance().const_config_data.version); });
@@ -534,9 +546,44 @@ void SettingWidget::connectSignals()
         UpdateDialog dialog(summary, this);
         dialog.exec(); });
 
+    // 语言选择
+    connect(ui->comboBox_2, &QComboBox::currentIndexChanged, this, [this](int idx)
+            {
+        if (m_isUpdatingLanguage) return;
+        m_isUpdatingLanguage = true;
+        QString code = ui->comboBox_2->currentData().toString();
+        TranslationManager::instance()->setLanguage(code);
+        retranslateUI();
+        m_isUpdatingLanguage = false; });
+
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &)
+            { retranslateUI(); });
+
     // 组件初始状态
     ui->widget_6->hide();
     ui->widget_7->hide();
+}
+
+void SettingWidget::retranslateUI()
+{
+    saveData();
+    ConfigData data = DataManager::instance().getBasicData();
+
+    ui->retranslateUi(this);
+
+    // comboBox_3 的条目是 tr() 字符串，必须重建
+    ui->comboBox_3->clear();
+    QVector<QPair<QString, LogLevel>> logLevels = {
+        {tr("Debug"), LogLevel::Debug},
+        {tr("Info"), LogLevel::Info},
+        {tr("Warning"), LogLevel::Warning},
+        {tr("Critical"), LogLevel::Critical},
+        {tr("Fatal"), LogLevel::Fatal}};
+    for (const auto &item : logLevels)
+        ui->comboBox_3->addItem(item.first, static_cast<int>(item.second));
+
+    setAllValues(data); // 恢复所有控件状态（包括 label_2、comboBox_3 索引等）
 }
 
 QSlider *SettingWidget::getHorizontalSlider()
@@ -600,7 +647,7 @@ void SettingWidget::resetSetting()
     // 第一次确认
     const auto re = QMessageBox::question(
         this, tr("Confirmation"),
-        tr("确定要重置设置吗？\n这将恢复所有选项为默认值。"),
+        tr("Are you sure you want to reset all settings?\nThis will restore all options to defaults."),
         QMessageBox::Yes | QMessageBox::No);
     if (re == QMessageBox::No)
         return;
@@ -608,9 +655,9 @@ void SettingWidget::resetSetting()
     // 第二次确认：是否删除所有用户数据
     const auto re2 = QMessageBox::question(
         this, tr("Confirmation"),
-        tr("是否同时删除所有用户数据（包括日志、缓存、用户文件夹等）？\n\n"
-           "选择“是”将彻底清理并重启程序，所有数据将永久丢失。\n"
-           "选择“否”将仅重置配置为默认值。"),
+        tr("Delete all user data (logs, cache, user folder, etc.) as well?\n\n"
+           "\"Yes\" will clean everything and restart - all data will be lost permanently.\n"
+           "\"No\" will only reset settings to defaults."),
         QMessageBox::Yes | QMessageBox::No);
 
     // 无论哪种情况，都移除启动项
@@ -643,7 +690,7 @@ void SettingWidget::resetSetting()
             qWarning() << "[Settings] Failed to delete some user data folders";
             NotificationWidget::showNotification(
                 tr("Error"),
-                tr("部分数据文件夹无法删除，请手动清理后重启程序。"),
+                tr("Some data folders could not be deleted. Please clean them manually and restart."),
                 5000, NotificationWidget::Warning);
             return;
         }
@@ -659,7 +706,7 @@ void SettingWidget::resetSetting()
         setAllValues(new_data);
         DataManager::instance().writeData<ConfigData>(new_data);
         qDebug() << "[Settings] Reset setting to defaults";
-        NotificationWidget::showNotification(tr("Information"), tr("设置已重置！"));
+        NotificationWidget::showNotification(tr("Information"), tr("Settings have been reset!"));
     }
 }
 
@@ -697,18 +744,18 @@ void SettingWidget::startupSwitch(const bool flag)
         if (!QFile::exists(shortcutPath))
         {
             qDebug() << "[Settings] Shortcut does not exist:" << shortcutPath;
-            NotificationWidget::showNotification(tr("Information"), tr("快捷方式已不存在！"));
+            NotificationWidget::showNotification(tr("Information"), tr("Shortcut no longer exists!"));
             return;
         }
         bool success = QFile::remove(shortcutPath);
         if (!success)
         {
             qWarning() << "[Settings] Cannot remove shortcut:" << shortcutPath;
-            NotificationWidget::showNotification(tr("Warning"), tr("移除快捷方式失败！"), 5000, MessageType::Warning);
+            NotificationWidget::showNotification(tr("Warning"), tr("Failed to remove shortcut!"), 5000, MessageType::Warning);
             return;
         }
         qDebug() << "[Settings] Remove shortcut success:" << shortcutPath;
-        NotificationWidget::showNotification(tr("Information"), tr("快捷方式已移除！"));
+        NotificationWidget::showNotification(tr("Information"), tr("Shortcut removed!"));
     }
     else
     {
@@ -739,12 +786,12 @@ void SettingWidget::startupSwitch(const bool flag)
         if (FAILED(hr))
         {
             qWarning() << "[Settings] Cannot create shortcut:" << shortcutPath;
-            NotificationWidget::showNotification(tr("Warning"), tr("创建快捷方式失败！"), 5000, MessageType::Warning);
+            NotificationWidget::showNotification(tr("Warning"), tr("Failed to create shortcut!"), 5000, MessageType::Warning);
         }
         else
         {
             qDebug() << "[Settings] Create shortcut success:" << shortcutPath;
-            NotificationWidget::showNotification(tr("Information"), tr("快捷方式已创建！"));
+            NotificationWidget::showNotification(tr("Information"), tr("Shortcut created!"));
         }
     }
 }

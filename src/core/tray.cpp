@@ -15,6 +15,7 @@
 #include <endpointvolume.h>
 #include <iostream>
 #include "AudioSpectrumDetector.h"
+#include "TranslationManager.h"
 // 初始化静态成员变量
 TrayIcon *TrayIcon::m_instance = nullptr;
 
@@ -53,57 +54,57 @@ TrayIcon::TrayIcon(QObject *parent)
     // 创建右键菜单
     menu = new CustomMenu();
 
-    action_resetWinLoc = new QAction(tr("重置位置"), this);
-    action_showWin = new QAction(tr("显示界面"), this);
-    action_silentMode = new QAction(tr("静默模式"), this);
-    action_switchDrag = new QAction(tr("锁定位置"), this);
-    action_mediaPlayer = new QAction(tr("播放媒体"), this);
+    action_resetWinLoc = new QAction(tr("Reset Position"), this);
+    action_showWin = new QAction(tr("Show Window"), this);
+    action_silentMode = new QAction(tr("Silent Mode"), this);
+    action_switchDrag = new QAction(tr("Lock Position"), this);
+    action_mediaPlayer = new QAction(tr("Play Media"), this);
 
-    action_quit = new QAction(tr("退出程序"), this);
-    action_keyListener = new QAction(tr("按键监听"), this);
+    action_quit = new QAction(tr("Exit"), this);
+    action_keyListener = new QAction(tr("Key Listener"), this);
 
     action_silentMode->setCheckable(true);
     action_switchDrag->setCheckable(true);
     action_keyListener->setCheckable(true);
 
-    QMenu *MenuOpen = new CustomMenu(tr("打开"), menu);
+    m_menuOpen = new CustomMenu(tr("Open"), menu);
 
-    QAction *action_openDirPath = new QAction(tr("程序文件夹"), MenuOpen);
-    QAction *action_openUserPath = new QAction(tr("用户文件夹"), MenuOpen);
-    QAction *action_openLogPath = new QAction(tr("日志文件夹"), MenuOpen);
+    m_actionOpenDirPath = new QAction(tr("Program Folder"), m_menuOpen);
+    m_actionOpenUserPath = new QAction(tr("User Folder"), m_menuOpen);
+    m_actionOpenLogPath = new QAction(tr("Log Folder"), m_menuOpen);
     // 连接信号和槽
     // 打开程序文件夹
-    connect(action_openDirPath, &QAction::triggered, []()
+    connect(m_actionOpenDirPath, &QAction::triggered, []()
             {
         const QString appDir = QCoreApplication::applicationDirPath();
         launchByPath(appDir); });
     // 打开用户文件夹
-    connect(action_openUserPath, &QAction::triggered, []()
+    connect(m_actionOpenUserPath, &QAction::triggered, []()
             {
         QString appDir = QCoreApplication::applicationDirPath();
         const QString userDir = appDir.append("/user");
         launchByPath(userDir); });
     // 打开日志文件夹
-    connect(action_openLogPath, &QAction::triggered, []()
+    connect(m_actionOpenLogPath, &QAction::triggered, []()
             {
         QString appDir = QCoreApplication::applicationDirPath();
         const QString logDir = appDir.append("/log");
         launchByPath(logDir); });
-    QAction *action_startApp = new QAction("启动项目", this);
-    action_startApp->setMenu(launcherMenu::instance());
+    m_actionStartApp = new QAction(tr("Launch Item"), this);
+    m_actionStartApp->setMenu(launcherMenu::instance());
     // 如果有内容就添加到菜单
     if (launcherMenu::instance()->hasContent)
     {
         // 添加菜单项到菜单
-        menu->addAction(action_startApp);
+        menu->addAction(m_actionStartApp);
         menu->addSeparator();
     }
     menu->addActions({action_silentMode, action_switchDrag,
                       action_keyListener,
                       action_showWin, action_resetWinLoc, action_mediaPlayer});
-    MenuOpen->addActions({action_openUserPath, action_openDirPath, action_openLogPath});
+    m_menuOpen->addActions({m_actionOpenUserPath, m_actionOpenDirPath, m_actionOpenLogPath});
     menu->addSeparator();
-    menu->addMenu(MenuOpen);
+    menu->addMenu(m_menuOpen);
     menu->addSeparator();
     menu->addAction(action_quit);
     // 字体
@@ -115,9 +116,28 @@ TrayIcon::TrayIcon(QObject *parent)
 
     qDebug() << "[Tray] TrayIcon singleton initialized";
 
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, [this](const QString &) { retranslateUI(); });
+
     // 显示托盘图标
     this->show();
     switchMusicIcon(DataManager::instance().getBasicData().isMusicIcon);
+}
+
+void TrayIcon::retranslateUI()
+{
+    action_resetWinLoc->setText(tr("Reset Position"));
+    action_showWin->setText(tr("Show Window"));
+    action_silentMode->setText(tr("Silent Mode"));
+    action_switchDrag->setText(tr("Lock Position"));
+    action_mediaPlayer->setText(tr("Play Media"));
+    action_quit->setText(tr("Exit"));
+    action_keyListener->setText(tr("Key Listener"));
+    m_menuOpen->setTitle(tr("Open"));
+    m_actionOpenDirPath->setText(tr("Program Folder"));
+    m_actionOpenUserPath->setText(tr("User Folder"));
+    m_actionOpenLogPath->setText(tr("Log Folder"));
+    m_actionStartApp->setText(tr("Launch Item"));
 }
 
 void TrayIcon::initializeAudioDetector()

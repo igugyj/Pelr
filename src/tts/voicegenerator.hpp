@@ -162,7 +162,6 @@ public:
         if (!m_player)
             return;
 
-        // 如果新文件与当前播放文件相同，且正在播放，则停止并从头播放（不删除）
         if (m_currentPlayFile == filePath)
         {
             if (m_player->playbackState() == QMediaPlayer::PlayingState)
@@ -174,18 +173,17 @@ public:
             return;
         }
 
-        // 清理旧文件（仅当与新文件不同）
         if (!m_currentPlayFile.isEmpty())
         {
             m_player->stop();
-            QFile::remove(m_currentPlayFile);
+            m_currentPlayFile.clear();
         }
 
         m_currentPlayFile = filePath;
         if (!QFile::exists(filePath))
         {
             qWarning() << "[VoiceGen] File does not exist:" << filePath;
-            emit errorOccurred(tr("音频文件不存在: %1").arg(filePath));
+            emit errorOccurred(tr("Audio file not found: %1").arg(filePath));
             return;
         }
 
@@ -235,12 +233,6 @@ private:
         connect(m_player, &QMediaPlayer::playbackStateChanged, this, [this](QMediaPlayer::PlaybackState state)
                 {
             if (state == QMediaPlayer::StoppedState) {
-                // 播放完毕后自动删除临时文件
-                if (!m_currentPlayFile.isEmpty())
-                {
-                    QFile::remove(m_currentPlayFile);
-                    m_currentPlayFile.clear();
-                }
                 emit playbackFinished();
             } });
 

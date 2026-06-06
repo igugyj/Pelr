@@ -72,7 +72,6 @@ BubbleBox::BubbleBox(QLabel *parent) : QLabel(parent)
             this, [&](const QString &filePath)
             {
                 qDebug() << "[BubbleBox] Voice generated:" << filePath;
-                // 可以直接播放
                 VoiceGenerator::instance()->playVoice(filePath);
                 setText(m_text);
                 adjustSize();
@@ -127,7 +126,7 @@ void BubbleBox::RandomSentence()
     {
         qInfo() << "[BubbleBox] RandomSentence: using LLM greeting";
         LlamaClient::instance()->generateRandomAsync(
-            QStringLiteral(
+            tr(
                 "Generate a short spontaneous sentence as yourself.\n"
                 "Greet the user, make a casual remark, or comment on something.\n"
                 "Vary the topic each time — don't repeat what you said before.\n"
@@ -181,18 +180,18 @@ void BubbleBox::showTime()
     if (isFirst)
     {
         period = getPeriodText(); // 获取当前时间段句子
-        textSet(tr("%1\n现在是%2哦~").arg(period).arg(time));
+        textSet(tr("%1\nIt's %2").arg(period).arg(time));
         isFirst = false;
     }
     else if ((time.contains(":00") || time.contains(":30")) && time != this->now)
     {
         period = getPeriodText();
-        textSet(tr("%1\n现在是%2哦~").arg(period).arg(time));
+        textSet(tr("%1\nIt's %2").arg(period).arg(time));
         const bool fg = DataManager::instance().getBasicData().isTrayHourAlarm;
         if (fg)
         {
             NotificationWidget::showNotification(
-                DataManager::instance().Project_Name, tr("现在是%1").arg(time));
+                DataManager::instance().Project_Name, tr("It's %1").arg(time));
         }
         qDebug() << "[BubbleBox] Now:" << time << "isTrayHourAlarm:" << fg;
         this->now = time;
