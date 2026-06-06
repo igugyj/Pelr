@@ -141,7 +141,6 @@ void SystemMonitorWidget::setupUI()
     m_labelTtsPath = new QLabel();
     m_labelTtsPath->setStyleSheet("color: #888; font-size: 11px;");
     m_btnClearTts = new QPushButton(tr("Clear"));
-    m_btnClearTts->setFixedSize(50, 24);
     ttsRow->addWidget(m_labelTtsSize);
     ttsRow->addWidget(m_labelTtsPath);
     ttsRow->addStretch();
@@ -197,7 +196,9 @@ void SystemMonitorWidget::retranslateUI()
     m_labelRingMem->setText(tr("Memory Usage"));
     m_labelRingDisk->setText(tr("Disk Usage"));
     m_btnClearTts->setText(tr("Clear"));
+    m_btnClearTts->adjustSize();
     m_btnClearLog->setText(tr("Clear All"));
+    m_btnClearLog->adjustSize();
     m_labelTtsCache->setText(tr("TTS Cache:"));
     m_labelLog->setText(tr("Log:"));
     m_labelUserData->setText(tr("User Data:"));

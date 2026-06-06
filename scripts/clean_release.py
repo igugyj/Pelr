@@ -26,6 +26,7 @@ DIRS = [
     "log",
     "user",
     "voice_files",
+    ".lupdate"
 ]
 
 # 要删除的文件（glob 模式）

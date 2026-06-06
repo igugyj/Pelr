@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "v0.5.1"
+#define VERSION "v0.6.1"
 
 struct filePaths
 {
