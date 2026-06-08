@@ -376,3 +376,46 @@ if (WIN32)
         message(WARNING "Resources directory not found: ${RES_DIR}")
     endif()
 endif ()
+
+# ============================================================================
+# FluentUIStyle 插件（独立构建，不干涉主工程变量）
+# 源码通过 git submodule 管理：thirdParty/FluentUIStyle
+# ============================================================================
+if(EXISTS "${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle/CMakeLists.txt")
+    include(ExternalProject)
+
+    # 为 MinGW 修补 FluentUIStyle CMakeLists.txt（移除 MSVC 专用的 PDB 生成表达式）
+    set(_fus_patch_script "${CMAKE_BINARY_DIR}/_deps/patch_fluentui.cmake")
+    file(WRITE "${_fus_patch_script}"
+"file(READ \"${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle/CMakeLists.txt\" _content)
+string(REPLACE \"\\$<TARGET_PDB_FILE:\" \"# patched: \\$<TARGET_PDB_FILE:\" _content \"\${_content}\")
+file(WRITE \"${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle/CMakeLists.txt\" \"\${_content}\")
+message(STATUS \"Patched FluentUIStyle/CMakeLists.txt for MinGW\")
+")
+
+    ExternalProject_Add(FluentUIStylePlugin
+        SOURCE_DIR "${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle"
+        BINARY_DIR "${CMAKE_BINARY_DIR}/_deps/FluentUIStyle-build"
+        PATCH_COMMAND "${CMAKE_COMMAND}" -P "${_fus_patch_script}"
+        CMAKE_GENERATOR "${CMAKE_GENERATOR}"
+        CMAKE_GENERATOR_PLATFORM "${CMAKE_GENERATOR_PLATFORM}"
+        CMAKE_GENERATOR_TOOLSET "${CMAKE_GENERATOR_TOOLSET}"
+        CMAKE_CACHE_ARGS
+            -DCMAKE_MAKE_PROGRAM:FILEPATH=${CMAKE_MAKE_PROGRAM}
+            -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
+            -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
+            -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_PREFIX_PATH}
+            -DCMAKE_PREFIX_PATH:PATH=${CMAKE_PREFIX_PATH}
+            -DBUILD_LIBRARY:BOOL=OFF
+            -DBUILD_PLUGIN:BOOL=ON
+            -DBUILD_EXAMPLE:BOOL=OFF
+        CMAKE_ARGS
+            -DCMAKE_BUILD_TYPE=$<CONFIG>
+        BUILD_ALWAYS TRUE
+        INSTALL_COMMAND ""
+        EXCLUDE_FROM_ALL TRUE
+    )
+    add_dependencies(${PROJECT_NAME} FluentUIStylePlugin)
+else()
+    message(WARNING "FluentUIStyle not found at thirdParty/FluentUIStyle. Skipping style plugin build.")
+endif()

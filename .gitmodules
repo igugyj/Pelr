@@ -10,3 +10,6 @@
 [submodule "thirdParty/miniaudio"]
 	path = thirdParty/miniaudio
 	url = https://github.com/mackron/miniaudio.git
+[submodule "thirdParty/FluentUIStyle"]
+	path = thirdParty/FluentUIStyle
+	url = https://github.com/igugyj/FluentUIStyle.git

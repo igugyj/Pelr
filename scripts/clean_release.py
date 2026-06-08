@@ -26,7 +26,9 @@ DIRS = [
     "log",
     "user",
     "voice_files",
-    ".lupdate"
+    ".lupdate",
+    "_deps",  # FluentUIStyle 构建树
+    "FluentUIStylePlugin-prefix",  # ExternalProject 暂存目录
 ]
 
 # 要删除的文件（glob 模式）

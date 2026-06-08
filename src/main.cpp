@@ -53,7 +53,9 @@ int main(int argc, char *argv[])
     {
         qDebug() << "[APP] Available style:" << style;
     }
-    if (styles.contains("Fusion", Qt::CaseInsensitive))
+    if (styles.contains("FluentUI3"))
+        app.setStyle("FluentUI3");
+    else if (styles.contains("Fusion", Qt::CaseInsensitive))
         app.setStyle("Fusion");
 
     // 许可证检查
