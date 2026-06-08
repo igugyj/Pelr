@@ -229,7 +229,7 @@ Different components use different licenses:
 - [GLEW](http://glew.sourceforge.net/) - OpenGL extension loading
 - [GLFW](https://www.glfw.org/) - Window and OpenGL context management
 - [kissfft](https://github.com/mborgerding/kissfft) - Fast Fourier transform library
-- [FluentUI3Style](https://github.com/igugyj/FluentUIStyle) - Fluent UI 3 Qt style implementation
+- [FluentUI3Style](https://github.com/XHY-ChuJian/FluentUIStyle) - Fluent UI 3 Qt style implementation
 - [miniaudio](https://github.com/mackron/miniaudio) - Single-file audio decoding library
 - [stb](https://github.com/nothings/stb) - Single-header image processing library
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - Free TTS engine
