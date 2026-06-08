@@ -27,6 +27,9 @@
 #include <QRandomGenerator>
 #include <QDateTime>
 #include <QStandardPaths>
+#if __has_include(<FluentUI3Style/fluentui3styleproperties.h>)
+#include <FluentUI3Style/fluentui3styleproperties.h>
+#endif
 using MessageType = NotificationWidget::MessageType;
 
 ConfigData SettingWidget::getAllValues()
@@ -392,7 +395,14 @@ void SettingWidget::connectSignals()
             {
     QString style = ui->comboBox_8->itemData(idx).toString();
     qApp->setStyle(style);
-    qDebug() << "[Settings] current theme set to"<<style; });
+    qDebug() << "[Settings] current theme set to"<<style;
+    if (style == "FluentUI3") {
+        // 方式一：findChildren 版本 (推荐)
+        const auto boxes = this->findChildren<QCheckBox*>();
+        for (QCheckBox *cb : boxes) {
+            cb->setProperty(SwitchStyleProperty, true);
+        }
+    } });
     // color
     connect(ui->pushButton_17, &QPushButton::clicked, [&]()
             {
