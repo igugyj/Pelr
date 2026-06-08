@@ -746,112 +746,112 @@ This will restore all options to defaults.</source>
     <name>SystemMonitorWidget</name>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="53"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="194"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="193"/>
         <source>System Monitor</source>
         <translation>系统监视器</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="73"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="197"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="196"/>
         <source>Memory Usage</source>
         <translation>内存使用</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="89"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="198"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="197"/>
         <source>Disk Usage</source>
         <translation>磁盘使用</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="100"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="195"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="194"/>
         <source>Process Memory</source>
         <translation>进程内存</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="109"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="211"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="212"/>
         <source>Physical Memory:</source>
         <translation>物理内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="110"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="212"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="213"/>
         <source>Peak Memory:</source>
         <translation>峰值内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="111"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="213"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="214"/>
         <source>Private Memory:</source>
         <translation>私有内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="112"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="214"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="215"/>
         <source>Virtual Memory:</source>
         <translation>虚拟内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="116"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="196"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="195"/>
         <source>Disk Space</source>
         <translation>磁盘空间</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="132"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="215"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="216"/>
         <source>Resources (Live2D):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="136"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="216"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="217"/>
         <source>voicevox_core:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="143"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="199"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="198"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="149"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="201"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="148"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="202"/>
         <source>TTS Cache:</source>
         <translation>TTS 缓存：</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="160"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="159"/>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="200"/>
         <source>Clear All</source>
         <translation>全部清除</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="166"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="202"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="165"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="203"/>
         <source>Log:</source>
         <translation>日志：</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="180"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="203"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="179"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="204"/>
         <source>User Data:</source>
         <translation>用户数据：</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="239"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="240"/>
         <source>Memory</source>
         <translation>内存</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="259"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="260"/>
         <source>Disk</source>
         <translation>磁盘</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="264"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="265"/>
         <source>Total Usage: %1 / %2 (Available: %3)</source>
         <translation>总使用量：%1 / %2（可用：%3）</translation>
     </message>
@@ -1239,27 +1239,27 @@ This will restore all options to defaults.</source>
 <context>
     <name>setting</name>
     <message>
-        <location filename="../src/ui/setting.ui" line="170"/>
+        <location filename="../src/ui/setting.ui" line="136"/>
         <source>FPS</source>
         <translation>帧率</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="584"/>
+        <location filename="../src/ui/setting.ui" line="594"/>
         <source>TTS</source>
         <translation>语音合成</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="806"/>
+        <location filename="../src/ui/setting.ui" line="816"/>
         <source>APIKey</source>
         <translation>APIKey</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="778"/>
+        <location filename="../src/ui/setting.ui" line="788"/>
         <source>APPID</source>
         <translation>APPID</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="792"/>
+        <location filename="../src/ui/setting.ui" line="802"/>
         <source>APISecret</source>
         <translation>APISecret</translation>
     </message>
@@ -1269,42 +1269,42 @@ This will restore all options to defaults.</source>
         <translation>x.y.z</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1222"/>
+        <location filename="../src/ui/setting.ui" line="1232"/>
         <source>llm</source>
         <translation>大语言模型</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1335"/>
+        <location filename="../src/ui/setting.ui" line="1345"/>
         <source>Weather API</source>
         <translation>天气 API</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1341"/>
+        <location filename="../src/ui/setting.ui" line="1351"/>
         <source>Chengdu</source>
         <translation type="unfinished">Chengdu</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1355"/>
+        <location filename="../src/ui/setting.ui" line="1365"/>
         <source>Key</source>
         <translation>密钥</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1362"/>
+        <location filename="../src/ui/setting.ui" line="1372"/>
         <source>https://home.openweathermap.org/api_keys</source>
         <translation>https://home.openweathermap.org/api_keys</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1365"/>
+        <location filename="../src/ui/setting.ui" line="1375"/>
         <source>OpenWeather</source>
         <translation>OpenWeather</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1464"/>
+        <location filename="../src/ui/setting.ui" line="1474"/>
         <source>GitHub</source>
         <translation>GitHub</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1444"/>
+        <location filename="../src/ui/setting.ui" line="1454"/>
         <source>Contributors</source>
         <translation>贡献者</translation>
     </message>
@@ -1334,528 +1334,533 @@ This will restore all options to defaults.</source>
         <translation>Live2D 模型路径</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="139"/>
-        <location filename="../src/ui/setting.ui" line="870"/>
-        <location filename="../src/ui/setting.ui" line="887"/>
+        <location filename="../src/ui/setting.ui" line="167"/>
+        <location filename="../src/ui/setting.ui" line="880"/>
+        <location filename="../src/ui/setting.ui" line="897"/>
         <source>Browse</source>
         <translation>浏览</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="146"/>
+        <location filename="../src/ui/setting.ui" line="211"/>
         <source>Model Size</source>
         <translation>模型大小</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="194"/>
+        <location filename="../src/ui/setting.ui" line="150"/>
         <source>Volume</source>
         <translation>音量</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="218"/>
-        <location filename="../src/ui/setting.ui" line="983"/>
-        <location filename="../src/ui/setting.ui" line="1191"/>
+        <location filename="../src/ui/setting.ui" line="201"/>
+        <location filename="../src/ui/setting.ui" line="993"/>
+        <location filename="../src/ui/setting.ui" line="1201"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="228"/>
+        <location filename="../src/ui/setting.ui" line="235"/>
         <source>Log Level</source>
         <translation>日志级别</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="238"/>
+        <location filename="../src/ui/setting.ui" line="221"/>
         <source>Speech Interval (min)</source>
         <translation>语音间隔（分钟）</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="247"/>
+        <location filename="../src/ui/setting.ui" line="244"/>
         <source>Min</source>
         <translation>最小</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="267"/>
+        <location filename="../src/ui/setting.ui" line="264"/>
         <source>Max</source>
         <translation>最大</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="291"/>
+        <location filename="../src/ui/setting.ui" line="286"/>
+        <source>Theme</source>
+        <translation type="unfinished">主题</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.ui" line="301"/>
         <source>Bubble Colors</source>
         <translation>气泡颜色</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="298"/>
+        <location filename="../src/ui/setting.ui" line="308"/>
         <source>Bubble Color - Background</source>
         <translation>气泡颜色 - 背景</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="305"/>
+        <location filename="../src/ui/setting.ui" line="315"/>
         <source>Bubble Color - Foreground</source>
         <translation>气泡颜色 - 前景</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="312"/>
+        <location filename="../src/ui/setting.ui" line="322"/>
         <source>Music Icon Color - Inactive</source>
         <translation>音乐图标颜色 - 非活跃</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="319"/>
+        <location filename="../src/ui/setting.ui" line="329"/>
         <source>Music Icon Color - Active</source>
         <translation>音乐图标颜色 - 活跃</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="329"/>
+        <location filename="../src/ui/setting.ui" line="339"/>
         <source>Bubble Color</source>
         <translation>气泡颜色</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="336"/>
+        <location filename="../src/ui/setting.ui" line="346"/>
         <source>Music Icon Colors</source>
         <translation>音乐图标颜色</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="343"/>
+        <location filename="../src/ui/setting.ui" line="353"/>
         <source>Music Icon Color</source>
         <translation>音乐图标颜色</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="350"/>
+        <location filename="../src/ui/setting.ui" line="360"/>
         <source>Music Icon Symbol</source>
         <translation>音乐图标符号</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="378"/>
+        <location filename="../src/ui/setting.ui" line="388"/>
         <source>Toggles</source>
         <translation>开关</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="399"/>
+        <location filename="../src/ui/setting.ui" line="409"/>
         <source>Start with System</source>
         <translation>开机自启</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="406"/>
+        <location filename="../src/ui/setting.ui" line="416"/>
         <source>Listen for Keys on Startup</source>
         <translation>启动时监听按键</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="413"/>
+        <location filename="../src/ui/setting.ui" line="423"/>
         <source>Eye Tracking</source>
         <translation>视线追踪</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="423"/>
+        <location filename="../src/ui/setting.ui" line="433"/>
         <source>Strength</source>
         <translation>强度</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="443"/>
+        <location filename="../src/ui/setting.ui" line="453"/>
         <source>Launch &quot;Star&quot; Items</source>
         <translation type="unfinished">启动&quot;star&quot;项目</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="453"/>
+        <location filename="../src/ui/setting.ui" line="463"/>
         <source>Detection Duration (min)</source>
         <translation>检测时长（分钟）</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="460"/>
+        <location filename="../src/ui/setting.ui" line="470"/>
         <source>-1 disables check</source>
         <translation>-1 表示禁用检测</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="473"/>
+        <location filename="../src/ui/setting.ui" line="483"/>
         <source>Launch Delay (min)</source>
         <translation>启动延迟（分钟）</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="480"/>
+        <location filename="../src/ui/setting.ui" line="490"/>
         <source>-1 disables launch</source>
         <translation>-1 表示禁用启动</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="496"/>
+        <location filename="../src/ui/setting.ui" line="506"/>
         <source>Random Speech</source>
         <translation>随机发言</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="503"/>
+        <location filename="../src/ui/setting.ui" line="513"/>
         <source>Enable Voice</source>
         <translation>启用语音</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="510"/>
+        <location filename="../src/ui/setting.ui" line="520"/>
         <source>Hourly Chime</source>
         <translation>整点报时</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="517"/>
+        <location filename="../src/ui/setting.ui" line="527"/>
         <source>Always on Top</source>
         <translation>总在最前</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="524"/>
+        <location filename="../src/ui/setting.ui" line="534"/>
         <source>Tray Hourly Chime</source>
         <translation>托盘整点报时</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="531"/>
+        <location filename="../src/ui/setting.ui" line="541"/>
         <source>Silent Boot</source>
         <translation>静默启动</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="538"/>
+        <location filename="../src/ui/setting.ui" line="548"/>
         <source>Remember Window Position</source>
         <translation>记住窗口位置</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="545"/>
+        <location filename="../src/ui/setting.ui" line="555"/>
         <source>Music Icon</source>
         <translation>音乐图标</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="552"/>
+        <location filename="../src/ui/setting.ui" line="562"/>
         <source>Show Thinking Bubble</source>
         <translation>显示思考气泡</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="559"/>
+        <location filename="../src/ui/setting.ui" line="569"/>
         <source>AI Greeting</source>
         <translation>AI 问候</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="608"/>
+        <location filename="../src/ui/setting.ui" line="618"/>
         <source>TTS Selection</source>
         <translation>TTS 选择</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="621"/>
+        <location filename="../src/ui/setting.ui" line="631"/>
         <source>OpenAI-Edge-TTS</source>
         <translation>OpenAI-Edge-TTS</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="627"/>
-        <location filename="../src/ui/setting.ui" line="820"/>
+        <location filename="../src/ui/setting.ui" line="637"/>
+        <location filename="../src/ui/setting.ui" line="830"/>
         <source>Speaker</source>
         <translation>发音人</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="641"/>
+        <location filename="../src/ui/setting.ui" line="651"/>
         <source>Speed</source>
         <translation>语速</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="667"/>
+        <location filename="../src/ui/setting.ui" line="677"/>
         <source>How to set up speaker</source>
         <translation>如何设置发音人</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="681"/>
+        <location filename="../src/ui/setting.ui" line="691"/>
         <source>OpenAI-Compatible</source>
         <translation>OpenAI 兼容</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="772"/>
+        <location filename="../src/ui/setting.ui" line="782"/>
         <source>iFlytek TTS</source>
         <translation>讯飞 TTS</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="830"/>
+        <location filename="../src/ui/setting.ui" line="840"/>
         <source>Get API</source>
         <translation>获取 API</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="837"/>
+        <location filename="../src/ui/setting.ui" line="847"/>
         <source>iFlytek Speech Synthesis</source>
         <translation>讯飞语音合成</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="854"/>
+        <location filename="../src/ui/setting.ui" line="864"/>
         <source>voicevox (Japanese, Local)</source>
         <translation>voicevox（日语，本地）</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="860"/>
+        <location filename="../src/ui/setting.ui" line="870"/>
         <source>Dictionary Directory</source>
         <translation>词典目录</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="877"/>
+        <location filename="../src/ui/setting.ui" line="887"/>
         <source>Model File</source>
         <translation>模型文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="894"/>
+        <location filename="../src/ui/setting.ui" line="904"/>
         <source>Voice Style</source>
         <translation>语音风格</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="904"/>
+        <location filename="../src/ui/setting.ui" line="914"/>
         <source>Speech Speed</source>
         <translation>语速</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="930"/>
-        <location filename="../src/ui/setting.ui" line="937"/>
-        <location filename="../src/ui/setting.ui" line="1008"/>
-        <location filename="../src/ui/setting.ui" line="1022"/>
-        <location filename="../src/ui/setting.ui" line="1128"/>
-        <location filename="../src/ui/setting.ui" line="1161"/>
+        <location filename="../src/ui/setting.ui" line="940"/>
+        <location filename="../src/ui/setting.ui" line="947"/>
+        <location filename="../src/ui/setting.ui" line="1018"/>
+        <location filename="../src/ui/setting.ui" line="1032"/>
+        <location filename="../src/ui/setting.ui" line="1138"/>
+        <location filename="../src/ui/setting.ui" line="1171"/>
         <source>Test</source>
         <translation>测试</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="950"/>
+        <location filename="../src/ui/setting.ui" line="960"/>
         <source>Translation Settings</source>
         <translation>翻译设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="963"/>
+        <location filename="../src/ui/setting.ui" line="973"/>
         <source>TTS Server (translators)</source>
         <translation>TTS 服务器（翻译）</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="969"/>
+        <location filename="../src/ui/setting.ui" line="979"/>
         <source>Provider</source>
         <translation>提供商</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="997"/>
+        <location filename="../src/ui/setting.ui" line="1007"/>
         <source>Refresh Providers &amp; Languages</source>
         <translation>刷新提供商和语言</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1015"/>
-        <location filename="../src/ui/setting.ui" line="1135"/>
+        <location filename="../src/ui/setting.ui" line="1025"/>
+        <location filename="../src/ui/setting.ui" line="1145"/>
         <source>Enter test text</source>
         <translation>输入测试文本</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1036"/>
+        <location filename="../src/ui/setting.ui" line="1046"/>
         <source>Tencent (Cloud)</source>
         <translation>腾讯云</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1145"/>
+        <location filename="../src/ui/setting.ui" line="1155"/>
         <source>&lt;Test Result&gt;</source>
         <translation>&lt;测试结果&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1175"/>
+        <location filename="../src/ui/setting.ui" line="1185"/>
         <source>LibreTranslate (Local)</source>
         <translation>LibreTranslate（本地）</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1181"/>
+        <location filename="../src/ui/setting.ui" line="1191"/>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1242"/>
+        <location filename="../src/ui/setting.ui" line="1252"/>
         <source>Max History Messages</source>
         <translation>最大历史消息数</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1256"/>
+        <location filename="../src/ui/setting.ui" line="1266"/>
         <source>-1 means unlimited</source>
         <translation>-1 表示无限制</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1272"/>
+        <location filename="../src/ui/setting.ui" line="1282"/>
         <source>Enter system prompt here. If a prompt file is set, this is ignored.</source>
         <translation>在此输入系统提示词。如果设置了提示词文件，此内容将被忽略。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1293"/>
+        <location filename="../src/ui/setting.ui" line="1303"/>
         <source>Custom Prompt</source>
         <translation>自定义提示词</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1307"/>
+        <location filename="../src/ui/setting.ui" line="1317"/>
         <source>Prompt File</source>
         <translation>提示词文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1317"/>
+        <location filename="../src/ui/setting.ui" line="1327"/>
         <source>If set, the custom prompt above is ignored.</source>
         <translation>如果设置此项，上面的自定义提示词将被忽略。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1324"/>
+        <location filename="../src/ui/setting.ui" line="1334"/>
         <source>Choose</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1348"/>
+        <location filename="../src/ui/setting.ui" line="1358"/>
         <source>This feature may be inaccessible in mainland China.</source>
         <translation>此功能在中国大陆可能无法访问。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1376"/>
+        <location filename="../src/ui/setting.ui" line="1386"/>
         <source>Get OpenWeather API</source>
         <translation>获取 OpenWeather API</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1383"/>
+        <location filename="../src/ui/setting.ui" line="1393"/>
         <source>City</source>
         <translation>城市</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1407"/>
+        <location filename="../src/ui/setting.ui" line="1417"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1416"/>
+        <location filename="../src/ui/setting.ui" line="1426"/>
         <source>Voice Directory</source>
         <translation>语音目录</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1423"/>
+        <location filename="../src/ui/setting.ui" line="1433"/>
         <source>Program Folder</source>
         <translation>程序文件夹</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1430"/>
+        <location filename="../src/ui/setting.ui" line="1440"/>
         <source>Check for Updates</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1437"/>
+        <location filename="../src/ui/setting.ui" line="1447"/>
         <source>Reset App</source>
         <translation>重置应用</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1471"/>
+        <location filename="../src/ui/setting.ui" line="1481"/>
         <source>Issue</source>
         <translation>问题反馈</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1478"/>
+        <location filename="../src/ui/setting.ui" line="1488"/>
         <source>Custom Phrases</source>
         <translation>自定义短语</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1485"/>
+        <location filename="../src/ui/setting.ui" line="1495"/>
         <source>Documentation</source>
         <translation>文档</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1496"/>
+        <location filename="../src/ui/setting.ui" line="1506"/>
         <source>Open Source License</source>
         <translation>开源许可</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="634"/>
+        <location filename="../src/ui/setting.ui" line="644"/>
         <source>zh-CN-XiaoxiaoNeural</source>
         <translation>zh-CN-XiaoxiaoNeural</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="687"/>
+        <location filename="../src/ui/setting.ui" line="697"/>
         <source>endpoint</source>
         <translation>endpoint</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="694"/>
+        <location filename="../src/ui/setting.ui" line="704"/>
         <source>http://example.com/v1/audio/speech</source>
         <translation>http://example.com/v1/audio/speech</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="701"/>
+        <location filename="../src/ui/setting.ui" line="711"/>
         <source>apiKey</source>
         <translation>apiKey</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="715"/>
+        <location filename="../src/ui/setting.ui" line="725"/>
         <source>model</source>
         <translation>model</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="729"/>
+        <location filename="../src/ui/setting.ui" line="739"/>
         <source>voice</source>
         <translation>voice</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="736"/>
+        <location filename="../src/ui/setting.ui" line="746"/>
         <source>alloy</source>
         <translation>alloy</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="743"/>
+        <location filename="../src/ui/setting.ui" line="753"/>
         <source>speed</source>
         <translation>speed</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1042"/>
+        <location filename="../src/ui/setting.ui" line="1052"/>
         <source>SecretId</source>
         <translation>SecretId</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1052"/>
+        <location filename="../src/ui/setting.ui" line="1062"/>
         <source>SecretKey</source>
         <translation>SecretKey</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1066"/>
+        <location filename="../src/ui/setting.ui" line="1076"/>
         <source>region</source>
         <translation>region</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1076"/>
+        <location filename="../src/ui/setting.ui" line="1086"/>
         <source>ap-guangzhou</source>
         <translation>ap-guangzhou</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1083"/>
+        <location filename="../src/ui/setting.ui" line="1093"/>
         <source>project_id</source>
         <translation>project_id</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1097"/>
+        <location filename="../src/ui/setting.ui" line="1107"/>
         <source>source_lang</source>
         <translation>source_lang</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1107"/>
+        <location filename="../src/ui/setting.ui" line="1117"/>
         <source>zh</source>
         <translation>zh</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1114"/>
+        <location filename="../src/ui/setting.ui" line="1124"/>
         <source>target_lang</source>
         <translation>target_lang</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1121"/>
+        <location filename="../src/ui/setting.ui" line="1131"/>
         <source>en</source>
         <translation>en</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1228"/>
+        <location filename="../src/ui/setting.ui" line="1238"/>
         <source>http://example.com</source>
         <translation>http://example.com</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1269"/>
+        <location filename="../src/ui/setting.ui" line="1279"/>
         <source>You are a friendly AI assistant.</source>
         <translation>你是一个友好的 AI 助手。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1279"/>
+        <location filename="../src/ui/setting.ui" line="1289"/>
         <source>API Base URL</source>
         <translation>API 基础地址</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1286"/>
+        <location filename="../src/ui/setting.ui" line="1296"/>
         <source>API Key</source>
         <translation>API 密钥</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1300"/>
+        <location filename="../src/ui/setting.ui" line="1310"/>
         <source>AI Model</source>
         <translation>AI 模型</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1502"/>
+        <location filename="../src/ui/setting.ui" line="1512"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }

@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QCoreApplication>
-#include <QStyleFactory>
 #include <QIcon>
 #include <QDebug>
 
@@ -46,17 +45,6 @@ int main(int argc, char *argv[])
     main_font.setWeight(QFont::Medium);
     app.setFont(main_font);
     app.setWindowIcon(QIcon(":/public/image/Pelr.png"));
-
-    // 样式设置
-    QStringList styles = QStyleFactory::keys();
-    for (auto &style : styles)
-    {
-        qDebug() << "[APP] Available style:" << style;
-    }
-    if (styles.contains("FluentUI3"))
-        app.setStyle("FluentUI3");
-    else if (styles.contains("Fusion", Qt::CaseInsensitive))
-        app.setStyle("Fusion");
 
     // 许可证检查
     if (!CheckApplication::hasValidLicense())

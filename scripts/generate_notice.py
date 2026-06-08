@@ -217,7 +217,7 @@ THIRD_PARTY_LIBS = [
         "name": "FluentUIStyle",
         "version": "Latest",
         "license_type": "MIT License",
-        "copyright": "Copyright (c) 2026 XuHongYun-ChuJian",
+        "copyright": "XuHongYun-ChuJian",
         "homepage": "https://github.com/XHY-ChuJian/FluentUIStyle",
         "license_path": r"thirdParty\FluentUIStyle\LICENSE",
         "extra_notes": "",
