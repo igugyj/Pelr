@@ -20,6 +20,8 @@ namespace Ui
 class SettingWidget : public QWidget
 {
     Q_OBJECT
+signals:
+    void styleChanged(const QString &newStyle);
 
 public:
     explicit SettingWidget(QWidget *parent = nullptr);

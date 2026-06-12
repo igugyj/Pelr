@@ -7,13 +7,27 @@
 #include <QDebug>
 #include <QMessageBox>
 #include "TranslationManager.h"
-
+#if __has_include(<FluentUI3Style/fluentui3styleproperties.h>)
+#include <FluentUI3Style/fluentui3styleproperties.h>
+#endif
 mainWidget::mainWidget(QWidget *parent) : QWidget(parent), ui(new Ui::mainWidget)
 {
     ui->setupUi(this);
     initUI();
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            this, [this](const QString &) { retranslateUI(); });
+            this, [this](const QString &)
+            { retranslateUI(); });
+    connect(Widget_Setting, &SettingWidget::styleChanged, this, [this](const QString &style)
+            {                if (style == "FluentUI3")
+{
+    auto setSwitchStyle = [](QWidget *w) {
+        for (auto *cb : w->findChildren<QCheckBox *>())
+            cb->setProperty(SwitchStyleProperty, true);
+    };
+    setSwitchStyle(Widget_Setting);
+    setSwitchStyle(Widget_Todo);
+    qDebug() << "[MainWidget] Style changed to FluentUI3 set SwitchStyleProperty";
+} });
 }
 
 void mainWidget::retranslateUI()
@@ -25,12 +39,7 @@ void mainWidget::initUI()
 {
     this->setWindowIcon(qApp->windowIcon());
     this->setWindowTitle(qApp->applicationName());
-    // QFile styleFile(":/thirdParty/QSS/Ubuntu.qss");
-    // if (styleFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    //     QString styleSheet = QLatin1String(styleFile.readAll());
-    //     this->setStyleSheet(styleSheet);
-    //     styleFile.close();
-    // }
+
     Widget_SystemMonitor = new SystemMonitorWidget(this);
     Widget_chat = new ChatWidget(this);
     Widget_ManageStart = new ManageStartWidget(this);

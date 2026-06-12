@@ -395,14 +395,10 @@ void SettingWidget::connectSignals()
             {
     QString style = ui->comboBox_8->itemData(idx).toString();
     qApp->setStyle(style);
-    qDebug() << "[Settings] current theme set to"<<style;
-    if (style == "FluentUI3") {
-        // 方式一：findChildren 版本 (推荐)
-        const auto boxes = this->findChildren<QCheckBox*>();
-        for (QCheckBox *cb : boxes) {
-            cb->setProperty(SwitchStyleProperty, true);
-        }
-    } });
+    if(style!=qApp->style()->objectName()){
+    qDebug() << "[Settings] current theme set to"<< style;
+    emit styleChanged(style);
+} });
     // color
     connect(ui->pushButton_17, &QPushButton::clicked, [&]()
             {
