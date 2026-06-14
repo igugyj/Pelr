@@ -214,6 +214,15 @@ THIRD_PARTY_LIBS = [
         "extra_notes": "",
     },
     {
+        "name": "FluentUIStyle",
+        "version": "Latest",
+        "license_type": "MIT License",
+        "copyright": "XuHongYun-ChuJian",
+        "homepage": "https://github.com/XHY-ChuJian/FluentUIStyle",
+        "license_path": r"thirdParty\FluentUIStyle\LICENSE",
+        "extra_notes": "",
+    },
+    {
         "name": "IconaMoon",
         "version": "1.1",
         "license_type": "Free for any use",

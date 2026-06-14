@@ -60,6 +60,7 @@ Before building, the following resources must be present:
 | `thirdParty/stb/` | Git submodule | Included in submodule init |
 | `Resources/` | Cubism SDK Demo build | See `docs/dev-init.md` for detailed instructions |
 | `Resources/voicevox_core/` | [voicevox_core 0.16.4](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.16.4) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the output in `Resources/voicevox_core/` |
+| `thirdParty/FluentUIStyle/` | Git submodule | Initialize with `git submodule update --init --recursive`. Built as Qt style plugin (dll) via ExternalProject. |
 
 For detailed setup instructions, refer to [docs/dev-init.md](docs/dev-init.md).
 
@@ -187,6 +188,7 @@ Examples:
 | GLFW | zlib/libpng | Yes (downloaded by setup script) |
 | kissfft | BSD-3-Clause | Yes (git submodule) |
 | miniaudio | MIT | Yes (git submodule) |
+| FluentUI3Style | MIT | Yes (git submodule, built as ExternalProject) |
 | voicevox_core | OSS (MIT, Apache 2.0) | No — must be downloaded separately |
 | ONNX Runtime | MIT | No — bundled with voicevox_core |
 

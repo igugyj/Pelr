@@ -157,7 +157,6 @@ void SystemMonitorWidget::setupUI()
     m_labelLogPath = new QLabel();
     m_labelLogPath->setStyleSheet("color: #888; font-size: 11px;");
     m_btnClearLog = new QPushButton(tr("Clear All"));
-    m_btnClearLog->setFixedSize(50, 24);
     logRow->addWidget(m_labelLogSize);
     logRow->addWidget(m_labelLogPath);
     logRow->addStretch();

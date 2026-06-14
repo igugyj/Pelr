@@ -149,6 +149,7 @@ See [docs/dev-structure.md](docs/dev-structure.md) for details.
 |  voicevox_core     (C API, local TTS engine)                  |
 |  ONNX Runtime      (bundled with voicevox_core)               |
 |  stb               (image loading)                             |
+|  FluentUI3Style    (Qt style plugin: Fluent UI 3 look)        |
 |                                                                 |
 +---------------------------------------------------------------+
                                |
@@ -186,6 +187,7 @@ See [NOTICE](NOTICE) for third-party notices.
 - **STB** - Image processing
 - **VOICEVOX** - Free, medium-quality TTS engine
 - **kissfft** - Real-time spectrum analysis and audio detection
+- **FluentUI3Style** - Fluent UI 3 style for Qt widgets (built as plugin via ExternalProject)
 
 ### Python Toolchain (optional)
 
@@ -227,6 +229,7 @@ Different components use different licenses:
 - [GLEW](http://glew.sourceforge.net/) - OpenGL extension loading
 - [GLFW](https://www.glfw.org/) - Window and OpenGL context management
 - [kissfft](https://github.com/mborgerding/kissfft) - Fast Fourier transform library
+- [FluentUI3Style](https://github.com/XHY-ChuJian/FluentUIStyle) - Fluent UI 3 Qt style implementation
 - [miniaudio](https://github.com/mackron/miniaudio) - Single-file audio decoding library
 - [stb](https://github.com/nothings/stb) - Single-header image processing library
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - Free TTS engine

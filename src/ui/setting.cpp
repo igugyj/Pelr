@@ -13,6 +13,7 @@
 #include <QColorDialog>
 #include <QColor>
 #include <QDebug>
+#include <QStyleFactory>
 #include "LAppLive2DManager.hpp"
 #include "logger.hpp"
 #include "llamaclient.h"
@@ -26,6 +27,9 @@
 #include <QRandomGenerator>
 #include <QDateTime>
 #include <QStandardPaths>
+#if __has_include(<FluentUI3Style/fluentui3styleproperties.h>)
+#include <FluentUI3Style/fluentui3styleproperties.h>
+#endif
 using MessageType = NotificationWidget::MessageType;
 
 ConfigData SettingWidget::getAllValues()
@@ -78,6 +82,7 @@ ConfigData SettingWidget::getAllValues()
     data.StarRunTimeout = ui->spinBox_6->value();
 
     data.language = ui->comboBox_2->currentData().toString();
+    data.theme = ui->comboBox_8->currentData().toString();
 
     return data;
 }
@@ -289,6 +294,12 @@ void SettingWidget::setAllValues(const ConfigData &data)
         ui->comboBox_2->setCurrentIndex(langIdx);
         m_isUpdatingLanguage = false;
     }
+    // 填充可用样式
+    QStringList styles = QStyleFactory::keys();
+    ui->comboBox_8->clear();
+    for (const auto &style : styles)
+        ui->comboBox_8->addItem(style, style);
+    ui->comboBox_8->setCurrentText(data.theme);
     loadNotice();
 }
 
@@ -370,16 +381,22 @@ void SettingWidget::connectSignals()
     connect(ui->horizontalSlider_2, &QSlider::valueChanged, [&]()
             { ui->label_8->setText(QString::number(ui->horizontalSlider_2->value())); });
     connect(ui->label_8, &DoubleClickableLabel::doubleClicked, [&]()
-            {                 ConfigData temp ;
-
+            {
+                ConfigData temp ;
                 ui->horizontalSlider_2->setValue(temp.FPS); });
     connect(ui->horizontalSlider_3, &QSlider::valueChanged, [&]()
             { ui->label_9->setText(QString::number(ui->horizontalSlider_3->value())); });
     connect(ui->label_9, &DoubleClickableLabel::doubleClicked, [&]()
-            {                 ConfigData temp ;
-
+            {
+                ConfigData temp ;
                 ui->horizontalSlider_3->setValue(temp.volume); });
     connect(ui->comboBox_3, &QComboBox::currentTextChanged, this, &SettingWidget::onLogLevelChanged);
+    connect(ui->comboBox_8, &QComboBox::currentTextChanged, this, [this]()
+            {
+    QString style = ui->comboBox_8->currentData().toString();
+    qApp->setStyle(style);
+    qDebug() << "[Settings] current theme set to" << style;
+    emit styleChanged(style); });
     // color
     connect(ui->pushButton_17, &QPushButton::clicked, [&]()
             {
