@@ -296,7 +296,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 # ============================================================================
 if (WIN32)
     # 程序图标
-    set(APP_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/assets/image/Pelr.ico")
+    set(APP_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/public/image/Pelr.ico")
     set(APP_RC_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/icon.rc")
     if (EXISTS ${APP_ICON_FILE} AND EXISTS ${APP_RC_FILE})
         target_sources(${PROJECT_NAME} PRIVATE ${APP_RC_FILE})
