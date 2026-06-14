@@ -17,6 +17,8 @@ class mainWidget : public QWidget
 {
     Q_OBJECT
 
+    void setSwitchStyleProperty(const QString &style);
+
 public:
     ChatWidget *Widget_chat;
     ManageStartWidget *Widget_ManageStart;

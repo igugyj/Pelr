@@ -18,16 +18,22 @@ mainWidget::mainWidget(QWidget *parent) : QWidget(parent), ui(new Ui::mainWidget
             this, [this](const QString &)
             { retranslateUI(); });
     connect(Widget_Setting, &SettingWidget::styleChanged, this, [this](const QString &style)
-            {                if (style == "FluentUI3")
+            { setSwitchStyleProperty(style); });
+}
+
+void mainWidget::setSwitchStyleProperty(const QString &style)
 {
-    auto setSwitchStyle = [](QWidget *w) {
-        for (auto *cb : w->findChildren<QCheckBox *>())
-            cb->setProperty(SwitchStyleProperty, true);
-    };
-    setSwitchStyle(Widget_Setting);
-    setSwitchStyle(Widget_Todo);
-    qDebug() << "[MainWidget] Style changed to FluentUI3 set SwitchStyleProperty";
-} });
+    if (style == "FluentUI3")
+    {
+        auto setSwitchStyle = [](QWidget *w)
+        {
+            for (auto *cb : w->findChildren<QCheckBox *>())
+                cb->setProperty(SwitchStyleProperty, true);
+        };
+        setSwitchStyle(Widget_Setting);
+        setSwitchStyle(Widget_Todo);
+        qDebug() << "[MainWidget] Applied FluentUI3 SwitchStyleProperty";
+    }
 }
 
 void mainWidget::retranslateUI()
@@ -66,6 +72,8 @@ void mainWidget::initUI()
     // 设置初始页面
     ui->stackedWidget->setCurrentWidget(Widget_SystemMonitor);
     resize(1280, 720);
+    // 手动应用主题效果
+    setSwitchStyleProperty(DataManager::instance().getBasicData().theme);
 }
 
 void mainWidget::showEvent(QShowEvent *event)

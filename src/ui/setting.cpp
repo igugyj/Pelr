@@ -395,11 +395,8 @@ void SettingWidget::connectSignals()
             {
     QString style = ui->comboBox_8->currentData().toString();
     qApp->setStyle(style);
-    if (style != qApp->style()->objectName())
-    {
-        qDebug() << "[Settings] current theme set to" << style;
-        emit styleChanged(style);
-    } });
+    qDebug() << "[Settings] current theme set to" << style;
+    emit styleChanged(style); });
     // color
     connect(ui->pushButton_17, &QPushButton::clicked, [&]()
             {
