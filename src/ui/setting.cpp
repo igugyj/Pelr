@@ -391,14 +391,15 @@ void SettingWidget::connectSignals()
                 ConfigData temp ;
                 ui->horizontalSlider_3->setValue(temp.volume); });
     connect(ui->comboBox_3, &QComboBox::currentTextChanged, this, &SettingWidget::onLogLevelChanged);
-    connect(ui->comboBox_8, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int idx)
+    connect(ui->comboBox_8, &QComboBox::currentTextChanged, this, [this]()
             {
-    QString style = ui->comboBox_8->itemData(idx).toString();
+    QString style = ui->comboBox_8->currentData().toString();
     qApp->setStyle(style);
-    if(style!=qApp->style()->objectName()){
-    qDebug() << "[Settings] current theme set to"<< style;
-    emit styleChanged(style);
-} });
+    if (style != qApp->style()->objectName())
+    {
+        qDebug() << "[Settings] current theme set to" << style;
+        emit styleChanged(style);
+    } });
     // color
     connect(ui->pushButton_17, &QPushButton::clicked, [&]()
             {
