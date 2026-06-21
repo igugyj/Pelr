@@ -2,29 +2,21 @@
 #include "tray.h"
 #include <QMessageBox>
 #include <QCoreApplication>
-#include <QTime>
 #include <QDebug>
 #include <QFile>
 #include "launcher.hpp"
-#include "data.hpp"
 #include "launcherMenu.hpp"
 #include "custommenu.h"
 #include <windows.h>
-#include <mmdeviceapi.h>
-#include <audioclient.h>
-#include <endpointvolume.h>
-#include <iostream>
 #include "AudioSpectrumDetector.h"
 #include "TranslationManager.h"
-// 初始化静态成员变量
+
 TrayIcon *TrayIcon::m_instance = nullptr;
 
 TrayIcon *TrayIcon::instance()
 {
     if (!m_instance)
-    {
         m_instance = new TrayIcon();
-    }
     return m_instance;
 }
 
@@ -32,26 +24,25 @@ void TrayIcon::showMessage(const QString &title, const QString &msg,
                            QSystemTrayIcon::MessageIcon icon, int timeout)
 {
     if (m_instance && !m_instance->m_silentMode)
-    {
         m_instance->QSystemTrayIcon::showMessage(title, msg, icon, timeout);
-    }
 }
 
 TrayIcon::TrayIcon(QObject *parent)
-    : QSystemTrayIcon(parent)
+    : QSystemTrayIcon(parent), m_appIcon(":/public/image/Pelr.png")
 {
     setIcon(m_appIcon);
-    setToolTip(
-        DataManager::instance().Project_Name + " " + DataManager::instance().const_config_data.version);
+    setToolTip(DataManager::instance().Project_Name + " " + DataManager::instance().const_config_data.version);
 
-    m_rotateTimer = new QTimer(this);
-    connect(m_rotateTimer, &QTimer::timeout, this, &TrayIcon::rotateNote);
+    m_textTimer = new QTimer(this);
+    connect(m_textTimer, &QTimer::timeout, this, &TrayIcon::textRotate);
+
+    m_gifTimer = new QTimer(this);
+    connect(m_gifTimer, &QTimer::timeout, this, &TrayIcon::advanceGifFrame);
 
     m_audioCheckTimer = new QTimer(this);
     connect(m_audioCheckTimer, &QTimer::timeout, this, &TrayIcon::checkAudioActivity);
     m_audioCheckTimer->setInterval(500);
 
-    // 创建右键菜单
     menu = new CustomMenu();
 
     action_resetWinLoc = new QAction(tr("Reset Position"), this);
@@ -59,7 +50,6 @@ TrayIcon::TrayIcon(QObject *parent)
     action_silentMode = new QAction(tr("Silent Mode"), this);
     action_switchDrag = new QAction(tr("Lock Position"), this);
     action_mediaPlayer = new QAction(tr("Play Media"), this);
-
     action_quit = new QAction(tr("Exit"), this);
     action_keyListener = new QAction(tr("Key Listener"), this);
 
@@ -72,30 +62,18 @@ TrayIcon::TrayIcon(QObject *parent)
     m_actionOpenDirPath = new QAction(tr("Program Folder"), m_menuOpen);
     m_actionOpenUserPath = new QAction(tr("User Folder"), m_menuOpen);
     m_actionOpenLogPath = new QAction(tr("Log Folder"), m_menuOpen);
-    // 连接信号和槽
-    // 打开程序文件夹
+
     connect(m_actionOpenDirPath, &QAction::triggered, []()
-            {
-        const QString appDir = QCoreApplication::applicationDirPath();
-        launchByPath(appDir); });
-    // 打开用户文件夹
+            { launchByPath(QCoreApplication::applicationDirPath()); });
     connect(m_actionOpenUserPath, &QAction::triggered, []()
-            {
-        QString appDir = QCoreApplication::applicationDirPath();
-        const QString userDir = appDir.append("/user");
-        launchByPath(userDir); });
-    // 打开日志文件夹
+            { launchByPath(QCoreApplication::applicationDirPath() + "/user"); });
     connect(m_actionOpenLogPath, &QAction::triggered, []()
-            {
-        QString appDir = QCoreApplication::applicationDirPath();
-        const QString logDir = appDir.append("/log");
-        launchByPath(logDir); });
+            { launchByPath(QCoreApplication::applicationDirPath() + "/log"); });
+
     m_actionStartApp = new QAction(tr("Launch Item"), this);
     m_actionStartApp->setMenu(launcherMenu::instance());
-    // 如果有内容就添加到菜单
     if (launcherMenu::instance()->hasContent)
     {
-        // 添加菜单项到菜单
         menu->addAction(m_actionStartApp);
         menu->addSeparator();
     }
@@ -107,21 +85,20 @@ TrayIcon::TrayIcon(QObject *parent)
     menu->addMenu(m_menuOpen);
     menu->addSeparator();
     menu->addAction(action_quit);
-    // 字体
+
     QFont font = qApp->font();
     font.setWeight(QFont::Medium);
     menu->setFont(font);
-    // 设置托盘图标的菜单
-    this->setContextMenu(menu);
+    setContextMenu(menu);
 
     qDebug() << "[Tray] TrayIcon singleton initialized";
 
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
             this, [this](const QString &) { retranslateUI(); });
-
-    // 显示托盘图标
-    this->show();
-    switchMusicIcon(DataManager::instance().getBasicData().isMusicIcon);
+    setTrayIconMode(DataManager::instance().getBasicData().trayIconMode,
+                    DataManager::instance().getBasicData().trayGifPath);
+    switchLaunchMenu(DataManager::instance().getBasicData().ShowLaunchMenuinTrayMenu);
+    show();
 }
 
 void TrayIcon::retranslateUI()
@@ -138,6 +115,60 @@ void TrayIcon::retranslateUI()
     m_actionOpenUserPath->setText(tr("User Folder"));
     m_actionOpenLogPath->setText(tr("Log Folder"));
     m_actionStartApp->setText(tr("Launch Item"));
+}
+void TrayIcon::switchLaunchMenu(const bool flag)
+{
+    m_actionStartApp->setVisible(flag);
+}
+
+void TrayIcon::setTrayIconMode(int mode, const QString &gifPath)
+{
+    // Stop previous mode
+    m_textTimer->stop();
+    m_gifTimer->stop();
+    stopAudioDetector();
+
+    m_textRotating = false;
+    m_textAngle = 0;
+    m_gifFrames.clear();
+    m_gifIdx = 0;
+
+    m_mode = mode;
+
+    switch (m_mode)
+    {
+    case TrayIcon_Static:
+        setIcon(m_appIcon);
+        qDebug() << "[Tray] Mode set to Static";
+        break;
+
+    case TrayIcon_Text:
+        textRotate(); // draw static text icon
+        initializeAudioDetector();
+        qDebug() << "[Tray] Mode set to Text";
+        break;
+
+    case TrayIcon_Gif:
+        if (!gifPath.isEmpty())
+        {
+            loadGifFrames(gifPath);
+            if (!m_gifFrames.isEmpty())
+                setIcon(QIcon(m_gifFrames[0].pixmap));
+            else
+                setIcon(m_appIcon);
+        }
+        else
+        {
+            setIcon(m_appIcon);
+        }
+        initializeAudioDetector();
+        qDebug() << "[Tray] Mode set to GIF";
+        break;
+
+    default:
+        setIcon(m_appIcon);
+        break;
+    }
 }
 
 void TrayIcon::initializeAudioDetector()
@@ -156,49 +187,15 @@ void TrayIcon::initializeAudioDetector()
     }
 }
 
-QPixmap TrayIcon::createMusicIcon() const
+void TrayIcon::stopAudioDetector()
 {
-    QPixmap pixmap(64, 64);
-    pixmap.fill(Qt::transparent);
-
-    QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::TextAntialiasing);
-
-    // 应用旋转
-    if (m_rotating)
+    m_audioCheckTimer->stop();
+    if (m_audioDetector)
     {
-        painter.translate(32, 32);
-        painter.rotate(m_angle);
-        painter.translate(-32, -32);
+        m_audioDetector->stop();
+        delete m_audioDetector;
+        m_audioDetector = nullptr;
     }
-
-    // 设置字体和颜色
-    QFont font(qApp->font());
-    font.setPointSize(64);
-    font.setBold(true);
-    painter.setFont(font);
-
-    // 根据旋转状态改变颜色
-    if (m_rotating)
-    {
-        painter.setPen(QColor(DataManager::instance().getBasicData().color_tray.background)); // 有音频
-    }
-    else
-    {
-        painter.setPen(QColor(DataManager::instance().getBasicData().color_tray.forground)); // 无音频
-    }
-
-    // 绘制音乐符号
-    painter.drawText(pixmap.rect(), Qt::AlignCenter, DataManager::instance().getBasicData().music_tray_symbol);
-
-    return pixmap;
-}
-
-void TrayIcon::rotateNote()
-{
-    m_angle = (m_angle + 30) % 360;
-    setIcon(QIcon(createMusicIcon()));
 }
 
 void TrayIcon::checkAudioActivity()
@@ -206,49 +203,47 @@ void TrayIcon::checkAudioActivity()
     if (!m_audioDetector)
         return;
 
-    bool isAudioPlaying = m_audioDetector->isAudioPlaying();
-    float energy = m_audioDetector->currentEnergy();
-    // qDebug() << "Energy:" << energy << "Active:" << isAudioPlaying;
-    // 根据音频状态控制旋转
-    if (isAudioPlaying && !m_rotating)
-    {
-        // 开始旋转
-        m_rotating = true;
-        m_rotateTimer->start(100); // 固定速度：100ms
-    }
-    else if (!isAudioPlaying && m_rotating)
-    {
-        // 停止旋转
-        m_rotating = false;
-        m_rotateTimer->stop();
-    }
+    bool playing = m_audioDetector->isAudioPlaying();
 
-    // 更新图标以反映颜色变化
-    setIcon(QIcon(createMusicIcon()));
-}
-
-void TrayIcon::switchMusicIcon(const bool flag)
-{
-    qDebug() << "[Tray] SwitchMusicIcon called with flag:" << flag;
-    if (flag)
+    switch (m_mode)
     {
-        initializeAudioDetector();
-        qDebug() << "[Tray] Music icon enabled";
-    }
-    else
+    case TrayIcon_Text:
     {
-        m_audioCheckTimer->stop();
-        m_rotateTimer->stop();
-        m_rotating = false;
-        setIcon(m_appIcon);
-
-        if (m_audioDetector)
+        if (playing && !m_textRotating)
         {
-            m_audioDetector->stop();
-            delete m_audioDetector;
-            m_audioDetector = nullptr;
+            m_textRotating = true;
+            m_textTimer->start(100);
         }
-        qDebug() << "[Tray] Music icon disabled";
+        else if (!playing && m_textRotating)
+        {
+            m_textRotating = false;
+            m_textTimer->stop();
+        }
+        textRotate(); // update color
+        break;
+    }
+    case TrayIcon_Gif:
+    {
+        if (playing && !m_gifTimer->isActive())
+        {
+            if (!m_gifFrames.isEmpty())
+            {
+                m_gifIdx = 0;
+                m_gifTimer->start(m_gifFrames[0].delayMs);
+                setIcon(QIcon(m_gifFrames[0].pixmap));
+            }
+        }
+        else if (!playing && m_gifTimer->isActive())
+        {
+            m_gifTimer->stop();
+            m_gifIdx = 0;
+            if (!m_gifFrames.isEmpty())
+                setIcon(QIcon(m_gifFrames[0].pixmap));
+        }
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -265,9 +260,5 @@ TrayIcon::~TrayIcon()
 {
     delete menu;
     m_instance = nullptr;
-    if (m_audioDetector)
-    {
-        m_audioDetector->stop();
-        delete m_audioDetector;
-    }
+    stopAudioDetector();
 }

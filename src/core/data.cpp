@@ -128,7 +128,9 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
     obj["isTrayHourAlarm"] = d.isTrayHourAlarm;
     obj["isSilentBoot"] = d.isSilentBoot;
     obj["isRecordWindowLocation"] = d.isRecordWindowLocation;
-    obj["isMusicIcon"] = d.isMusicIcon;
+    obj["trayIconMode"] = d.trayIconMode;
+    obj["trayGifPath"] = d.trayGifPath;
+    obj["ShowLaunchMenuinTrayMenu"] = d.ShowLaunchMenuinTrayMenu;
     obj["isShowThinkingBubble"] = d.isShowThinkingBubble;
     obj["isLLMGreeting"] = d.isLLMGreeting;
     obj["language"] = d.language;
@@ -171,7 +173,9 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.isTrayHourAlarm = obj["isTrayHourAlarm"].toBool();
     d.isSilentBoot = obj["isSilentBoot"].toBool();
     d.isRecordWindowLocation = obj["isRecordWindowLocation"].toBool();
-    d.isMusicIcon = obj["isMusicIcon"].toBool();
+    d.trayIconMode = obj["trayIconMode"].toInt(TrayIcon_Static);
+    d.trayGifPath = obj["trayGifPath"].toString().trimmed();
+    d.ShowLaunchMenuinTrayMenu = obj["ShowLaunchMenuinTrayMenu"].toBool(true);
     d.isShowThinkingBubble = obj["isShowThinkingBubble"].toBool();
     d.isLLMGreeting = obj["isLLMGreeting"].toBool();
     d.language = obj["language"].toString().trimmed();

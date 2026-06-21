@@ -6,7 +6,7 @@ project(Pelr)
 
 # ====================== 全局配置开关 ======================
 set(DEBUG_MODE OFF)           # ON: Debug, OFF: Release
-set(AUTO_UPDATE_TRANSLATIONS OFF)  # ON: 每次构建自动跑 lupdate 更新 .ts
+set(AUTO_UPDATE_TRANSLATIONS ON)  # ON: 每次构建自动跑 lupdate 更新 .ts
 
 # 根据 DEBUG_MODE 设置构建类型和子系统
 if(DEBUG_MODE)
@@ -99,9 +99,7 @@ qt_add_lupdate(${PROJECT_NAME}
 )
 qt_add_translation(QM_FILES ${TRANSLATION_FILES})
 
-if(AUTO_UPDATE_TRANSLATIONS)
-    add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_lupdate)
-endif()
+
 
 # ============================================================================
 # 第三方库：kissfft
@@ -280,7 +278,9 @@ target_link_libraries(${PROJECT_NAME}
         Qt6::MultimediaWidgets
         ksuser
 )
-
+if(AUTO_UPDATE_TRANSLATIONS)
+    add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_lupdate)
+endif()
 # 强制在 Qt OpenGL 头前包含 GLEW，避免符号冲突
 target_compile_options(${PROJECT_NAME} PRIVATE -include GL/glew.h)
 

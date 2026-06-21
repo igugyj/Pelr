@@ -13,7 +13,14 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "v0.6.4"
+#define VERSION "v0.7.0"
+
+enum TrayIconMode : int
+{
+    TrayIcon_Static = 0,
+    TrayIcon_Text = 1,
+    TrayIcon_Gif = 2
+};
 
 struct filePaths
 {
@@ -61,7 +68,9 @@ struct ConfigData
     bool isTrayHourAlarm = false;
     bool isSilentBoot = false;
     bool isRecordWindowLocation = false;
-    bool isMusicIcon = false;
+    int trayIconMode = TrayIconMode::TrayIcon_Static;
+    bool ShowLaunchMenuinTrayMenu = true;
+    QString trayGifPath;
     bool isShowThinkingBubble = false;
     bool isLLMGreeting = false;
     QString language;
@@ -164,7 +173,11 @@ static QVector<QPair<QString, int>> TTSProviderList = {
     {"voicevox", 2},
     {"OpenAI-Compatible", 3},
 };
-
+static QVector<QPair<QString, int>> TrayIconModes = {
+    {"Static", TrayIcon_Static},
+    {"Text", TrayIcon_Text},
+    {"GIF", TrayIcon_Gif},
+};
 static QVector<QPair<QString, int>> Translators = {
     {"libretranslate", 0},
     {"translators", 1},
