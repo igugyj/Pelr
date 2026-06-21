@@ -93,6 +93,18 @@ void SettingWidget::selectModelPath()
         saveData();
     }
 }
+void SettingWidget::selectTrayGIFPath()
+{
+    // 使用自绘的对话框避免bug
+    QString path = QFileDialog::getOpenFileName(this, tr("Select GIF File"), QDir::currentPath(), tr("GIF Files (*.gif)"), nullptr, QFileDialog::DontUseNativeDialog);
+    if (!path.isEmpty())
+    {
+        ui->lineEdit_29->setText(path);
+        qDebug() << "[Settings] GIF path:" << path;
+        saveData();
+        TrayIcon::instance()->setTrayIconMode(ui->comboBox_9->currentData().toInt(), ui->lineEdit_29->text());
+    }
+}
 // 用户点击“浏览”模型文件按钮
 void SettingWidget::onChooseVoicevoxModel()
 {

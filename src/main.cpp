@@ -10,6 +10,7 @@
 #include "GLCore.h"
 #include "tray.h"
 #include "CheckApplication.h"
+#include "PrivacyPolicyDialog.h"
 #include "TranslationManager.h"
 #include "logger.hpp"
 #include "NotificationWidget.h"
@@ -50,12 +51,24 @@ int main(int argc, char *argv[])
     if (!CheckApplication::hasValidLicense())
     {
         CheckApplication licenseDialog;
-        if (licenseDialog.exec() != QDialog::Accepted || !licenseDialog.isLicenseAccepted())
+        if (licenseDialog.exec() != QDialog::Accepted || !licenseDialog.isAccepted())
         {
             qDebug() << "[APP] License not accepted, exit";
             return 1; // 非零退出码表示异常
         }
         qDebug() << "[APP] License accepted";
+    }
+
+    // 隐私政策检查
+    if (!PrivacyPolicyDialog::hasAccepted())
+    {
+        PrivacyPolicyDialog privacyDialog;
+        if (privacyDialog.exec() != QDialog::Accepted || !privacyDialog.isAccepted())
+        {
+            qDebug() << "[APP] Privacy policy not accepted, exit";
+            return 1;
+        }
+        qDebug() << "[APP] Privacy policy accepted";
     }
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, TrayIcon::cleanup);

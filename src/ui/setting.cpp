@@ -73,9 +73,12 @@ ConfigData SettingWidget::getAllValues()
     data.isTrayHourAlarm = ui->checkBox_9->isChecked();
     data.isSilentBoot = ui->checkBox_10->isChecked();
     data.isRecordWindowLocation = ui->checkBox_11->isChecked();
-    data.isMusicIcon = ui->checkBox_12->isChecked();
     data.isShowThinkingBubble = ui->checkBox_14->isChecked();
     data.isLLMGreeting = ui->checkBox_13->isChecked();
+
+    data.trayIconMode = ui->comboBox_9->currentData().toInt();
+    data.trayGifPath = ui->lineEdit_29->text(); // 做了路径输入
+    data.ShowLaunchMenuinTrayMenu = ui->checkBox_12->isChecked();
 
     data.LookingMouseStrength = ui->doubleSpinBox_3->value();
     data.StarCheckTime = ui->spinBox_5->value();
@@ -256,6 +259,7 @@ void SettingWidget::setAllValues(const ConfigData &data)
     ui->label_34->setText(data.color_tray.forground);
     ui->label_35->setText(data.color_tray.background);
     ui->lineEdit_9->setText(data.music_tray_symbol);
+    ui->lineEdit_29->setText(data.trayGifPath);
     // bool
     ui->checkBox->setChecked(data.isStartUp);
     if (checkStartupLink())
@@ -276,7 +280,6 @@ void SettingWidget::setAllValues(const ConfigData &data)
     ui->checkBox_9->setChecked(data.isTrayHourAlarm);
     ui->checkBox_10->setChecked(data.isSilentBoot);
     ui->checkBox_11->setChecked(data.isRecordWindowLocation);
-    ui->checkBox_12->setChecked(data.isMusicIcon);
     ui->checkBox_14->setChecked(data.isShowThinkingBubble);
     ui->checkBox_13->setChecked(data.isLLMGreeting);
 
@@ -300,6 +303,17 @@ void SettingWidget::setAllValues(const ConfigData &data)
     for (const auto &style : styles)
         ui->comboBox_8->addItem(style, style);
     ui->comboBox_8->setCurrentText(data.theme);
+    // tray
+    ui->comboBox_9->clear();
+    for (const auto &mode : TrayIconModes)
+    {
+        ui->comboBox_9->addItem(mode.first, mode.second);
+    }
+    int mode = data.trayIconMode;
+    int idx = ui->comboBox_9->findData(mode);
+    if (idx >= 0)
+        ui->comboBox_9->setCurrentIndex(idx);
+    ui->checkBox_12->setChecked(data.ShowLaunchMenuinTrayMenu);
     loadNotice();
 }
 
@@ -431,6 +445,24 @@ void SettingWidget::connectSignals()
         if (color.isEmpty())return;
         ui->label_35->setText(color);
         ui->label_35->setStyleSheet(QString("color: %1;").arg(color)); });
+    connect(ui->pushButton_14, &QPushButton::clicked, this, &SettingWidget::selectTrayGIFPath);
+    connect(ui->checkBox_12, &QCheckBox::checkStateChanged, [&]()
+            { TrayIcon::instance()->switchLaunchMenu(ui->checkBox_12->isChecked()); });
+    connect(ui->comboBox_9, &QComboBox::currentIndexChanged, [&]()
+            {
+                int index = ui->comboBox_9->currentIndex();
+                qDebug() << "[Settings] tray mode changed to" << index;
+                QList<QGroupBox *> groupBoxes = {
+                    nullptr, ui->groupBox_9, ui->groupBox_8};
+                for (int i = 0; i < groupBoxes.size(); i++)
+                {
+                    if(!groupBoxes[i])continue;
+                    if (i == index )
+                        groupBoxes[i]->setVisible(true);
+                    else
+                        groupBoxes[i]->setVisible(false);
+                }
+                TrayIcon::instance()->setTrayIconMode(ui->comboBox_9->currentData().toInt(), ui->lineEdit_29->text()); });
     // bool
     connect(ui->checkBox, &QCheckBox::clicked, [&]()
             { startupSwitch(!ui->checkBox->isChecked()); });
@@ -438,8 +470,7 @@ void SettingWidget::connectSignals()
             { ui->widget_7->setVisible(ui->checkBox_3->isChecked()); });
     connect(ui->checkBox_4, &QCheckBox::checkStateChanged, [&]()
             { ui->widget_6->setVisible(ui->checkBox_4->isChecked()); });
-    connect(ui->checkBox_12, &QCheckBox::checkStateChanged, [&]()
-            { TrayIcon::instance()->switchMusicIcon(ui->checkBox_12->isChecked()); });
+
     // TTS
     connect(ui->comboBox_4, &QComboBox::currentTextChanged, this, &SettingWidget::onTTSProviderChanged);
     connect(ui->comboBox_7, &QComboBox::currentTextChanged, this, &SettingWidget::onTranslatorsChanged);

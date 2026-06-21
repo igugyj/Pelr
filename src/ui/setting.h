@@ -55,7 +55,7 @@ private slots:
     void saveData();
 
     void selectModelPath();
-
+    void selectTrayGIFPath();
     QString selectColor();
 
     void resetSetting();
