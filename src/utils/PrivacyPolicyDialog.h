@@ -3,14 +3,13 @@
 
 #include "AgreementDialog.h"
 
-class CheckApplication : public AgreementDialog
+class PrivacyPolicyDialog : public AgreementDialog
 {
     Q_OBJECT
 
 public:
-    explicit CheckApplication(QWidget *parent = nullptr);
-
-    static bool hasValidLicense();
+    explicit PrivacyPolicyDialog(QWidget *parent = nullptr);
+    static bool hasAccepted();
 
 protected:
     QString agreementTitle() const override;

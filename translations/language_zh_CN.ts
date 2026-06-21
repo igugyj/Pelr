@@ -2,6 +2,24 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>AgreementDialog</name>
+    <message>
+        <location filename="../src/utils/AgreementDialog.cpp" line="228"/>
+        <source>I have read and agree to the above terms</source>
+        <translation>我理解并接受上述隐私政策</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/AgreementDialog.cpp" line="233"/>
+        <source>Accept</source>
+        <translation>接受</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/AgreementDialog.cpp" line="238"/>
+        <source>Reject</source>
+        <translation>拒绝</translation>
+    </message>
+</context>
+<context>
     <name>BubbleBox</name>
     <message>
         <location filename="../src/ui/BubbleBox.cpp" line="129"/>
@@ -36,7 +54,7 @@ It&apos;s %2</source>
     <message>
         <location filename="../src/ui/BubbleBox.cpp" line="228"/>
         <source>In response...</source>
-        <translation type="unfinished">正在思考...</translation>
+        <translation>正在思考...</translation>
     </message>
 </context>
 <context>
@@ -74,20 +92,16 @@ It&apos;s %2</source>
 <context>
     <name>CheckApplication</name>
     <message>
-        <location filename="../src/utils/CheckApplication.cpp" line="85"/>
-        <location filename="../src/utils/CheckApplication.cpp" line="144"/>
+        <location filename="../src/utils/CheckApplication.cpp" line="17"/>
         <source>MIT License Agreement</source>
         <translation>MIT 许可协议</translation>
     </message>
     <message>
-        <location filename="../src/utils/CheckApplication.cpp" line="89"/>
-        <location filename="../src/utils/CheckApplication.cpp" line="145"/>
         <source>MIT License</source>
-        <translation>MIT 许可</translation>
+        <translation type="vanished">MIT 许可</translation>
     </message>
     <message>
-        <location filename="../src/utils/CheckApplication.cpp" line="100"/>
-        <location filename="../src/utils/CheckApplication.cpp" line="146"/>
+        <location filename="../src/utils/CheckApplication.cpp" line="22"/>
         <source>MIT License
 
 Copyright (c) 2007 Free Software Foundation &lt;https://fsf.org/&gt;
@@ -118,22 +132,16 @@ User: %1
 Version: %2</translation>
     </message>
     <message>
-        <location filename="../src/utils/CheckApplication.cpp" line="115"/>
-        <location filename="../src/utils/CheckApplication.cpp" line="158"/>
         <source>I understand and accept the above MIT License terms</source>
-        <translation>我理解并接受上述 MIT 许可条款</translation>
+        <translation type="vanished">我理解并接受上述 MIT 许可条款</translation>
     </message>
     <message>
-        <location filename="../src/utils/CheckApplication.cpp" line="118"/>
-        <location filename="../src/utils/CheckApplication.cpp" line="159"/>
         <source>Accept</source>
-        <translation>接受</translation>
+        <translation type="vanished">接受</translation>
     </message>
     <message>
-        <location filename="../src/utils/CheckApplication.cpp" line="119"/>
-        <location filename="../src/utils/CheckApplication.cpp" line="160"/>
         <source>Reject</source>
-        <translation>拒绝</translation>
+        <translation type="vanished">拒绝</translation>
     </message>
 </context>
 <context>
@@ -461,6 +469,73 @@ Consider downloading and installing LAV Filters for better format support.</sour
     </message>
 </context>
 <context>
+    <name>PrivacyPolicyDialog</name>
+    <message>
+        <location filename="../src/utils/PrivacyPolicyDialog.cpp" line="18"/>
+        <source>Privacy Policy</source>
+        <translation>隐私政策</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/PrivacyPolicyDialog.cpp" line="23"/>
+        <source>Privacy Policy
+
+Last updated: June 2026
+
+This Privacy Policy describes how Pelr handles your data.
+
+1. Data Storage
+   All configuration data (API keys, model paths, display preferences) is stored locally in the user/ directory. Voice generation outputs are saved locally in voice_files/. Application logs are stored in log/. No data is transmitted to any server unless explicitly configured by you.
+
+2. Third-Party API Services
+   Pelr connects only to services that you explicitly configure:
+   - LLM APIs (OpenAI-compatible endpoints)
+   - TTS providers (Edge TTS, iFlytek, Voicevox, OpenAI TTS)
+   - Translation services (LibreTranslate, Tencent)
+   - OpenWeather API
+   API keys are stored locally and sent only to the corresponding services. You are responsible for reviewing the privacy policies of those third-party services.
+
+3. No Telemetry
+   Pelr does not collect usage statistics, analytics, or crash reports. No data is sent to the application authors.
+
+4. Data Security
+   API keys and configuration are stored in plaintext on your local machine. No encryption is applied to local storage. Protect your device accordingly.
+
+5. Open Source
+   Pelr is open source. You may inspect, build, and modify the source code to verify its data handling practices.
+
+User: %1
+Version: %2</source>
+        <translation>Privacy Policy
+
+Last updated: June 2026
+
+This Privacy Policy describes how Pelr handles your data.
+
+1. Data Storage
+   All configuration data (API keys, model paths, display preferences) is stored locally in the user/ directory. Voice generation outputs are saved locally in voice_files/. Application logs are stored in log/. No data is transmitted to any server unless explicitly configured by you.
+
+2. Third-Party API Services
+   Pelr connects only to services that you explicitly configure:
+   - LLM APIs (OpenAI-compatible endpoints)
+   - TTS providers (Edge TTS, iFlytek, Voicevox, OpenAI TTS)
+   - Translation services (LibreTranslate, Tencent)
+   - OpenWeather API
+   API keys are stored locally and sent only to the corresponding services. You are responsible for reviewing the privacy policies of those third-party services.
+
+3. No Telemetry
+   Pelr does not collect usage statistics, analytics, or crash reports. No data is sent to the application authors.
+
+4. Data Security
+   API keys and configuration are stored in plaintext on your local machine. No encryption is applied to local storage. Protect your device accordingly.
+
+5. Open Source
+   Pelr is open source. You may inspect, build, and modify the source code to verify its data handling practices.
+
+User: %1
+Version: %2</translation>
+    </message>
+</context>
+<context>
     <name>PyLang</name>
     <message>
         <location filename="../src/tts/pyLang.cpp" line="17"/>
@@ -528,49 +603,49 @@ Consider downloading and installing LAV Filters for better format support.</sour
 <context>
     <name>SettingWidget</name>
     <message>
-        <location filename="../src/ui/setting.cpp" line="501"/>
-        <location filename="../src/ui/setting.cpp" line="540"/>
-        <location filename="../src/ui/setting.cpp" line="709"/>
-        <location filename="../src/ui/setting.cpp" line="747"/>
-        <location filename="../src/ui/setting.cpp" line="758"/>
-        <location filename="../src/ui/setting.cpp" line="794"/>
+        <location filename="../src/ui/setting.cpp" line="518"/>
+        <location filename="../src/ui/setting.cpp" line="557"/>
+        <location filename="../src/ui/setting.cpp" line="726"/>
+        <location filename="../src/ui/setting.cpp" line="764"/>
+        <location filename="../src/ui/setting.cpp" line="775"/>
+        <location filename="../src/ui/setting.cpp" line="811"/>
         <location filename="../src/ui/settingslots.cpp" line="128"/>
         <source>Information</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="540"/>
+        <location filename="../src/ui/setting.cpp" line="557"/>
         <source>Saved!
 Will take effect on next startup.</source>
         <translation>已保存！
 将在下次启动时生效。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="649"/>
-        <location filename="../src/ui/setting.cpp" line="657"/>
+        <location filename="../src/ui/setting.cpp" line="666"/>
+        <location filename="../src/ui/setting.cpp" line="674"/>
         <source>Confirmation</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="315"/>
-        <location filename="../src/ui/setting.cpp" line="578"/>
+        <location filename="../src/ui/setting.cpp" line="326"/>
+        <location filename="../src/ui/setting.cpp" line="595"/>
         <source>Debug</source>
         <translation>调试</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="316"/>
-        <location filename="../src/ui/setting.cpp" line="579"/>
+        <location filename="../src/ui/setting.cpp" line="327"/>
+        <location filename="../src/ui/setting.cpp" line="596"/>
         <source>Info</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="317"/>
-        <location filename="../src/ui/setting.cpp" line="441"/>
-        <location filename="../src/ui/setting.cpp" line="478"/>
-        <location filename="../src/ui/setting.cpp" line="503"/>
-        <location filename="../src/ui/setting.cpp" line="580"/>
-        <location filename="../src/ui/setting.cpp" line="754"/>
-        <location filename="../src/ui/setting.cpp" line="789"/>
+        <location filename="../src/ui/setting.cpp" line="328"/>
+        <location filename="../src/ui/setting.cpp" line="458"/>
+        <location filename="../src/ui/setting.cpp" line="495"/>
+        <location filename="../src/ui/setting.cpp" line="520"/>
+        <location filename="../src/ui/setting.cpp" line="597"/>
+        <location filename="../src/ui/setting.cpp" line="771"/>
+        <location filename="../src/ui/setting.cpp" line="806"/>
         <location filename="../src/ui/settingslots.cpp" line="112"/>
         <location filename="../src/ui/settingslots.cpp" line="185"/>
         <location filename="../src/ui/settingslots.cpp" line="250"/>
@@ -581,52 +656,52 @@ Will take effect on next startup.</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="318"/>
-        <location filename="../src/ui/setting.cpp" line="581"/>
+        <location filename="../src/ui/setting.cpp" line="329"/>
+        <location filename="../src/ui/setting.cpp" line="598"/>
         <source>Critical</source>
         <translation>严重</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="319"/>
-        <location filename="../src/ui/setting.cpp" line="582"/>
+        <location filename="../src/ui/setting.cpp" line="330"/>
+        <location filename="../src/ui/setting.cpp" line="599"/>
         <source>Fatal</source>
         <translation>致命</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="441"/>
-        <location filename="../src/ui/setting.cpp" line="478"/>
+        <location filename="../src/ui/setting.cpp" line="458"/>
+        <location filename="../src/ui/setting.cpp" line="495"/>
         <source>Please fill in all fields first.</source>
         <translation>请先填写所有字段。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="491"/>
+        <location filename="../src/ui/setting.cpp" line="508"/>
         <source>Select Prompt File</source>
         <translation>选择提示词文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="493"/>
+        <location filename="../src/ui/setting.cpp" line="510"/>
         <source>Text Files (*.txt *.md *.json);;All Files (*)</source>
         <translation>文本文件 (*.txt *.md *.json);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="501"/>
+        <location filename="../src/ui/setting.cpp" line="518"/>
         <source>Loaded prompt from [%1] successfully.</source>
         <translation>已成功从 [%1] 加载提示词。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="503"/>
+        <location filename="../src/ui/setting.cpp" line="520"/>
         <source>Failed to load prompt from [%1].</source>
         <translation>从 [%1] 加载提示词失败。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="650"/>
+        <location filename="../src/ui/setting.cpp" line="667"/>
         <source>Are you sure you want to reset all settings?
 This will restore all options to defaults.</source>
         <translation>确定要重置所有设置吗？
 这将把所有选项恢复为默认值。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="658"/>
+        <location filename="../src/ui/setting.cpp" line="675"/>
         <source>Delete all user data (logs, cache, user folder, etc.) as well?
 
 &quot;Yes&quot; will clean everything and restart - all data will be lost permanently.
@@ -637,42 +712,42 @@ This will restore all options to defaults.</source>
 &quot;否&quot;仅将设置重置为默认值。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="693"/>
+        <location filename="../src/ui/setting.cpp" line="710"/>
         <source>Some data folders could not be deleted. Please clean them manually and restart.</source>
         <translation>部分数据文件夹无法删除。请手动清理并重新启动。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="709"/>
+        <location filename="../src/ui/setting.cpp" line="726"/>
         <source>Settings have been reset!</source>
         <translation>设置已重置！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="747"/>
+        <location filename="../src/ui/setting.cpp" line="764"/>
         <source>Shortcut no longer exists!</source>
         <translation>快捷方式已不存在！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="754"/>
+        <location filename="../src/ui/setting.cpp" line="771"/>
         <source>Failed to remove shortcut!</source>
         <translation>删除快捷方式失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="758"/>
+        <location filename="../src/ui/setting.cpp" line="775"/>
         <source>Shortcut removed!</source>
         <translation>快捷方式已删除！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="789"/>
+        <location filename="../src/ui/setting.cpp" line="806"/>
         <source>Failed to create shortcut!</source>
         <translation>创建快捷方式失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="794"/>
+        <location filename="../src/ui/setting.cpp" line="811"/>
         <source>Shortcut created!</source>
         <translation>快捷方式已创建！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="692"/>
+        <location filename="../src/ui/setting.cpp" line="709"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
@@ -746,112 +821,112 @@ This will restore all options to defaults.</source>
     <name>SystemMonitorWidget</name>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="53"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="193"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="192"/>
         <source>System Monitor</source>
         <translation>系统监视器</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="73"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="196"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="195"/>
         <source>Memory Usage</source>
         <translation>内存使用</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="89"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="197"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="196"/>
         <source>Disk Usage</source>
         <translation>磁盘使用</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="100"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="194"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="193"/>
         <source>Process Memory</source>
         <translation>进程内存</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="109"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="212"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="211"/>
         <source>Physical Memory:</source>
         <translation>物理内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="110"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="213"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="212"/>
         <source>Peak Memory:</source>
         <translation>峰值内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="111"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="214"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="213"/>
         <source>Private Memory:</source>
         <translation>私有内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="112"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="215"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="214"/>
         <source>Virtual Memory:</source>
         <translation>虚拟内存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="116"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="195"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="194"/>
         <source>Disk Space</source>
         <translation>磁盘空间</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="132"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="216"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="215"/>
         <source>Resources (Live2D):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="136"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="217"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="216"/>
         <source>voicevox_core:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="143"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="198"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="197"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="148"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="202"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="201"/>
         <source>TTS Cache:</source>
         <translation>TTS 缓存：</translation>
     </message>
     <message>
         <location filename="../src/ui/systemMonitorWidget.cpp" line="159"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="200"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="199"/>
         <source>Clear All</source>
         <translation>全部清除</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="165"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="203"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="164"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="202"/>
         <source>Log:</source>
         <translation>日志：</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="179"/>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="204"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="178"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="203"/>
         <source>User Data:</source>
         <translation>用户数据：</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="240"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="239"/>
         <source>Memory</source>
         <translation>内存</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="260"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="259"/>
         <source>Disk</source>
         <translation>磁盘</translation>
     </message>
     <message>
-        <location filename="../src/ui/systemMonitorWidget.cpp" line="265"/>
+        <location filename="../src/ui/systemMonitorWidget.cpp" line="264"/>
         <source>Total Usage: %1 / %2 (Available: %3)</source>
         <translation>总使用量：%1 / %2（可用：%3）</translation>
     </message>
@@ -1193,12 +1268,12 @@ This will restore all options to defaults.</source>
         <translation>待办</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainWidget.cpp" line="79"/>
+        <location filename="../src/ui/mainWidget.cpp" line="96"/>
         <source>Confirmation</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainWidget.cpp" line="80"/>
+        <location filename="../src/ui/mainWidget.cpp" line="97"/>
         <source>Your changes have not been saved. Do you want to save?</source>
         <translation>您的更改尚未保存。是否要保存？</translation>
     </message>

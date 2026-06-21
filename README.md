@@ -63,7 +63,7 @@
 - **OS**: Windows 10/11 (Windows only)
 - **CPU**: Dual-core or better
 - **RAM**: 4GB or more
-- **Storage**: At least 500MB free
+- **Storage**: At least 6GB free
 - **GPU**: OpenGL 3.0+ support
 
 ## Quick Start
