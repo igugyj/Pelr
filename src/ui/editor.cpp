@@ -63,7 +63,7 @@ QPair<QList<QString>, QList<QString>> EditorWidget::getAllInfo()
 
 void EditorWidget::selectFile(QLineEdit *lineEdit)
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", "所有文件 (*.*)", nullptr, QFileDialog::DontUseNativeDialog);
     if (fileName.isEmpty())
     {
         return;

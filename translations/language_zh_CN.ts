@@ -391,8 +391,8 @@ Battery State: %3</source>
     <message>
         <location filename="../src/ui/MediaPlayerWidget.cpp" line="147"/>
         <location filename="../src/ui/MediaPlayerWidget.cpp" line="197"/>
-        <location filename="../src/ui/MediaPlayerWidget.cpp" line="397"/>
-        <location filename="../src/ui/MediaPlayerWidget.cpp" line="401"/>
+        <location filename="../src/ui/MediaPlayerWidget.cpp" line="398"/>
+        <location filename="../src/ui/MediaPlayerWidget.cpp" line="402"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
@@ -435,7 +435,7 @@ Consider downloading and installing LAV Filters for better format support.</sour
     <message>
         <location filename="../src/ui/MediaPlayerWidget.cpp" line="199"/>
         <location filename="../src/ui/MediaPlayerWidget.cpp" line="231"/>
-        <location filename="../src/ui/MediaPlayerWidget.cpp" line="366"/>
+        <location filename="../src/ui/MediaPlayerWidget.cpp" line="367"/>
         <source>No media file selected</source>
         <translation>未选择媒体文件</translation>
     </message>
@@ -446,24 +446,24 @@ Consider downloading and installing LAV Filters for better format support.</sour
         <translation>音量：</translation>
     </message>
     <message>
-        <location filename="../src/ui/MediaPlayerWidget.cpp" line="309"/>
+        <location filename="../src/ui/MediaPlayerWidget.cpp" line="310"/>
         <source>Unsupported format: </source>
         <translation>不支持的格式：</translation>
     </message>
     <message>
-        <location filename="../src/ui/MediaPlayerWidget.cpp" line="334"/>
+        <location filename="../src/ui/MediaPlayerWidget.cpp" line="335"/>
         <source>Now Playing: </source>
         <translation>正在播放：</translation>
     </message>
     <message>
         <location filename="../src/ui/MediaPlayerWidget.cpp" line="195"/>
-        <location filename="../src/ui/MediaPlayerWidget.cpp" line="393"/>
+        <location filename="../src/ui/MediaPlayerWidget.cpp" line="394"/>
         <source>Pause</source>
         <translation>暂停</translation>
     </message>
     <message>
         <location filename="../src/ui/MediaPlayerWidget.cpp" line="201"/>
-        <location filename="../src/ui/MediaPlayerWidget.cpp" line="519"/>
+        <location filename="../src/ui/MediaPlayerWidget.cpp" line="520"/>
         <source>Video - Media Player</source>
         <translation>视频 - 媒体播放器</translation>
     </message>

@@ -80,7 +80,7 @@ void SettingWidget::selectModelPath()
     // 确保文件夹存在
     if (!dir.exists())
         QDir().mkpath(folder);
-    QString path = QFileDialog::getOpenFileName(this, tr("Select Model File"), folder, "*.model3.json");
+    QString path = QFileDialog::getOpenFileName(this, tr("Select Model File"), folder, "*.model3.json", nullptr, QFileDialog::DontUseNativeDialog);
     if (!path.isEmpty())
     {
         ui->lineEdit->setText(path);
@@ -112,7 +112,7 @@ void SettingWidget::onChooseVoicevoxModel()
         this,
         tr("Select Voice Model File"),
         "voicevox_core",
-        tr("VVM Files (*.vvm);;All Files (*)"));
+        tr("VVM Files (*.vvm);;All Files (*)"), nullptr, QFileDialog::DontUseNativeDialog);
     if (filePath.isEmpty())
         return;
 
@@ -222,7 +222,7 @@ void SettingWidget::onChooseVoicevoxDict()
         this,
         tr("Select Dictionary Directory"),
         "voicevox_core",
-        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks | QFileDialog::DontUseNativeDialog);
 
     if (!dir.isEmpty())
     {
