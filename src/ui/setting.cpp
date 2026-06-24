@@ -538,7 +538,7 @@ void SettingWidget::connectSignals()
                     this,
                     tr("Select Prompt File"),
                     QString(), // 默认目录，可设为最近使用的路径
-                    tr("Text Files (*.txt *.md *.json);;All Files (*)"));
+                    tr("Text Files (*.txt *.md *.json);;All Files (*)"), nullptr, QFileDialog::DontUseNativeDialog);
 
                 if (path.isEmpty())
                     return; // 用户取消

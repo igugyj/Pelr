@@ -293,7 +293,8 @@ void MediaPlayerWidget::onOpenFile()
                                                     "媒体文件 (*.mp3 *.wav *.flac *.ogg *.mp4 *.avi *.mkv *.mov);;"
                                                     "音频文件 (*.mp3 *.wav *.flac *.ogg);;"
                                                     "视频文件 (*.mp4 *.avi *.mkv *.mov);;"
-                                                    "所有文件 (*.*)");
+                                                    "所有文件 (*.*)",
+                                                    nullptr, QFileDialog::DontUseNativeDialog);
 
     if (!filePath.isEmpty())
     {
