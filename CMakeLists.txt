@@ -384,19 +384,9 @@ endif ()
 if(EXISTS "${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle/CMakeLists.txt")
     include(ExternalProject)
 
-    # 为 MinGW 修补 FluentUIStyle CMakeLists.txt（移除 MSVC 专用的 PDB 生成表达式）
-    set(_fus_patch_script "${CMAKE_BINARY_DIR}/_deps/patch_fluentui.cmake")
-    file(WRITE "${_fus_patch_script}"
-"file(READ \"${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle/CMakeLists.txt\" _content)
-string(REPLACE \"\\$<TARGET_PDB_FILE:\" \"# patched: \\$<TARGET_PDB_FILE:\" _content \"\${_content}\")
-file(WRITE \"${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle/CMakeLists.txt\" \"\${_content}\")
-message(STATUS \"Patched FluentUIStyle/CMakeLists.txt for MinGW\")
-")
-
     ExternalProject_Add(FluentUIStylePlugin
         SOURCE_DIR "${CMAKE_SOURCE_DIR}/thirdParty/FluentUIStyle"
         BINARY_DIR "${CMAKE_BINARY_DIR}/_deps/FluentUIStyle-build"
-        PATCH_COMMAND "${CMAKE_COMMAND}" -P "${_fus_patch_script}"
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_GENERATOR_PLATFORM "${CMAKE_GENERATOR_PLATFORM}"
         CMAKE_GENERATOR_TOOLSET "${CMAKE_GENERATOR_TOOLSET}"
@@ -409,10 +399,10 @@ message(STATUS \"Patched FluentUIStyle/CMakeLists.txt for MinGW\")
             -DBUILD_LIBRARY:BOOL=OFF
             -DBUILD_PLUGIN:BOOL=ON
             -DBUILD_EXAMPLE:BOOL=OFF
+            -DBUILD_AUDIOMATIC_MINI:BOOL=OFF
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=$<CONFIG>
         BUILD_ALWAYS TRUE
-        INSTALL_COMMAND ""
         EXCLUDE_FROM_ALL TRUE
     )
     add_dependencies(${PROJECT_NAME} FluentUIStylePlugin)

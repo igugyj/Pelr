@@ -18,7 +18,7 @@
 
 ## 系统要求
 
-- 至少 **5 GB** 可用存储空间（本项目所需）
+- 至少 **6 GB** 可用存储空间（本项目所需）
 - 约 **20 GB** Visual Studio 2022 C++ 开发环境（仅需其编译输出的资源文件，本项目不由该 IDE 开发）
 
 ## 下载源代码
@@ -26,13 +26,13 @@
 通过 Git 克隆仓库：
 
 ```shell
-git clone https://github.com/igugyj/Pelr.git
+git clone --depth 1 https://github.com/igugyj/Pelr.git
 ```
 
 或使用 SSH：
 
 ```shell
-git clone git@github.com:igugyj/Pelr.git
+git clone --depth 1 git@github.com:igugyj/Pelr.git
 ```
 
 进入项目目录并初始化子模块：
@@ -45,7 +45,7 @@ git submodule update --init --recursive
 如需在克隆时一步到位：
 
 ```shell
-git clone --recursive https://github.com/igugyj/Pelr.git
+git clone --depth 1 --recursive https://github.com/igugyj/Pelr.git
 ```
 
 ---
