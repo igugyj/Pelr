@@ -78,6 +78,7 @@ void ManageStartWidget::initWidget()
 
 void ManageStartWidget::deleteSelectedItem()
 {
+    qDebug() << "[ManageStart] deleteSelectedItem called";
     QModelIndex currentIndex = ui->treeView->currentIndex();
     if (!currentIndex.isValid())
     {
@@ -86,14 +87,6 @@ void ManageStartWidget::deleteSelectedItem()
         return;
     }
 
-    // 获取选中项
-    QStandardItem *selectedItem = dataModel->itemFromIndex(currentIndex);
-    if (!selectedItem)
-    {
-        return;
-    }
-
-    // 检查是否是顶级节点（分类节点）
     QModelIndex parentIndex = currentIndex.parent();
     if (!parentIndex.isValid())
     {
@@ -101,39 +94,64 @@ void ManageStartWidget::deleteSelectedItem()
         return;
     }
 
-    // 确认对话框
+    QPersistentModelIndex persistentParent(parentIndex);
+    QPersistentModelIndex persistentIndex(currentIndex);
+
+    qDebug() << "[ManageStart] About to show QMessageBox for delete confirmation";
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr("Confirmation"), tr("Are you sure you want to delete the selected item?"),
+    reply = QMessageBox::question(this, tr("Confirmation"),
+                                  tr("Are you sure you want to delete the selected item?"),
                                   QMessageBox::Yes | QMessageBox::No);
+
+    qDebug() << "[ManageStart] QMessageBox returned:" << (reply == QMessageBox::Yes ? "Yes" : "No");
 
     if (reply == QMessageBox::Yes)
     {
-        // 获取父项
-        QStandardItem *parentItem = dataModel->itemFromIndex(parentIndex);
+        if (!persistentParent.isValid())
+        {
+            qWarning() << "[ManageStart] parent index invalid after QMessageBox";
+            isSaved = false;
+            return;
+        }
+        QStandardItem *parentItem = dataModel->itemFromIndex(persistentParent);
         if (parentItem)
         {
-            // 删除选中的行
-            parentItem->removeRow(currentIndex.row());
-            qDebug() << "[ManageStart] Delete data:" << selectedItem->text();
+            parentItem->removeRow(persistentIndex.row());
+            qDebug() << "[ManageStart] Deleted row:" << persistentIndex.row();
+        }
+        else
+        {
+            qWarning() << "[ManageStart] parentItem is null after QMessageBox";
         }
     }
     isSaved = false;
+    qDebug() << "[ManageStart] deleteSelectedItem done";
 }
 
 void ManageStartWidget::loadMenuData()
 {
     QList<MenuData> data = DataManager::instance().getMenuData();
+    qDebug() << "[ManageStart] Loading" << data.size() << "menu items";
     if (data.isEmpty())
     {
         qDebug() << "[ManageStart] No data to load";
         return;
-    }; // 如果数据为空，则不加载
+    }
     for (MenuData item : data)
     {
         QList<QStandardItem *> items;
         QStandardItem *iconItem = new QStandardItem(item.icon);
         if (!item.icon.isEmpty())
-            iconItem->setIcon(QIcon(item.icon));
+        {
+            if (QFileInfo::exists(item.icon))
+            {
+                iconItem->setIcon(QIcon(item.icon));
+            }
+            else
+            {
+                qDebug() << "[ManageStart] Icon file not found:" << item.icon;
+            }
+        }
         items << new QStandardItem("")
               << new QStandardItem(item.name)
               << new QStandardItem(item.path)
@@ -152,21 +170,30 @@ void ManageStartWidget::loadMenuData()
 
 void ManageStartWidget::saveMenuData()
 {
+    qDebug() << "[ManageStart] saveMenuData called";
     QList<MenuData> data;
     getAllItems(data);
+    qDebug() << "[ManageStart] Collected" << data.size() << "items for save";
+
     for (int i = 0; i < data.size(); ++i)
     {
         QFileInfo fileInfo(data[i].path);
         if (!fileInfo.exists() && data[i].category != "Link")
             NotificationWidget::showNotification(
                 tr("Warning"), tr("Item %1 path does not exist: %2").arg(data[i].name).arg(data[i].path), 5000, MessageType::Warning);
-        qDebug() << "[ManageStart] Save data:" << data[i].category << " " << data[i].name << " " << data[i].path << " "
-                 << data[i].icon << " " << data[i].description;
+        qDebug() << "[ManageStart] Save data:" << data[i].category << data[i].name << data[i].path
+                 << data[i].icon << data[i].description;
     }
+
+    qDebug() << "[ManageStart] Writing data to DataManager...";
     DataManager::instance().writeData<QList<MenuData>>(data);
     isSaved = true;
+
+    qDebug() << "[ManageStart] Refreshing launcher menu...";
     launcherMenu::instance()->refreshMenu();
+
     NotificationWidget::showNotification(tr("Information"), tr("Saved!"));
+    qDebug() << "[ManageStart] saveMenuData done";
 }
 
 void ManageStartWidget::getAllItems(QList<MenuData> &data)
@@ -222,46 +249,53 @@ void ManageStartWidget::getAllItems(QList<MenuData> &data)
 
 void ManageStartWidget::showEditor()
 {
+    qDebug() << "[ManageStart] showEditor, editorWidget was" << (editorWidget ? "non-null" : "null");
     if (editorWidget)
     {
-        delete editorWidget;
+        disconnect(editorWidget, &EditorWidget::accepted, this, &ManageStartWidget::onEditorAccepted);
+        editorWidget->deleteLater();
         editorWidget = nullptr;
     }
-    editorWidget = new EditorWidget(nullptr); // 不能是子部件 除非是模态窗口
+    editorWidget = new EditorWidget(nullptr);
     connect(editorWidget, &EditorWidget::accepted, this, &ManageStartWidget::onEditorAccepted);
+    qDebug() << "[ManageStart] EditorWidget created for add";
     editorWidget->show();
 }
 
 void ManageStartWidget::onEditorAccepted()
 {
-    //{category, {name, path, icon, desc}}
-    QPair<QList<QString>, QList<QString>> info = editorWidget->getAllInfo();
+    qDebug() << "[ManageStart] onEditorAccepted entered";
+    auto *editor = editorWidget;
+    editorWidget = nullptr;
+
+    if (!editor)
+    {
+        qWarning() << "[ManageStart] onEditorAccepted: editorWidget already null (re-entrant call?)";
+        return;
+    }
+
+    QPair<QList<QString>, QList<QString>> info = editor->getAllInfo();
     if (info.first.isEmpty() || info.second.isEmpty())
     {
-        return; // 如果信息不完整，则不添加
+        qDebug() << "[ManageStart] onEditorAccepted: info incomplete, keeping editor open";
+        editorWidget = editor;
+        return;
     }
-    qDebug() << "[ManageStart]" << info.first;
+    qDebug() << "[ManageStart] onEditorAccepted categories:" << info.first;
 
     if (info.first.contains("Star"))
-    {
         addItemToList(p1_star, info.second);
-    }
     if (info.first.contains("App"))
-    {
         addItemToList(p2_app, info.second);
-    }
     if (info.first.contains("Link"))
-    {
         addItemToList(p3_link, info.second);
-    }
     if (info.first.contains("Scripts"))
-    {
         addItemToList(p4_scripts, info.second);
-    }
+
     isSaved = false;
-    editorWidget->close();
-    editorWidget->deleteLater();
-    editorWidget = nullptr;
+    editor->close();
+    editor->deleteLater();
+    qDebug() << "[ManageStart] onEditorAccepted done";
 }
 
 void ManageStartWidget::addItemToList(QStandardItem *parent, QList<QString> &item)
@@ -273,7 +307,16 @@ void ManageStartWidget::addItemToList(QStandardItem *parent, QList<QString> &ite
     {
         QStandardItem *x = new QStandardItem(item[i]);
         if (i == 2 && !item[i].isEmpty())
-            x->setIcon(QIcon(item[i]));
+        {
+            if (QFileInfo::exists(item[i]))
+            {
+                x->setIcon(QIcon(item[i]));
+            }
+            else
+            {
+                qDebug() << "[ManageStart] Icon file not found:" << item[i];
+            }
+        }
         obj << x;
     }
     parent->appendRow(obj);
@@ -321,27 +364,41 @@ void ManageStartWidget::editObj()
     QString currentPath = pathItem->text();
     QString currentIcon = iconItem ? iconItem->text() : "";
     QString currentDesc = descItem ? descItem->text() : "";
-    // 创建并显示编辑器，填充当前数据
+    qDebug() << "[ManageStart] editObj - category:" << currentCategory << "name:" << currentName << "row:" << currentRow;
     if (editorWidget)
     {
-        delete editorWidget;
+        disconnect(editorWidget, &EditorWidget::accepted, this, &ManageStartWidget::onEditorAcceptedForEdit);
+        editorWidget->deleteLater();
         editorWidget = nullptr;
     }
     editorWidget = new EditorWidget();
     editorWidget->setData(currentCategory, currentName, currentPath, currentIcon, currentDesc);
     connect(editorWidget, &EditorWidget::accepted, this, &ManageStartWidget::onEditorAcceptedForEdit);
+    qDebug() << "[ManageStart] EditorWidget created for edit";
     editorWidget->show();
 }
 
 void ManageStartWidget::onEditorAcceptedForEdit()
 {
-    QPair<QList<QString>, QList<QString>> info = editorWidget->getAllInfo();
-    if (info.first.isEmpty() || info.second.isEmpty())
+    qDebug() << "[ManageStart] onEditorAcceptedForEdit entered";
+    auto *editor = editorWidget;
+    editorWidget = nullptr;
+
+    if (!editor)
     {
+        qWarning() << "[ManageStart] onEditorAcceptedForEdit: editorWidget already null (re-entrant call?)";
         return;
     }
-    qDebug() << "[ManageStart]" << info.first;
-    // 获取父项
+
+    QPair<QList<QString>, QList<QString>> info = editor->getAllInfo();
+    if (info.first.isEmpty() || info.second.isEmpty())
+    {
+        qDebug() << "[ManageStart] onEditorAcceptedForEdit: info incomplete, keeping editor open";
+        editorWidget = editor;
+        return;
+    }
+    qDebug() << "[ManageStart] onEditorAcceptedForEdit categories:" << info.first;
+
     QStandardItem *parentItem = nullptr;
     if (currentCategory == "Star")
         parentItem = p1_star;
@@ -354,36 +411,40 @@ void ManageStartWidget::onEditorAcceptedForEdit()
 
     if (!parentItem)
     {
+        qWarning() << "[ManageStart] onEditorAcceptedForEdit: unknown category:" << currentCategory;
+        editorWidget = editor;
         return;
     }
-    // 从原分类删除
+
+    if (currentRow >= parentItem->rowCount())
+    {
+        qWarning() << "[ManageStart] currentRow" << currentRow
+                   << "out of range for category:" << currentCategory
+                   << "(max:" << (parentItem->rowCount() - 1) << ")";
+        editorWidget = editor;
+        return;
+    }
     parentItem->removeRow(currentRow);
-    qDebug() << "[ManageStart] Remove row:" << currentRow;
+    qDebug() << "[ManageStart] Removed row:" << currentRow << "from category:" << currentCategory;
 
     if (info.first.contains("Star"))
-    {
         addItemToList(p1_star, info.second);
-    }
     if (info.first.contains("App"))
-    {
         addItemToList(p2_app, info.second);
-    }
     if (info.first.contains("Link"))
-    {
         addItemToList(p3_link, info.second);
-    }
     if (info.first.contains("Scripts"))
-    {
         addItemToList(p4_scripts, info.second);
-    }
+
     isSaved = false;
-    editorWidget->close();
-    editorWidget->deleteLater();
-    editorWidget = nullptr;
+    editor->close();
+    editor->deleteLater();
+    qDebug() << "[ManageStart] onEditorAcceptedForEdit done";
 }
 
 ManageStartWidget::~ManageStartWidget()
 {
+    qDebug() << "[ManageStart] Destructor called";
     if (editorWidget)
     {
         editorWidget->deleteLater();

@@ -344,38 +344,38 @@ Battery State: %3</source>
 <context>
     <name>ManageStartWidget</name>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="84"/>
+        <location filename="../src/ui/manageStart.cpp" line="85"/>
         <source>Please select an item first!</source>
         <translation>请先选择一个项目！</translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="106"/>
+        <location filename="../src/ui/manageStart.cpp" line="102"/>
         <source>Confirmation</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="106"/>
+        <location filename="../src/ui/manageStart.cpp" line="103"/>
         <source>Are you sure you want to delete the selected item?</source>
         <translation>确定要删除所选项目吗？</translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="162"/>
+        <location filename="../src/ui/manageStart.cpp" line="183"/>
         <source>Item %1 path does not exist: %2</source>
         <translation>项目 %1 的路径不存在：%2</translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="169"/>
+        <location filename="../src/ui/manageStart.cpp" line="195"/>
         <source>Saved!</source>
         <translation>已保存！</translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="84"/>
-        <location filename="../src/ui/manageStart.cpp" line="162"/>
+        <location filename="../src/ui/manageStart.cpp" line="85"/>
+        <location filename="../src/ui/manageStart.cpp" line="183"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="169"/>
+        <location filename="../src/ui/manageStart.cpp" line="195"/>
         <source>Information</source>
         <translation>信息</translation>
     </message>

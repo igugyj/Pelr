@@ -515,38 +515,38 @@ Battery State: %3</source>
 <context>
     <name>ManageStartWidget</name>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="84"/>
+        <location filename="../src/ui/manageStart.cpp" line="85"/>
         <source>Please select an item first!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="106"/>
+        <location filename="../src/ui/manageStart.cpp" line="102"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="106"/>
+        <location filename="../src/ui/manageStart.cpp" line="103"/>
         <source>Are you sure you want to delete the selected item?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="162"/>
+        <location filename="../src/ui/manageStart.cpp" line="183"/>
         <source>Item %1 path does not exist: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="169"/>
+        <location filename="../src/ui/manageStart.cpp" line="195"/>
         <source>Saved!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="84"/>
-        <location filename="../src/ui/manageStart.cpp" line="162"/>
+        <location filename="../src/ui/manageStart.cpp" line="85"/>
+        <location filename="../src/ui/manageStart.cpp" line="183"/>
         <source>Warning</source>
         <translation type="unfinished">Warning</translation>
     </message>
     <message>
-        <location filename="../src/ui/manageStart.cpp" line="169"/>
+        <location filename="../src/ui/manageStart.cpp" line="195"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>

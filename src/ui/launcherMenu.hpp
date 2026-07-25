@@ -7,6 +7,7 @@
 #include <QAction>
 #include <QIcon>
 #include <QDebug>
+#include <QFileInfo>
 #include <QPushButton>
 #include "custommenu.h"
 
@@ -32,6 +33,7 @@ public:
     // 初始化菜单
     void initMenu()
     {
+        qDebug() << "[LauncherMenu] initMenu: rebuilding menu";
         clear();
         QueueTimer = new QTimer(this);
         QueueTimer->setInterval(3000);
@@ -61,7 +63,7 @@ public:
                 action->setToolTip(item.description);
             }
             // 连接信号槽
-            connect(action, &QAction::triggered, [&]()
+            connect(action, &QAction::triggered, [item]()
                     { launchByPath(item.path); });
             if (item.category == menu_Star->title())
             {
@@ -93,7 +95,14 @@ public:
             }
             if (!item.icon.isEmpty())
             {
-                action->setIcon(QIcon(item.icon));
+                if (QFileInfo::exists(item.icon))
+                {
+                    action->setIcon(QIcon(item.icon));
+                }
+                else
+                {
+                    qDebug() << "[LauncherMenu] Icon file not found:" << item.icon;
+                }
             }
         }
 
@@ -131,15 +140,16 @@ public:
         addMenu(menu_Scripts);
         addSeparator();
         addMenu(menu_LaunchAll);
-        qDebug() << "[LauncherMenu] Menu loaded";
+        qDebug() << "[LauncherMenu] Menu loaded, items:" << (star_count + app_count + link_count + scripts_count);
         hasContent = (star_count + app_count + link_count + scripts_count != 0);
     }
 
     // 刷新菜单数据
     void refreshMenu()
     {
-        qDebug() << "[LauncherMenu] Refresh menu";
+        qDebug() << "[LauncherMenu] Refresh menu called";
         initMenu();
+        qDebug() << "[LauncherMenu] Refresh menu done";
     }
 
 protected:

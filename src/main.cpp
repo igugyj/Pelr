@@ -16,6 +16,7 @@
 #include "NotificationWidget.h"
 #include "initFileSys.h"
 #include "voicevox_tts.h"
+#include "CrashHandler.h"
 
 void initTranslator(QApplication &a, const QString &path);
 
@@ -24,6 +25,7 @@ int main(int argc, char *argv[])
     // ---- 基础初始化（应在 QApplication 之前完成，但注意不要依赖 QSettings 等） ----
     initFileSys();
     initLogFile();
+    CrashHandler::install();
 
 #ifdef Q_OS_WIN
     SetConsoleOutputCP(CP_UTF8);

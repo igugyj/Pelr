@@ -277,6 +277,7 @@ target_link_libraries(${PROJECT_NAME}
         Qt6::Concurrent
         Qt6::MultimediaWidgets
         ksuser
+        dbghelp
 )
 if(AUTO_UPDATE_TRANSLATIONS)
     add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_lupdate)
