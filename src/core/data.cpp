@@ -1,20 +1,27 @@
 #include "data.hpp"
+#include <QSaveFile>
 
 bool DataManager::writeJsonFile(const QString &filePath, const QJsonDocument &doc)
 {
-    QFile file(filePath);
+    QSaveFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
     {
         qCritical() << "[Data] Cannot open file for writing:" << filePath;
         return false;
     }
     file.write(doc.toJson());
-    file.close();
+    if (!file.commit())
+    {
+        qCritical() << "[Data] Failed to commit file:" << filePath;
+        return false;
+    }
     return true;
 }
 
 void DataManager::writeOpenWeatherData(const OpenWeatherData &opwdt)
 {
+    QWriteLocker wl(&DataManager::instance().rwlock);
+    DataManager::instance().openWeather_data = opwdt;
     QJsonObject obj;
     obj["city"] = opwdt.city;
     obj["api_key"] = opwdt.api_key;
@@ -23,6 +30,8 @@ void DataManager::writeOpenWeatherData(const OpenWeatherData &opwdt)
 
 void DataManager::writeLlamaData(const LlamaData &llm)
 {
+    QWriteLocker wl(&DataManager::instance().rwlock);
+    DataManager::instance().llama_data = llm;
     QJsonObject obj;
     obj["maxContextMessages"] = llm.maxContextMessages;
     obj["model"] = llm.model;
@@ -35,6 +44,8 @@ void DataManager::writeLlamaData(const LlamaData &llm)
 
 void DataManager::writeTTSConfig(const TTSConfig &ttsc)
 {
+    QWriteLocker wl(&DataManager::instance().rwlock);
+    DataManager::instance().tts_config = ttsc;
     QJsonObject obj;
     obj["provider"] = ttsc.provider;
     obj["speaker_openai_edge_tts"] = ttsc.speaker_openai_edge_tts;
@@ -259,6 +270,7 @@ QList<TodoData> DataManager::deserializeTodoList(const QJsonArray &arr)
 
 void DataManager::writeData(ToDoSettingData setting)
 {
+    QWriteLocker wl(&rwlock);
     QJsonObject obj;
     obj["is_show_todo"] = setting.is_show_todo;
     obj["is_notify_tray"] = setting.is_notify_tray;
@@ -396,4 +408,69 @@ QFont DataManager::loadFont()
         }
     }
     return QFont();
+}
+
+// ── Lazy load guards (first getter call reads disk, then cached) ──
+
+void DataManager::ensureMenuLoaded()
+{
+    if (menuLoaded) return;
+    QWriteLocker wl(&rwlock);
+    if (menuLoaded) return;
+    readMenuData();
+    menuLoaded = true;
+}
+
+void DataManager::ensureBasicLoaded()
+{
+    if (basicLoaded) return;
+    QWriteLocker wl(&rwlock);
+    if (basicLoaded) return;
+    readBasicData();
+    basicLoaded = true;
+}
+
+void DataManager::ensureTodoLoaded()
+{
+    if (todoLoaded) return;
+    QWriteLocker wl(&rwlock);
+    if (todoLoaded) return;
+    readTodoData();
+    todoLoaded = true;
+}
+
+void DataManager::ensureTodoSettingLoaded()
+{
+    if (todoSettingLoaded) return;
+    QWriteLocker wl(&rwlock);
+    if (todoSettingLoaded) return;
+    readTodoNotify();
+    todoSettingLoaded = true;
+}
+
+void DataManager::ensureTTSLoaded()
+{
+    if (ttsLoaded) return;
+    QWriteLocker wl(&rwlock);
+    if (ttsLoaded) return;
+    readTTSConfig();
+    ttsLoaded = true;
+}
+
+void DataManager::ensureOpenWeatherLoaded()
+{
+    if (openWeatherLoaded) return;
+    QWriteLocker wl(&rwlock);
+    if (openWeatherLoaded) return;
+    readOpenWeatherData();
+    openWeatherLoaded = true;
+}
+
+void DataManager::ensureLlamaLoaded()
+{
+    if (llamaLoaded) return;
+    QWriteLocker wl(&rwlock);
+    if (llamaLoaded) return;
+    readLlamaData();
+    llamaLoaded = true;
 }

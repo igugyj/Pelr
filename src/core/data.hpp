@@ -11,9 +11,10 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QDebug>
+#include <QReadWriteLock>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.7"
+#define VERSION "v0.7.8"
 
 enum TrayIconMode : int
 {
@@ -206,6 +207,16 @@ protected:
     OpenWeatherData openWeather_data;
     LlamaData llama_data;
 
+    bool menuLoaded = false;
+    bool basicLoaded = false;
+    bool todoLoaded = false;
+    bool todoSettingLoaded = false;
+    bool ttsLoaded = false;
+    bool openWeatherLoaded = false;
+    bool llamaLoaded = false;
+
+    QReadWriteLock rwlock;
+
 public:
     QList<TodoData> todo_data;
     constConfigData const_config_data;
@@ -220,41 +231,48 @@ public:
 
     OpenWeatherData getOpenWeatherData()
     {
-        readOpenWeatherData();
+        ensureOpenWeatherLoaded();
+        QReadLocker rl(&rwlock);
         return openWeather_data;
     }
     LlamaData getLlamaData()
     {
-        readLlamaData();
+        ensureLlamaLoaded();
+        QReadLocker rl(&rwlock);
         return llama_data;
     }
     TTSConfig getTTSConfig()
     {
-        readTTSConfig();
+        ensureTTSLoaded();
+        QReadLocker rl(&rwlock);
         return tts_config;
     }
 
     ToDoSettingData getTodoSetting()
     {
-        readTodoNotify();
+        ensureTodoSettingLoaded();
+        QReadLocker rl(&rwlock);
         return todo_setting_data;
     }
 
     QList<MenuData> getMenuData()
     {
-        readMenuData();
+        ensureMenuLoaded();
+        QReadLocker rl(&rwlock);
         return cached_menu_data;
     }
 
     ConfigData getBasicData()
     {
-        readBasicData();
+        ensureBasicLoaded();
+        QReadLocker rl(&rwlock);
         return basic_data;
     }
 
     QList<TodoData> getTodoData()
     {
-        readTodoData();
+        ensureTodoLoaded();
+        QReadLocker rl(&rwlock);
         return todo_data;
     }
 
@@ -265,6 +283,7 @@ public:
     template <typename T>
     void writeData(const T &data)
     {
+        QWriteLocker wl(&rwlock);
         QString filename;
         QJsonDocument doc;
 
@@ -314,4 +333,12 @@ protected:
     static QFont loadFont();
     void readMenuData();
     void readBasicData();
+
+    void ensureMenuLoaded();
+    void ensureBasicLoaded();
+    void ensureTodoLoaded();
+    void ensureTodoSettingLoaded();
+    void ensureTTSLoaded();
+    void ensureOpenWeatherLoaded();
+    void ensureLlamaLoaded();
 };
