@@ -295,7 +295,7 @@ void GLCore::connectSignals()
         TodoNotify::instance().todoNotify(); });
     PermanentTimer->start(1000); // 1s
     // 键盘事件槽连接
-    connect(listener, &GlobalInputListener::keyPressed, [&](int code, ModifierKeys mods)
+    connect(listener, &GlobalInputListener::keyPressed, this, [this](int code, ModifierKeys mods)
             {
         QString keyStr = keyCodeToKeyString(code);
         QString modStr = modifiersToString(mods);
@@ -327,8 +327,8 @@ void GLCore::connectSignals()
         } });
 
     // 鼠标按键
-    connect(listener, &GlobalInputListener::mouseReleased,
-            [&](MouseButton btn, int x, int y, ModifierKeys mods)
+    connect(listener, &GlobalInputListener::mouseReleased, this,
+            [this](MouseButton btn, int x, int y, ModifierKeys mods)
             {
                 Q_UNUSED(x);
                 Q_UNUSED(y); // 坐标在此项目中用于展示按键无需使用
@@ -358,7 +358,7 @@ void GLCore::connectSignals()
     // 定时说话
     randomSentenceTimer = new QTimer();
     randomSentenceTimer->setSingleShot(true);
-    connect(randomSentenceTimer, &QTimer::timeout, [&]()
+    connect(randomSentenceTimer, &QTimer::timeout, this, [this]()
             {
         if (!isHidden()) {
             BubbleBox::instance()->RandomSentence();
@@ -386,12 +386,12 @@ void GLCore::connectSignals()
     // load model //void SettingWidget::selectModelPath()
     //  connect(main_widget->Widget_Setting->ui->lineEdit, &QLineEdit::textChanged, this, &GLCore::loadModel);
     // size
-    connect(main_widget->Widget_Setting->getHorizontalSlider(), &QSlider::valueChanged, [&]()
+    connect(main_widget->Widget_Setting->getHorizontalSlider(), &QSlider::valueChanged, this, [this]()
             {
         int var = main_widget->Widget_Setting->getHorizontalSlider()->value();
         resize(4 * var, 3 * var); });
     // 退出时记录窗口位置
-    connect(TrayIcon::instance()->action_quit, &QAction::triggered, [&]()
+    connect(TrayIcon::instance()->action_quit, &QAction::triggered, this, [this]()
             {
         saveWindowLocation();
         if (m_watcher.isRunning())
@@ -410,7 +410,7 @@ void GLCore::connectSignals()
     connect(TrayIcon::instance()->action_switchDrag, &QAction::triggered, this, &GLCore::switchDragStatus);
     // 播放媒体
     connect(TrayIcon::instance()->action_mediaPlayer, &QAction::triggered, this, &GLCore::onPlayMedia);
-    connect(TrayIcon::instance(), &QSystemTrayIcon::activated, [&](QSystemTrayIcon::ActivationReason reason)
+    connect(TrayIcon::instance(), &QSystemTrayIcon::activated, this, [this](QSystemTrayIcon::ActivationReason reason)
             {
         // 判断是否为双击动作
         if (reason == QSystemTrayIcon::DoubleClick) {
