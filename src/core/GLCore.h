@@ -44,6 +44,8 @@ Q_OBJECT // 可以用信号槽机制进行通信 信号与槽
 
     GLCore(QWidget *parent = nullptr);
 
+    ~GLCore();
+
 public slots:
     void resetLocation();
 

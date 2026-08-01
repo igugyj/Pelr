@@ -255,37 +255,37 @@ Version: %2</translation>
 <context>
     <name>GLCore</name>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="179"/>
-        <location filename="../src/core/GLCore.cpp" line="814"/>
+        <location filename="../src/core/GLCore.cpp" line="199"/>
+        <location filename="../src/core/GLCore.cpp" line="832"/>
         <source>Key Listener</source>
         <translation>按键监听</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="183"/>
-        <location filename="../src/core/GLCore.cpp" line="815"/>
+        <location filename="../src/core/GLCore.cpp" line="203"/>
+        <location filename="../src/core/GLCore.cpp" line="833"/>
         <source>Say Something</source>
         <translation>说点什么</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="188"/>
-        <location filename="../src/core/GLCore.cpp" line="816"/>
+        <location filename="../src/core/GLCore.cpp" line="208"/>
+        <location filename="../src/core/GLCore.cpp" line="834"/>
         <source>Launch</source>
         <translation>启动</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="195"/>
-        <location filename="../src/core/GLCore.cpp" line="817"/>
+        <location filename="../src/core/GLCore.cpp" line="215"/>
+        <location filename="../src/core/GLCore.cpp" line="835"/>
         <source>Weather</source>
         <translation>天气</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="198"/>
-        <location filename="../src/core/GLCore.cpp" line="818"/>
+        <location filename="../src/core/GLCore.cpp" line="218"/>
+        <location filename="../src/core/GLCore.cpp" line="836"/>
         <source>Power Status</source>
         <translation>电源状态</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="203"/>
+        <location filename="../src/core/GLCore.cpp" line="223"/>
         <source>Master, here is your PC&apos;s power status:
 AC: %1
 Percentage: %2%
@@ -296,47 +296,47 @@ Battery State: %3</source>
 电池状态：%3</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="208"/>
-        <location filename="../src/core/GLCore.cpp" line="819"/>
+        <location filename="../src/core/GLCore.cpp" line="228"/>
+        <location filename="../src/core/GLCore.cpp" line="837"/>
         <source>TODO</source>
         <translation>待办</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="212"/>
-        <location filename="../src/core/GLCore.cpp" line="820"/>
+        <location filename="../src/core/GLCore.cpp" line="232"/>
+        <location filename="../src/core/GLCore.cpp" line="838"/>
         <source>Ask a Question</source>
         <translation>提问</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="216"/>
-        <location filename="../src/core/GLCore.cpp" line="821"/>
+        <location filename="../src/core/GLCore.cpp" line="236"/>
+        <location filename="../src/core/GLCore.cpp" line="839"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="237"/>
-        <location filename="../src/core/GLCore.cpp" line="823"/>
+        <location filename="../src/core/GLCore.cpp" line="257"/>
+        <location filename="../src/core/GLCore.cpp" line="841"/>
         <source>Media Player</source>
         <translation>媒体播放器</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="524"/>
+        <location filename="../src/core/GLCore.cpp" line="545"/>
         <source>Uptime too long, skipping startup items</source>
         <translation>运行时间过长，跳过启动项</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="530"/>
+        <location filename="../src/core/GLCore.cpp" line="551"/>
         <source>Will launch startup items in %1 min</source>
         <translation>将在 %1 分钟后启动启动项</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="233"/>
-        <location filename="../src/core/GLCore.cpp" line="822"/>
+        <location filename="../src/core/GLCore.cpp" line="253"/>
+        <location filename="../src/core/GLCore.cpp" line="840"/>
         <source>EMO</source>
         <translation>表情</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="496"/>
+        <location filename="../src/core/GLCore.cpp" line="517"/>
         <source>%1, %2℃, %3, humidity: %4%.</source>
         <translation>%1，%2℃，%3，湿度：%4%。</translation>
     </message>

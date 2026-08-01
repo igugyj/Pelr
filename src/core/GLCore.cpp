@@ -90,6 +90,26 @@ GLCore::GLCore(QWidget *parent) : QOpenGLWidget(parent)
     retranslateUI();
 }
 
+GLCore::~GLCore()
+{
+    m_watcher.cancel();
+    m_watcher.waitForFinished();
+
+    timer->stop();
+    PermanentTimer->stop();
+    inputCheckTimer->stop();
+    randomSentenceTimer->stop();
+
+    delete timer;
+    delete PermanentTimer;
+    delete inputCheckTimer;
+    delete randomSentenceTimer;
+    delete overlay;
+    delete menuWidget;
+    delete modelChatBox;
+    delete main_widget;
+}
+
 void GLCore::checkMouseTransparency()
 {
     // 获取当前鼠标位置
@@ -402,6 +422,7 @@ void GLCore::connectSignals()
         } });
 
     // 启动启动项
+    connect(&m_watcher, &QFutureWatcher<void>::finished, this, &GLCore::onRunStarIfPoweredFinished);
     if (DataManager::instance().getBasicData().isStartStar)
     {
         qDebug() << "[GLCore] Starting app in star category";
@@ -528,9 +549,6 @@ void GLCore::startRunStarIfPoweredInThread()
     TrayIcon::showMessage(
         title,
         tr("Will launch startup items in %1 min").arg(DataManager::instance().getBasicData().StarRunTimeout));
-
-    // 设置完成信号与槽的连接
-    connect(&m_watcher, &QFutureWatcher<void>::finished, this, &GLCore::onRunStarIfPoweredFinished);
 
     // 启动任务，运行在子线程中
     QFuture<void> future = QtConcurrent::run([this]()

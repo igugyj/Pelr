@@ -417,37 +417,37 @@ Percentage: %2%
 Battery State: %3</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="179"/>
-        <location filename="../src/core/GLCore.cpp" line="814"/>
+        <location filename="../src/core/GLCore.cpp" line="199"/>
+        <location filename="../src/core/GLCore.cpp" line="832"/>
         <source>Key Listener</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="183"/>
-        <location filename="../src/core/GLCore.cpp" line="815"/>
+        <location filename="../src/core/GLCore.cpp" line="203"/>
+        <location filename="../src/core/GLCore.cpp" line="833"/>
         <source>Say Something</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="188"/>
-        <location filename="../src/core/GLCore.cpp" line="816"/>
+        <location filename="../src/core/GLCore.cpp" line="208"/>
+        <location filename="../src/core/GLCore.cpp" line="834"/>
         <source>Launch</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="195"/>
-        <location filename="../src/core/GLCore.cpp" line="817"/>
+        <location filename="../src/core/GLCore.cpp" line="215"/>
+        <location filename="../src/core/GLCore.cpp" line="835"/>
         <source>Weather</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="198"/>
-        <location filename="../src/core/GLCore.cpp" line="818"/>
+        <location filename="../src/core/GLCore.cpp" line="218"/>
+        <location filename="../src/core/GLCore.cpp" line="836"/>
         <source>Power Status</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="203"/>
+        <location filename="../src/core/GLCore.cpp" line="223"/>
         <source>Master, here is your PC&apos;s power status:
 AC: %1
 Percentage: %2%
@@ -455,36 +455,36 @@ Battery State: %3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="208"/>
-        <location filename="../src/core/GLCore.cpp" line="819"/>
+        <location filename="../src/core/GLCore.cpp" line="228"/>
+        <location filename="../src/core/GLCore.cpp" line="837"/>
         <source>TODO</source>
         <translation>TODO</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="212"/>
-        <location filename="../src/core/GLCore.cpp" line="820"/>
+        <location filename="../src/core/GLCore.cpp" line="232"/>
+        <location filename="../src/core/GLCore.cpp" line="838"/>
         <source>Ask a Question</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="216"/>
-        <location filename="../src/core/GLCore.cpp" line="821"/>
+        <location filename="../src/core/GLCore.cpp" line="236"/>
+        <location filename="../src/core/GLCore.cpp" line="839"/>
         <source>Settings</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="237"/>
-        <location filename="../src/core/GLCore.cpp" line="823"/>
+        <location filename="../src/core/GLCore.cpp" line="257"/>
+        <location filename="../src/core/GLCore.cpp" line="841"/>
         <source>Media Player</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="524"/>
+        <location filename="../src/core/GLCore.cpp" line="545"/>
         <source>Uptime too long, skipping startup items</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="530"/>
+        <location filename="../src/core/GLCore.cpp" line="551"/>
         <source>Will launch startup items in %1 min</source>
         <translation></translation>
     </message>
@@ -497,8 +497,8 @@ Battery State: %3</source>
         <translation type="vanished">Interface</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="233"/>
-        <location filename="../src/core/GLCore.cpp" line="822"/>
+        <location filename="../src/core/GLCore.cpp" line="253"/>
+        <location filename="../src/core/GLCore.cpp" line="840"/>
         <source>EMO</source>
         <translation>EMO</translation>
     </message>
@@ -507,7 +507,7 @@ Battery State: %3</source>
         <translation type="vanished">Media Player</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="496"/>
+        <location filename="../src/core/GLCore.cpp" line="517"/>
         <source>%1, %2℃, %3, humidity: %4%.</source>
         <translation>%1, %2℃, %3, humidity: %4%.</translation>
     </message>
