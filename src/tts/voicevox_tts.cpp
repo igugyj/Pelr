@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QCryptographicHash>
+#include <QMutex>
 #include <mutex>
 #include <QString>
 #include <QtWidgets/QApplication>
@@ -52,6 +53,7 @@ VoicevoxTTS &VoicevoxTTS::instance()
 // ============ Pimpl ============
 struct VoicevoxTTS::Impl
 {
+    mutable QRecursiveMutex mutex;
     OpenJtalkRc *openJtalk = nullptr;
     VoicevoxSynthesizer *synthesizer = nullptr;
     VoicevoxVoiceModelFile *model = nullptr;
@@ -111,6 +113,7 @@ VoicevoxTTS::~VoicevoxTTS() = default;
 // ============ 内部初始化/加载 ============
 bool VoicevoxTTS::initialize(const QString &dictDir)
 {
+    QMutexLocker locker(&d->mutex);
     if (!g_onnx)
     {
         qWarning() << "[VoicevoxTTS] ONNX Runtime not initialized";
@@ -154,6 +157,7 @@ bool VoicevoxTTS::initialize(const QString &dictDir)
 }
 bool VoicevoxTTS::loadModel(const QString &modelPath)
 {
+    QMutexLocker locker(&d->mutex);
     if (!d->synthesizer)
     {
         qWarning() << "[VoicevoxTTS] Synthesizer not ready, call initialize() first";
@@ -207,6 +211,7 @@ bool VoicevoxTTS::loadModel(const QString &modelPath)
 // ============ 公共配置应用 ============
 bool VoicevoxTTS::applyConfig(const TTSConfig &config)
 {
+    QMutexLocker locker(&d->mutex);
     if (config.provider != 2)
         return false; // 不是 VOICEVOX 配置，直接返回失败
 
@@ -269,6 +274,7 @@ bool VoicevoxTTS::applyConfig(const TTSConfig &config)
 // 在 synthesizeToFile 实现之后追加
 QVector<int> VoicevoxTTS::getStyleIds() const
 {
+    QMutexLocker locker(&d->mutex);
     QVector<int> ids;
     const auto speakers = getSpeakers();
     for (const auto &speaker : speakers)
@@ -285,6 +291,7 @@ QVector<int> VoicevoxTTS::getStyleIds() const
 
 QVector<VoicevoxTTS::SpeakerInfo> VoicevoxTTS::getSpeakers() const
 {
+    QMutexLocker locker(&d->mutex);
     QVector<SpeakerInfo> result;
     if (!d->synthesizer)
         return result;
@@ -333,8 +340,9 @@ QVector<VoicevoxTTS::SpeakerInfo> VoicevoxTTS::getSpeakers() const
     return result;
 }
 
-QByteArray VoicevoxTTS::synthesis(const QString &text, int styleId)
+QByteArray VoicevoxTTS::synthesis(const QString &text, int styleId, double speed)
 {
+    QMutexLocker locker(&d->mutex);
     if (!d->ready)
     {
         qWarning() << "[VoicevoxTTS] TTS not ready (must initialize + loadModel)";
@@ -342,13 +350,40 @@ QByteArray VoicevoxTTS::synthesis(const QString &text, int styleId)
     }
 
     QByteArray textUtf8 = text.toUtf8();
-    VoicevoxTtsOptions ttsOpts = voicevox_make_default_tts_options();
 
+    // 生成 AudioQuery 并调整 speedScale（speed > 0 时生效）
+    char *queryJson = nullptr;
+    VoicevoxResultCode rc = voicevox_synthesizer_create_audio_query(
+        d->synthesizer, textUtf8.constData(),
+        static_cast<VoicevoxStyleId>(styleId), &queryJson);
+    if (rc != VOICEVOX_RESULT_OK)
+    {
+        qWarning() << "[VoicevoxTTS] Failed to create audio query, error code:" << rc;
+        return QByteArray();
+    }
+    QByteArray query(queryJson);
+    voicevox_json_free(queryJson);
+
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(query, &parseError);
+    if (parseError.error != QJsonParseError::NoError || !doc.isObject())
+    {
+        qWarning() << "[VoicevoxTTS] Failed to parse audio query:" << parseError.errorString();
+        return QByteArray();
+    }
+    QJsonObject obj = doc.object();
+    if (speed > 0)
+    {
+        obj["speedScale"] = speed;
+    }
+    QByteArray queryBytes = QJsonDocument(obj).toJson(QJsonDocument::Compact);
+
+    VoicevoxSynthesisOptions synOpts = voicevox_make_default_synthesis_options();
     uintptr_t wavSize = 0;
     uint8_t *wav = nullptr;
-    VoicevoxResultCode rc = voicevox_synthesizer_tts(d->synthesizer, textUtf8.constData(),
-                                                     static_cast<VoicevoxStyleId>(styleId),
-                                                     ttsOpts, &wavSize, &wav);
+    rc = voicevox_synthesizer_synthesis(d->synthesizer, queryBytes.constData(),
+                                        static_cast<VoicevoxStyleId>(styleId),
+                                        synOpts, &wavSize, &wav);
     if (rc != VOICEVOX_RESULT_OK)
     {
         qWarning() << "[VoicevoxTTS] Speech synthesis failed, error code:" << rc;
@@ -361,36 +396,21 @@ QByteArray VoicevoxTTS::synthesis(const QString &text, int styleId)
     return data;
 }
 
-bool VoicevoxTTS::isReady() const { return d->ready; }
-void VoicevoxTTS::unloadModel() { d->unloadModel(); }
-
-QByteArray VoicevoxTTS::testSynthesis(const TTSConfig &config)
+bool VoicevoxTTS::isReady() const
 {
-    // 应用配置（如果需要切换模型/辞书）
-    if (!applyConfig(config))
-    {
-        qWarning() << "[VoicevoxTTS] testSynthesis: applyConfig failed";
-        return {};
-    }
-    const QString testText = QString::fromUtf8(u8"こんにちは、テストです。");
-    int styleId = config.voicevox_style_id; // 从配置读取
-    return synthesis(testText, styleId);
+    QMutexLocker locker(&d->mutex);
+    return d->ready;
 }
-
-QByteArray VoicevoxTTS::testSynthesis()
+void VoicevoxTTS::unloadModel()
 {
-    // 无参版本：使用内部存储的配置？这里简单回退到 style 0
-    if (!isReady())
-    {
-        qWarning() << "[VoicevoxTTS] testSynthesis: not ready";
-        return {};
-    }
-    return synthesis(QString::fromUtf8(u8"こんにちは、テストです。"), 0);
+    QMutexLocker locker(&d->mutex);
+    d->unloadModel();
 }
 
 QString VoicevoxTTS::synthesizeToFile(const TTSConfig &config, const QString &text,
                                       int styleId, double speed)
 {
+    QMutexLocker locker(&d->mutex);
     // 确保配置已生效
     if (!applyConfig(config))
     {
@@ -416,7 +436,7 @@ QString VoicevoxTTS::synthesizeToFile(const TTSConfig &config, const QString &te
         return filePath;
     }
 
-    QByteArray wav = synthesis(text, styleId);
+    QByteArray wav = synthesis(text, styleId, speed);
     if (wav.isEmpty())
     {
         qWarning() << "[VoicevoxTTS] synthesizeToFile: synthesis empty";

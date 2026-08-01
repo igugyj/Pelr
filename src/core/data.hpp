@@ -13,7 +13,7 @@
 #include <QDebug>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.6"
+#define VERSION "v0.7.7"
 
 enum TrayIconMode : int
 {

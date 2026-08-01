@@ -33,22 +33,16 @@ public:
     bool applyConfig(const TTSConfig &config);
 
     QVector<SpeakerInfo> getSpeakers() const;
-    QByteArray synthesis(const QString &text, int styleId);
+    QByteArray synthesis(const QString &text, int styleId, double speed = 1.0);
     bool isReady() const;
     void unloadModel();
-
-    /** 测试合成：使用内置文本，调用当前配置合成，返回音频数据 */
-    QByteArray testSynthesis();
-
-    // 使用指定配置进行测试合成
-    QByteArray testSynthesis(const TTSConfig &config);
 
     /**
      * @brief 使用当前配置合成语音并保存到文件
      * @param config TTS 配置（用于应用及文件名哈希）
      * @param text   日语文本
      * @param styleId 风格 ID
-     * @param speed   语速（当前预留）
+     * @param speed   语速（speedScale，>0 生效，默认 1.0）
      * @return 成功返回文件路径，失败返回空字符串
      */
     QString synthesizeToFile(const TTSConfig &config, const QString &text, int styleId, double speed);

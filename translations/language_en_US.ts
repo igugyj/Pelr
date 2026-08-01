@@ -89,17 +89,17 @@ It&apos;s %2</source>
     <name>ChatWidget</name>
     <message>
         <location filename="../src/ui/chat.cpp" line="18"/>
-        <location filename="../src/ui/chat.cpp" line="117"/>
+        <location filename="../src/ui/chat.cpp" line="115"/>
         <source>Hello, welcome to Pelr!</source>
         <translation>Hello, welcome to Pelr!</translation>
     </message>
     <message>
-        <location filename="../src/ui/chat.cpp" line="91"/>
+        <location filename="../src/ui/chat.cpp" line="89"/>
         <source>Message cannot be empty!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/chat.cpp" line="112"/>
+        <location filename="../src/ui/chat.cpp" line="110"/>
         <source>Error: %1</source>
         <translation></translation>
     </message>
@@ -779,7 +779,7 @@ Will take effect on next application launch.</translation>
         <location filename="../src/ui/setting.cpp" line="795"/>
         <location filename="../src/ui/setting.cpp" line="806"/>
         <location filename="../src/ui/setting.cpp" line="842"/>
-        <location filename="../src/ui/settingslots.cpp" line="140"/>
+        <location filename="../src/ui/settingslots.cpp" line="138"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
@@ -815,12 +815,11 @@ Will take effect on next startup.</source>
         <location filename="../src/ui/setting.cpp" line="628"/>
         <location filename="../src/ui/setting.cpp" line="802"/>
         <location filename="../src/ui/setting.cpp" line="837"/>
-        <location filename="../src/ui/settingslots.cpp" line="124"/>
-        <location filename="../src/ui/settingslots.cpp" line="197"/>
-        <location filename="../src/ui/settingslots.cpp" line="262"/>
-        <location filename="../src/ui/settingslots.cpp" line="274"/>
+        <location filename="../src/ui/settingslots.cpp" line="122"/>
+        <location filename="../src/ui/settingslots.cpp" line="195"/>
+        <location filename="../src/ui/settingslots.cpp" line="260"/>
+        <location filename="../src/ui/settingslots.cpp" line="272"/>
         <location filename="../src/ui/settingslots.cpp" line="281"/>
-        <location filename="../src/ui/settingslots.cpp" line="294"/>
         <source>Warning</source>
         <translation type="unfinished">Warning</translation>
     </message>
@@ -922,78 +921,73 @@ This will restore all options to defaults.</source>
         <translation type="vanished">Select Model File</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="83"/>
+        <location filename="../src/ui/settingslots.cpp" line="81"/>
         <source>Select Model File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="99"/>
+        <location filename="../src/ui/settingslots.cpp" line="97"/>
         <source>Select GIF File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="99"/>
+        <location filename="../src/ui/settingslots.cpp" line="97"/>
         <source>GIF Files (*.gif)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="113"/>
+        <location filename="../src/ui/settingslots.cpp" line="111"/>
         <source>Select Voice Model File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="115"/>
+        <location filename="../src/ui/settingslots.cpp" line="113"/>
         <source>VVM Files (*.vvm);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="125"/>
+        <location filename="../src/ui/settingslots.cpp" line="123"/>
         <source>Model loading failed. Please check the model file and reload.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="140"/>
+        <location filename="../src/ui/settingslots.cpp" line="138"/>
         <source>Model loaded successfully. Style list updated.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="153"/>
+        <location filename="../src/ui/settingslots.cpp" line="151"/>
         <source>(No available styles)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="197"/>
+        <location filename="../src/ui/settingslots.cpp" line="195"/>
         <source>Dictionary loading failed. Please check the path and ensure it contains valid dictionary files.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="223"/>
+        <location filename="../src/ui/settingslots.cpp" line="221"/>
         <source>Select Dictionary Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="263"/>
+        <location filename="../src/ui/settingslots.cpp" line="261"/>
         <source>Failed to apply configuration. Please check the dictionary directory and model file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="271"/>
+        <location filename="../src/ui/settingslots.cpp" line="269"/>
         <source>Current style is invalid (ID: %1), available styles: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="273"/>
+        <location filename="../src/ui/settingslots.cpp" line="271"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/settingslots.cpp" line="281"/>
         <source>TTS failed. Please check the logs.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/settingslots.cpp" line="294"/>
-        <source>Cannot write temporary file.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

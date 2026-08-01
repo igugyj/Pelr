@@ -74,17 +74,17 @@ It&apos;s %2</source>
     <name>ChatWidget</name>
     <message>
         <location filename="../src/ui/chat.cpp" line="18"/>
-        <location filename="../src/ui/chat.cpp" line="117"/>
+        <location filename="../src/ui/chat.cpp" line="115"/>
         <source>Hello, welcome to Pelr!</source>
         <translation>你好，欢迎使用 Pelr！</translation>
     </message>
     <message>
-        <location filename="../src/ui/chat.cpp" line="91"/>
+        <location filename="../src/ui/chat.cpp" line="89"/>
         <source>Message cannot be empty!</source>
         <translation>消息不能为空！</translation>
     </message>
     <message>
-        <location filename="../src/ui/chat.cpp" line="112"/>
+        <location filename="../src/ui/chat.cpp" line="110"/>
         <source>Error: %1</source>
         <translation>错误：%1</translation>
     </message>
@@ -609,7 +609,7 @@ Version: %2</translation>
         <location filename="../src/ui/setting.cpp" line="795"/>
         <location filename="../src/ui/setting.cpp" line="806"/>
         <location filename="../src/ui/setting.cpp" line="842"/>
-        <location filename="../src/ui/settingslots.cpp" line="140"/>
+        <location filename="../src/ui/settingslots.cpp" line="138"/>
         <source>Information</source>
         <translation>信息</translation>
     </message>
@@ -646,12 +646,11 @@ Will take effect on next startup.</source>
         <location filename="../src/ui/setting.cpp" line="628"/>
         <location filename="../src/ui/setting.cpp" line="802"/>
         <location filename="../src/ui/setting.cpp" line="837"/>
-        <location filename="../src/ui/settingslots.cpp" line="124"/>
-        <location filename="../src/ui/settingslots.cpp" line="197"/>
-        <location filename="../src/ui/settingslots.cpp" line="262"/>
-        <location filename="../src/ui/settingslots.cpp" line="274"/>
+        <location filename="../src/ui/settingslots.cpp" line="122"/>
+        <location filename="../src/ui/settingslots.cpp" line="195"/>
+        <location filename="../src/ui/settingslots.cpp" line="260"/>
+        <location filename="../src/ui/settingslots.cpp" line="272"/>
         <location filename="../src/ui/settingslots.cpp" line="281"/>
-        <location filename="../src/ui/settingslots.cpp" line="294"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -752,67 +751,67 @@ This will restore all options to defaults.</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="83"/>
+        <location filename="../src/ui/settingslots.cpp" line="81"/>
         <source>Select Model File</source>
         <translation>选择模型文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="99"/>
+        <location filename="../src/ui/settingslots.cpp" line="97"/>
         <source>Select GIF File</source>
         <translation>选择 GIF·文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="99"/>
+        <location filename="../src/ui/settingslots.cpp" line="97"/>
         <source>GIF Files (*.gif)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="113"/>
+        <location filename="../src/ui/settingslots.cpp" line="111"/>
         <source>Select Voice Model File</source>
         <translation>选择语音模型文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="115"/>
+        <location filename="../src/ui/settingslots.cpp" line="113"/>
         <source>VVM Files (*.vvm);;All Files (*)</source>
         <translation>VVM 文件 (*.vvm);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="125"/>
+        <location filename="../src/ui/settingslots.cpp" line="123"/>
         <source>Model loading failed. Please check the model file and reload.</source>
         <translation>模型加载失败。请检查模型文件后重新加载。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="140"/>
+        <location filename="../src/ui/settingslots.cpp" line="138"/>
         <source>Model loaded successfully. Style list updated.</source>
         <translation>模型加载成功。风格列表已更新。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="153"/>
+        <location filename="../src/ui/settingslots.cpp" line="151"/>
         <source>(No available styles)</source>
         <translation>（无可用风格）</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="197"/>
+        <location filename="../src/ui/settingslots.cpp" line="195"/>
         <source>Dictionary loading failed. Please check the path and ensure it contains valid dictionary files.</source>
         <translation>词典加载失败。请检查路径并确保包含有效的词典文件。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="223"/>
+        <location filename="../src/ui/settingslots.cpp" line="221"/>
         <source>Select Dictionary Directory</source>
         <translation>选择词典目录</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="263"/>
+        <location filename="../src/ui/settingslots.cpp" line="261"/>
         <source>Failed to apply configuration. Please check the dictionary directory and model file.</source>
         <translation>应用配置失败。请检查词典目录和模型文件。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="271"/>
+        <location filename="../src/ui/settingslots.cpp" line="269"/>
         <source>Current style is invalid (ID: %1), available styles: %2</source>
         <translation>当前风格无效（ID：%1），可用风格：%2</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="273"/>
+        <location filename="../src/ui/settingslots.cpp" line="271"/>
         <source>None</source>
         <translation>无</translation>
     </message>
@@ -822,9 +821,8 @@ This will restore all options to defaults.</source>
         <translation>TTS 失败。请检查日志。</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="294"/>
         <source>Cannot write temporary file.</source>
-        <translation>无法写入临时文件。</translation>
+        <translation type="vanished">无法写入临时文件。</translation>
     </message>
 </context>
 <context>
