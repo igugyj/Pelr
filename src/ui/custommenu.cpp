@@ -22,6 +22,9 @@ void CustomMenu::initStyle()
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
+    // 设置菜单字体
+    setFont(qApp->font());
+
     // 设置基础样式表，确保与你的 QSS 兼容
     applyStyle();
 }
