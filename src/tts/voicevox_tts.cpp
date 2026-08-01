@@ -26,7 +26,12 @@ bool VoicevoxTTS::initializeOnnxRuntime(const QString &onnxPath)
             return;
         }
         VoicevoxLoadOnnxruntimeOptions opts = voicevox_make_default_load_onnxruntime_options();
-        if (!onnxPath.isEmpty()) opts.filename = onnxPath.toUtf8().constData();
+        QByteArray onnxPathUtf8;
+        if (!onnxPath.isEmpty())
+        {
+            onnxPathUtf8 = onnxPath.toUtf8();
+            opts.filename = onnxPathUtf8.constData();
+        }
         VoicevoxResultCode rc = voicevox_onnxruntime_load_once(opts, &g_onnx);
         if (rc != VOICEVOX_RESULT_OK) {
             qWarning() << "[VoicevoxTTS] Failed to load ONNX Runtime, error code:" << rc;
