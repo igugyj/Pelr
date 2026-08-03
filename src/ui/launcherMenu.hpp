@@ -34,6 +34,24 @@ public:
     void initMenu()
     {
         qDebug() << "[LauncherMenu] initMenu: rebuilding menu";
+        // 释放上一轮对象，防止反复 refresh 泄漏（子菜单的 QAction 随子菜单一并释放）
+        delete menu_Star;
+        delete menu_App;
+        delete menu_Link;
+        delete menu_Scripts;
+        delete menu_LaunchAll;
+        menu_Star = menu_App = menu_Link = menu_Scripts = menu_LaunchAll = nullptr;
+        if (QueueTimer)
+        {
+            QueueTimer->stop();
+            delete QueueTimer;
+            QueueTimer = nullptr;
+        }
+        // 防重复刷新导致 "Launch All" 重复启动
+        queue_Star.clear();
+        queue_App.clear();
+        queue_Link.clear();
+        queue_Scripts.clear();
         clear();
         QueueTimer = new QTimer(this);
         QueueTimer->setInterval(3000);
@@ -50,7 +68,7 @@ public:
         menu_App = new CustomMenu("App", this);
         menu_Link = new CustomMenu("Link", this);
         menu_Scripts = new CustomMenu("Scripts", this);
-        CustomMenu *menu_LaunchAll = new CustomMenu("Launch All", this);
+        menu_LaunchAll = new CustomMenu("Launch All", this);
         menu_LaunchAll->setIcon(QIcon(p5));
         for (MenuData &item : menu_data)
         {
@@ -204,7 +222,8 @@ private slots:
     }
 
 private:
-    QMenu *menu_Star, *menu_App, *menu_Link, *menu_Scripts;
+    QMenu *menu_Star = nullptr, *menu_App = nullptr, *menu_Link = nullptr, *menu_Scripts = nullptr;
+    QMenu *menu_LaunchAll = nullptr; // 原来是无主局部变量，改为成员才能跨次重建释放
     QList<MenuData> menu_data;
     QQueue<QString> queue_Star, queue_App, queue_Link, queue_Scripts, queue_Temp;
     QTimer *QueueTimer = nullptr;

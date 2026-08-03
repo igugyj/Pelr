@@ -78,9 +78,39 @@ VersionChecker::~VersionChecker()
 void VersionChecker::checkVersionMatch(const QString &localVersion)
 {
     m_localVersion = localVersion;
+    m_results.clear(); // 先清结果，防残留写入
+
+    // abort() 在 Qt6 中会同步触发 finished → onReplyFinished；
+    // 临时断开 manager::finished，防止旧 reply 的同步回调处理旧数据/提前汇总
+    disconnect(m_networkManager, &QNetworkAccessManager::finished,
+               this, &VersionChecker::onReplyFinished);
+
+    // 拷贝遍历容器——abort 的同步回调会修改容器，直接 range-for 会迭代器失效
+    const QList<QNetworkReply *> pending = m_pendingReplies.values();
+    for (QNetworkReply *reply : pending)
+    {
+        if (reply)
+        {
+            reply->abort();
+            reply->deleteLater();
+        }
+    }
+
+    const QList<QTimer *> timers = m_timeoutTimers.values();
+    for (QTimer *timer : timers)
+    {
+        if (timer)
+        {
+            timer->disconnect(this); // 防止清理后旧 timer 的 timeout 再触发
+            timer->stop();
+            timer->deleteLater();
+        }
+    }
     m_pendingReplies.clear();
     m_timeoutTimers.clear();
-    m_results.clear();
+
+    connect(m_networkManager, &QNetworkAccessManager::finished,
+            this, &VersionChecker::onReplyFinished);
 
     checkByGitee(DataManager::instance().const_config_data.Gitee_repo_owner.toLower(),
                  DataManager::instance().const_config_data.Gitee_repo_name.toLower());
