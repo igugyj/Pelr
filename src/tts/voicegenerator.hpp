@@ -14,6 +14,7 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QDebug>
+#include <QQueue>
 #include "data.hpp"
 #include "launcher.hpp"
 #include "translator.h"
@@ -38,11 +39,8 @@ public:
      */
     void generateVoice(const TTSConfig &config, const QString &text)
     {
-
-        m_pendingConfig = config;
-        m_pendingText = text;
-        TrManager::instance()->setConfig(config);
-        TrManager::instance()->translate(text);
+        m_pendingQueue.enqueue(PendingRequest{config, text});
+        processNextTranslation();
     }
 
     // 原有讯飞 TTS 调用方式（保持不变）
@@ -210,14 +208,17 @@ private slots:
     void onTranslationFinished(const QString &translatedText)
     {
         qDebug() << "[VoiceGen] Translation successful:" << translatedText;
-        doGenerateVoice(m_pendingConfig, translatedText);
+        m_translating = false;
+        doGenerateVoice(m_currentRequest.config, translatedText);
+        processNextTranslation();
     }
 
     void onTranslationError(const QString &errorMessage)
     {
         qWarning() << "[VoiceGen] Translation failed:" << errorMessage;
-        emit errorOccurred("Translation failed: " + errorMessage);
-        doGenerateVoice(m_pendingConfig, m_pendingText); // 回退原文合成
+        m_translating = false;
+        doGenerateVoice(m_currentRequest.config, m_currentRequest.text); // 回退原文合成
+        processNextTranslation();
     }
 
 private:
@@ -246,6 +247,22 @@ private:
 
     VoiceGenerator(const VoiceGenerator &) = delete;
     VoiceGenerator &operator=(const VoiceGenerator &) = delete;
+
+    struct PendingRequest
+    {
+        TTSConfig config;
+        QString text;
+    };
+
+    void processNextTranslation()
+    {
+        if (m_translating || m_pendingQueue.isEmpty())
+            return;
+        m_translating = true;
+        m_currentRequest = m_pendingQueue.dequeue();
+        TrManager::instance()->setConfig(m_currentRequest.config);
+        TrManager::instance()->translate(m_currentRequest.text);
+    }
 
     // 统一执行 TTS 生成
     void doGenerateVoice(const TTSConfig &config, const QString &text)
@@ -394,7 +411,8 @@ private:
     QNetworkAccessManager *m_manager;
     QMediaPlayer *m_player;
     QAudioOutput *m_audioOutput;
-    TTSConfig m_pendingConfig; // 暂存等待翻译完成的配置
-    QString m_pendingText;     // 暂存待翻译的原始文本
+    QQueue<PendingRequest> m_pendingQueue; // 待翻译请求队列（串行化，避免 pending 状态被覆盖）
+    bool m_translating = false;            // 当前是否有翻译在途
+    PendingRequest m_currentRequest;       // 当前在途请求的配置与原文
     QString m_currentPlayFile; // 当前正在播放（或刚播完）的文件路径
 };

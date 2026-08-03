@@ -232,7 +232,17 @@ void BubbleBox::setThinkingText()
 
 void BubbleBox::textSet(const QString &text)
 {
-    m_text = text.trimmed();
+    const QString trimmed = text.trimmed();
+    // 防抖：30s 内相同文本不重复显示/合成
+    if (trimmed == m_lastDebounceText && m_lastDebounceTimer.isValid() &&
+        m_lastDebounceTimer.elapsed() < 30 * 1000)
+    {
+        qDebug() << "[BubbleBox] Debounce: duplicate text within 30s, skipped:" << trimmed.left(30);
+        return;
+    }
+    m_lastDebounceText = trimmed;
+    m_lastDebounceTimer.restart();
+    m_text = trimmed;
     if (!DataManager::instance().getBasicData().isSaying)
     {
         qDebug() << "[BubbleBox] No text-to-speech interface is used";
