@@ -31,6 +31,8 @@
 #include "globalinputlistener.h"
 #include "convertcodetostring.h"
 #include <QRandomGenerator>
+#include <QStringList>
+#include <QMetaObject>
 
 #define RECORD_FILE "user/record.dat"
 #define WINDOW_LOCATION_FILE "user/window_location.dat"
@@ -593,10 +595,41 @@ void GLCore::runStarIfPowered()
     std::vector<QString> powerStatus = getPowerStatus();
     if (powerStatus.size() < 1 || powerStatus[0] != "Online (AC)")
         return;
+
+    // H15: 验签——防 menuData.json 被篡改导致静默执行任意程序
+    bool jsonOk = false;
+    QStringList failedFiles;
+    bool sigOk = DataManager::instance().verifyMenuData(&jsonOk, &failedFiles);
+    if (!jsonOk)
+    {
+        qWarning() << "[GLCore] Menu data HMAC mismatch, auto-launch aborted";
+        QMetaObject::invokeMethod(qApp, []()
+        {
+            TrayIcon::showMessage(QObject::tr("Pelr"),
+                                  QObject::tr("menuData.json signature verification failed, auto-launch blocked. Please re-save the menu in Manage Start."));
+        }, Qt::QueuedConnection);
+        return;
+    }
+    if (!sigOk)
+    {
+        qWarning() << "[GLCore] Some menu items failed file verification, skipping:" << failedFiles;
+        QMetaObject::invokeMethod(qApp, [failedFiles]()
+        {
+            TrayIcon::showMessage(QObject::tr("Pelr"),
+                                  QObject::tr("Some launch items were modified and skipped: %1")
+                                      .arg(failedFiles.join(", ")));
+        }, Qt::QueuedConnection);
+    }
+
     for (MenuData &item : menu_data)
     {
         if (item.category == "Star")
         {
+            if (!sigOk && failedFiles.contains(item.path))
+            {
+                qWarning() << "[GLCore] Skipping tampered item:" << item.path;
+                continue;
+            }
             launchByPath(item.path);
             QThread::sleep(3);
         }

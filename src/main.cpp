@@ -2,6 +2,8 @@
 #include <QCoreApplication>
 #include <QIcon>
 #include <QDebug>
+#include <QDir>
+#include <QFileInfo>
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -22,6 +24,17 @@ void initTranslator(QApplication &a, const QString &path);
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_WIN
+    // 将工作目录固定为 exe 所在目录，使所有相对路径（user/、assets/、log/ 等）
+    // 与启动时的 CWD 无关，防止从其他目录启动导致配置/启动项读取错位
+    wchar_t exeBuf[MAX_PATH];
+    DWORD exeLen = GetModuleFileNameW(nullptr, exeBuf, MAX_PATH);
+    if (exeLen > 0 && exeLen < MAX_PATH)
+    {
+        QDir::setCurrent(QFileInfo(QString::fromWCharArray(exeBuf, exeLen)).absolutePath());
+    }
+#endif
+
     // ---- 基础初始化（应在 QApplication 之前完成，但注意不要依赖 QSettings 等） ----
     initFileSys();
     initLogFile();

@@ -1,5 +1,13 @@
 #include "data.hpp"
 #include <QSaveFile>
+#include <QRandomGenerator>
+#include <QCryptographicHash>
+#include <QMessageAuthenticationCode>
+#include <QJsonValue>
+#include <QMap>
+#include <QStringList>
+#include <QFileInfo>
+#include <QSysInfo>
 
 bool DataManager::writeJsonFile(const QString &filePath, const QJsonDocument &doc)
 {
@@ -16,6 +24,217 @@ bool DataManager::writeJsonFile(const QString &filePath, const QJsonDocument &do
         return false;
     }
     return true;
+}
+
+// ============================================================================
+// H15: 菜单数据 HMAC 签名 / 验签
+// 单文件 user/.menuSig（明文 JSON）内含 jsonSalt、json 摘要（HMAC-SHA256，
+// 密钥由机器标识派生，无定值）、各条目 salt + SHA-256 文件摘要（网页链接与文件夹跳过）。
+// 防护级别：防"随手改文件"；密钥可被本机进程重建（纯 Qt 路线的固有边界）。
+// ============================================================================
+
+namespace
+{
+bool constantTimeEqual(const QByteArray &a, const QByteArray &b)
+{
+    if (a.size() != b.size())
+        return false;
+    bool ok = true;
+    for (int i = 0; i < a.size(); ++i)
+        ok = ok && (a.at(i) == b.at(i));
+    return ok;
+}
+
+bool isUrlPath(const QString &path)
+{
+    return path.startsWith("http://") || path.startsWith("https://") ||
+           path.startsWith("ftp://") || path.startsWith("file://");
+}
+
+// 跨版本稳定契约：菜单签名密钥派生规则（机器标识），改动需 bump payload v + 一次重签过渡
+QByteArray menuHmacKey()
+{
+    static const QByteArray key = []() {
+        // 每台机器唯一：MachineGuid（Windows 注册表）；空（极端情况）回退主机名
+        QString seed = QSysInfo::machineUniqueId();
+        if (seed.isEmpty())
+            seed = QSysInfo::machineHostName();
+        return QCryptographicHash::hash(QByteArrayLiteral("Pelr-MenuSig-v1|") + seed.toUtf8(),
+                                        QCryptographicHash::Sha256);
+    }();
+    return key;
+}
+} // namespace
+
+void DataManager::signMenuData()
+{
+    QFile f(FilePaths.menuDataFile);
+    if (!f.open(QIODevice::ReadOnly))
+    {
+        qCritical() << "[Data] signMenuData: cannot read" << FilePaths.menuDataFile;
+        return;
+    }
+    const QByteArray jsonBytes = f.readAll();
+    const QByteArray key = menuHmacKey();
+
+    QByteArray jsonSalt;
+    QFile sigFile(FilePaths.menuSigFile);
+    if (sigFile.open(QIODevice::ReadOnly))
+    {
+        QJsonObject obj = QJsonDocument::fromJson(sigFile.readAll()).object();
+        jsonSalt = QByteArray::fromBase64(obj.value("jsonSalt").toString().toUtf8());
+    }
+    if (jsonSalt.size() != 16)
+    {
+        jsonSalt.resize(16);
+        for (int i = 0; i < 16; ++i)
+            jsonSalt[i] = static_cast<char>(QRandomGenerator::system()->bounded(256));
+    }
+
+    const QByteArray jsonHmac = QMessageAuthenticationCode::hash(jsonSalt + jsonBytes,
+                                                                 key, QCryptographicHash::Sha256);
+
+    QJsonArray filesArr;
+    for (const MenuData &item : cached_menu_data)
+    {
+        if (item.path.isEmpty() || isUrlPath(item.path))
+            continue;
+        QFileInfo fi(item.path);
+        if (fi.isDir())
+            continue; // 文件夹不校验（与网页链接同待遇）
+
+        QByteArray salt(16, '\0');
+        QByteArray hash;
+        QFile itemFile(item.path);
+        if (itemFile.open(QIODevice::ReadOnly))
+        {
+            for (int i = 0; i < 16; ++i)
+                salt[i] = static_cast<char>(QRandomGenerator::system()->bounded(256));
+            hash = QCryptographicHash::hash(salt + itemFile.readAll(), QCryptographicHash::Sha256);
+        }
+        else
+        {
+            qWarning() << "[Data] signMenuData: cannot read file for signing:" << item.path;
+        }
+        QJsonObject entry;
+        entry["path"] = item.path;
+        entry["salt"] = QString::fromLatin1(salt.toBase64());
+        entry["hash"] = QString::fromLatin1(hash.toBase64());
+        filesArr.append(entry);
+    }
+
+    QJsonObject payloadObj;
+    payloadObj["v"] = 1;
+    payloadObj["jsonSalt"] = QString::fromLatin1(jsonSalt.toBase64());
+    payloadObj["json"] = QString::fromLatin1(jsonHmac.toBase64());
+    payloadObj["files"] = filesArr;
+
+    QSaveFile sf(FilePaths.menuSigFile);
+    if (!sf.open(QIODevice::WriteOnly) || sf.write(QJsonDocument(payloadObj).toJson()) < 0 || !sf.commit())
+    {
+        qCritical() << "[Data] signMenuData: failed to write signature file";
+        return;
+    }
+    qDebug() << "[Data] signMenuData: signed" << filesArr.size() << "files";
+}
+
+bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
+{
+    if (jsonOk)
+        *jsonOk = false;
+    if (failedFiles)
+        failedFiles->clear();
+
+    QFile f(FilePaths.menuDataFile);
+    if (!f.open(QIODevice::ReadOnly))
+    {
+        qWarning() << "[Data] verifyMenuData: cannot read" << FilePaths.menuDataFile;
+        return false;
+    }
+    const QByteArray jsonBytes = f.readAll();
+
+    QFile sigFile(FilePaths.menuSigFile);
+    if (!sigFile.open(QIODevice::ReadOnly))
+    {
+        // TOFU：升级后首次启动无签名文件 → 信任当前菜单并生成签名
+        qDebug() << "[Data] verifyMenuData: no signature file, signing current menu (TOFU)";
+        signMenuData();
+        if (jsonOk)
+            *jsonOk = true;
+        return true;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(sigFile.readAll());
+    if (!doc.isObject())
+    {
+        qWarning() << "[Data] verifyMenuData: invalid signature file";
+        return false;
+    }
+    QJsonObject obj = doc.object();
+    QByteArray jsonSalt = QByteArray::fromBase64(obj.value("jsonSalt").toString().toUtf8());
+    QByteArray storedJson = QByteArray::fromBase64(obj.value("json").toString().toUtf8());
+    if (jsonSalt.size() != 16)
+    {
+        qWarning() << "[Data] verifyMenuData: invalid jsonSalt in signature";
+        return false;
+    }
+
+    const QByteArray calcJson = QMessageAuthenticationCode::hash(jsonSalt + jsonBytes,
+                                                                 menuHmacKey(), QCryptographicHash::Sha256);
+    if (!constantTimeEqual(storedJson, calcJson))
+    {
+        qWarning() << "[Data] verifyMenuData: menuData.json HMAC mismatch (tampered?)";
+        return false; // jsonOk 保持 false → 整批阻止自动启动
+    }
+    if (jsonOk)
+        *jsonOk = true;
+
+    // 逐条目文件校验
+    QMap<QString, QPair<QByteArray, QByteArray>> fileMap; // path -> (salt, hash)
+    const QJsonArray filesArr = obj.value("files").toArray();
+    for (const QJsonValue &v : filesArr)
+    {
+        QJsonObject e = v.toObject();
+        fileMap[e.value("path").toString()] = qMakePair(
+            QByteArray::fromBase64(e.value("salt").toString().toUtf8()),
+            QByteArray::fromBase64(e.value("hash").toString().toUtf8()));
+    }
+
+    bool allOk = true;
+    const QList<MenuData> items = getMenuData();
+    for (const MenuData &item : items)
+    {
+        if (item.path.isEmpty() || isUrlPath(item.path))
+            continue;
+        if (QFileInfo(item.path).isDir())
+            continue;
+
+        QByteArray salt, storedHash;
+        const auto it = fileMap.constFind(item.path);
+        if (it != fileMap.constEnd())
+        {
+            salt = it.value().first;
+            storedHash = it.value().second;
+        }
+        bool ok = !storedHash.isEmpty();
+        if (ok)
+        {
+            QFile itemFile(item.path);
+            if (itemFile.open(QIODevice::ReadOnly))
+                ok = constantTimeEqual(storedHash, QCryptographicHash::hash(
+                                                         salt + itemFile.readAll(), QCryptographicHash::Sha256));
+            else
+                ok = false;
+        }
+        if (!ok)
+        {
+            qWarning() << "[Data] verifyMenuData: file changed or unreadable:" << item.path;
+            if (failedFiles)
+                failedFiles->append(item.path);
+            allOk = false;
+        }
+    }
+    return allOk;
 }
 
 void DataManager::writeOpenWeatherData(const OpenWeatherData &opwdt)

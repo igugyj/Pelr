@@ -34,6 +34,7 @@ struct filePaths
     QString llmConfigFile = "user/llmConfig.json";
     QString defaultTextFile = "assets/text/text.json";
     QString userTextFile = "user/text.json";
+    QString menuSigFile = "user/.menuSig";   // H15: 菜单 HMAC 签名（明文 JSON，密钥由机器标识派生）
 };
 inline filePaths FilePaths;
 
@@ -311,7 +312,13 @@ public:
             return;
         }
         writeJsonFile(filename, doc);
+        if constexpr (std::is_same_v<T, QList<MenuData>>)
+            signMenuData(); // H15: 保存菜单后立即重新签名
     }
+
+    // H15: 菜单数据签名/验签（HMAC-SHA256 + 逐条目文件 SHA-256，DPAPI 加密存储）
+    void signMenuData();
+    bool verifyMenuData(bool *jsonOk = nullptr, QStringList *failedFiles = nullptr);
 
     void writeData(ToDoSettingData setting);
 

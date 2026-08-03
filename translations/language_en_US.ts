@@ -417,37 +417,37 @@ Percentage: %2%
 Battery State: %3</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="199"/>
-        <location filename="../src/core/GLCore.cpp" line="832"/>
+        <location filename="../src/core/GLCore.cpp" line="201"/>
+        <location filename="../src/core/GLCore.cpp" line="865"/>
         <source>Key Listener</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="203"/>
-        <location filename="../src/core/GLCore.cpp" line="833"/>
+        <location filename="../src/core/GLCore.cpp" line="205"/>
+        <location filename="../src/core/GLCore.cpp" line="866"/>
         <source>Say Something</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="208"/>
-        <location filename="../src/core/GLCore.cpp" line="834"/>
+        <location filename="../src/core/GLCore.cpp" line="210"/>
+        <location filename="../src/core/GLCore.cpp" line="867"/>
         <source>Launch</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="215"/>
-        <location filename="../src/core/GLCore.cpp" line="835"/>
+        <location filename="../src/core/GLCore.cpp" line="217"/>
+        <location filename="../src/core/GLCore.cpp" line="868"/>
         <source>Weather</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="218"/>
-        <location filename="../src/core/GLCore.cpp" line="836"/>
+        <location filename="../src/core/GLCore.cpp" line="220"/>
+        <location filename="../src/core/GLCore.cpp" line="869"/>
         <source>Power Status</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="223"/>
+        <location filename="../src/core/GLCore.cpp" line="225"/>
         <source>Master, here is your PC&apos;s power status:
 AC: %1
 Percentage: %2%
@@ -455,36 +455,36 @@ Battery State: %3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="228"/>
-        <location filename="../src/core/GLCore.cpp" line="837"/>
+        <location filename="../src/core/GLCore.cpp" line="230"/>
+        <location filename="../src/core/GLCore.cpp" line="870"/>
         <source>TODO</source>
         <translation>TODO</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="232"/>
-        <location filename="../src/core/GLCore.cpp" line="838"/>
+        <location filename="../src/core/GLCore.cpp" line="234"/>
+        <location filename="../src/core/GLCore.cpp" line="871"/>
         <source>Ask a Question</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="236"/>
-        <location filename="../src/core/GLCore.cpp" line="839"/>
+        <location filename="../src/core/GLCore.cpp" line="238"/>
+        <location filename="../src/core/GLCore.cpp" line="872"/>
         <source>Settings</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="257"/>
-        <location filename="../src/core/GLCore.cpp" line="841"/>
+        <location filename="../src/core/GLCore.cpp" line="259"/>
+        <location filename="../src/core/GLCore.cpp" line="874"/>
         <source>Media Player</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="545"/>
+        <location filename="../src/core/GLCore.cpp" line="547"/>
         <source>Uptime too long, skipping startup items</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="551"/>
+        <location filename="../src/core/GLCore.cpp" line="553"/>
         <source>Will launch startup items in %1 min</source>
         <translation></translation>
     </message>
@@ -497,8 +497,8 @@ Battery State: %3</source>
         <translation type="vanished">Interface</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="253"/>
-        <location filename="../src/core/GLCore.cpp" line="840"/>
+        <location filename="../src/core/GLCore.cpp" line="255"/>
+        <location filename="../src/core/GLCore.cpp" line="873"/>
         <source>EMO</source>
         <translation>EMO</translation>
     </message>
@@ -507,7 +507,7 @@ Battery State: %3</source>
         <translation type="vanished">Media Player</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="517"/>
+        <location filename="../src/core/GLCore.cpp" line="519"/>
         <source>%1, %2℃, %3, humidity: %4%.</source>
         <translation>%1, %2℃, %3, humidity: %4%.</translation>
     </message>
@@ -747,6 +747,22 @@ Version: %2</source>
         <location filename="../src/core/launcher.hpp" line="94"/>
         <source>Unknown exception occurred while launching: %1</source>
         <translation>Unknown exception occurred while launching: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/GLCore.cpp" line="608"/>
+        <location filename="../src/core/GLCore.cpp" line="618"/>
+        <source>Pelr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/GLCore.cpp" line="609"/>
+        <source>menuData.json signature verification failed, auto-launch blocked. Please re-save the menu in Manage Start.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/GLCore.cpp" line="619"/>
+        <source>Some launch items were modified and skipped: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
