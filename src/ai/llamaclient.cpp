@@ -35,15 +35,6 @@ LlamaClient *LlamaClient::instance()
         if (!m_instance)
         {
             m_instance = new LlamaClient();
-
-            // 应用程序退出时自动清理实例
-            connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
-                    []()
-                    {
-                        QMutexLocker lock(&mutex);
-                        delete m_instance;
-                        m_instance = nullptr;
-                    });
         }
     }
     return m_instance;
