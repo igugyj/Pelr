@@ -7,28 +7,21 @@
 #include <QMetaObject>
 #include <QDebug>
 
-NotificationWidget *NotificationWidget::m_instance = nullptr;
-
-NotificationWidget *NotificationWidget::instance() {
-    if (!m_instance)
-        m_instance = new NotificationWidget();
-    return m_instance;
-}
-
 void NotificationWidget::showNotification(
     const QString &title,
     const QString &message,
     int duration,
     MessageType type,
     std::function<void()> clickCallback) {
-    // 如果当前是UI线程,直接调用
+    // 每次通知创建全新窗口（创建必须发生在 UI 线程）
+    auto createAndShow = [title, message, duration, type, clickCallback]() {
+        NotificationWidget *w = new NotificationWidget();
+        w->showNotificationInternal(title, message, duration, type, clickCallback);
+    };
     if (QThread::currentThread() == QApplication::instance()->thread()) {
-        instance()->showNotificationInternal(title, message, duration, type, clickCallback);
+        createAndShow();
     } else {
-        // 否则安排到UI线程执行（实例也在UI线程创建，保证线程亲和性）
-        QMetaObject::invokeMethod(QApplication::instance(), [title, message, duration, type, clickCallback]() {
-            instance()->showNotificationInternal(title, message, duration, type, clickCallback);
-        }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(QApplication::instance(), createAndShow, Qt::QueuedConnection);
     }
 }
 
@@ -45,16 +38,15 @@ NotificationWidget::NotificationWidget(QWidget *parent)
     // 设置窗口属性
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
-    setAttribute(Qt::WA_DeleteOnClose, false);
+    setAttribute(Qt::WA_DeleteOnClose, true);
 
     // 创建自动隐藏计时器
     m_hideTimer = new QTimer(this);
     m_hideTimer->setSingleShot(true);
-    connect(m_hideTimer, &QTimer::timeout, this, &NotificationWidget::hide);
+    connect(m_hideTimer, &QTimer::timeout, this, &NotificationWidget::close);
 }
 
 NotificationWidget::~NotificationWidget() {
-    // 单例不需要手动删除
 }
 
 void NotificationWidget::setupUI() {
@@ -259,7 +251,7 @@ void NotificationWidget::mousePressEvent(QMouseEvent *event) {
             m_clickCallback();
         }
     }
-    hide();
+    close();
 
     QWidget::mousePressEvent(event);
 }
