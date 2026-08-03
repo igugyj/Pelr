@@ -49,30 +49,36 @@ void LibreTranslateClient::postJson(const QString &endpoint, const QByteArray &d
     QNetworkRequest request(QUrl(m_baseUrl + endpoint));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    m_currentReply = m_manager->post(request, data);
-    connect(m_currentReply, &QNetworkReply::finished, this, &LibreTranslateClient::onReplyFinished);
+    QNetworkReply *reply = m_manager->post(request, data);
+    m_currentReply = reply;
+    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+        handleReply(reply);
+    });
 }
 
-void LibreTranslateClient::onReplyFinished()
+void LibreTranslateClient::handleReply(QNetworkReply *reply)
 {
-    if (!m_currentReply)
-        return;
-
-    if (m_currentReply->error() != QNetworkReply::NoError)
+    // 被更新的请求取代（abort 后晚到的旧事件）→ 忽略
+    if (reply != m_currentReply)
     {
-        emit translationError(m_currentReply->errorString());
-        m_currentReply->deleteLater();
-        m_currentReply = nullptr;
+        reply->deleteLater();
+        return;
+    }
+    m_currentReply = nullptr; // 先清指针再 emit，防重入时序问题
+
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        emit translationError(reply->errorString());
+        reply->deleteLater();
         return;
     }
 
-    QByteArray responseData = m_currentReply->readAll();
+    QByteArray responseData = reply->readAll();
+    reply->deleteLater();
     QJsonDocument respDoc = QJsonDocument::fromJson(responseData);
     if (!respDoc.isObject())
     {
         emit translationError("Invalid JSON response from LibreTranslate");
-        m_currentReply->deleteLater();
-        m_currentReply = nullptr;
         return;
     }
 
@@ -91,7 +97,4 @@ void LibreTranslateClient::onReplyFinished()
     {
         emit translationError("Unknown response format");
     }
-
-    m_currentReply->deleteLater();
-    m_currentReply = nullptr;
 }

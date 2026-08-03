@@ -31,8 +31,8 @@ signals:
     void translationFinished(const QString &translatedText);
     void translationError(const QString &errorMessage);
 
-private slots:
-    void onReplyFinished();
+private:
+    void handleReply(QNetworkReply *reply);
 
 private:
     QNetworkAccessManager *m_manager;
