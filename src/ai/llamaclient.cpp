@@ -9,6 +9,7 @@
 #include <QEventLoop>
 #include <QMutexLocker>
 #include <QMutex>
+#include "logger.hpp"
 
 // 静态成员初始化
 LlamaClient *LlamaClient::m_instance = nullptr;
@@ -301,7 +302,7 @@ void LlamaClient::generateTextAsync(const QString &prompt, const int &id, bool s
 bool LlamaClient::isConfigured() const
 {
     bool ok = !m_baseUrl.isEmpty() && !m_model.isEmpty();
-    qDebug() << "[AI] isConfigured:" << ok << "baseUrl:" << m_baseUrl << "model:" << m_model;
+    qDebug() << "[AI] isConfigured:" << ok << "model:" << m_model;
     return ok;
 }
 
@@ -385,7 +386,7 @@ void LlamaClient::generateRandomAsync(const QString &prompt, const int &id)
     jsonBody["messages"] = msgs;
     jsonBody["stream"] = false;
 
-    qDebug() << "[AI] generateRandomAsync: posting to" << m_baseUrl << "model:" << m_model;
+    qDebug() << "[AI] generateRandomAsync: posting to" << maskUrl(m_baseUrl) << "model:" << m_model;
 
     QNetworkReply *reply = m_manager->post(request, QJsonDocument(jsonBody).toJson());
     reply->setProperty("_randomOnce", true);

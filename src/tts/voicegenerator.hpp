@@ -20,6 +20,7 @@
 #include "translator.h"
 #include "trmanager.h"
 #include "voicevox_tts.h"
+#include "logger.hpp"
 
 class VoiceGenerator : public QObject
 {
@@ -79,7 +80,7 @@ public:
                                    double speed)
     {
         qDebug() << "[VoiceGen] OpenAI-Compatible: text=" << text.left(50)
-                 << "endpoint=" << endpoint << "model=" << model << "voice=" << voice << "speed=" << speed;
+                 << "endpoint=" << maskUrl(endpoint) << "model=" << model << "voice=" << voice << "speed=" << speed;
 
         if (endpoint.isEmpty())
         {
@@ -116,12 +117,12 @@ public:
         QUrl url(endpoint.trimmed());
         if (!url.isValid())
         {
-            qWarning() << "[VoiceGen] Invalid URL:" << url.toString();
+            qWarning() << "[VoiceGen] Invalid URL:" << maskUrl(url.toString());
             emit errorOccurred("Invalid OpenAI TTS URL: " + url.errorString());
             return;
         }
 
-        qDebug() << "[VoiceGen] POST" << url.toString();
+        qDebug() << "[VoiceGen] POST" << maskUrl(url.toString());
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
         if (!apiKey.isEmpty())
@@ -207,7 +208,7 @@ private slots:
     // 翻译成功后的处理
     void onTranslationFinished(const QString &translatedText)
     {
-        qDebug() << "[VoiceGen] Translation successful:" << translatedText;
+        qDebug() << "[VoiceGen] Translation successful:" << translatedText.left(50);
         m_translating = false;
         doGenerateVoice(m_currentRequest.config, translatedText);
         processNextTranslation();
@@ -319,15 +320,16 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "[VoiceGen] Voice generate response:" << json;
             QString filePath = json["file_path"].toString();
+            QString error = json["error"].toString();
+            qDebug() << "[VoiceGen] Voice generate response: file_path=" << filePath
+                     << "error=" << error;
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
                 emit voiceGenerated(filePath);
             }
             else
             {
-                QString error = json["error"].toString();
                 emit errorOccurred(error.isEmpty() ? "File not found" : error);
             }
         }
@@ -349,15 +351,16 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "[VoiceGen] OpenAI TTS response:" << json;
             QString filePath = json["file_path"].toString();
+            QString error = json["error"].toString();
+            qDebug() << "[VoiceGen] OpenAI TTS response: file_path=" << filePath
+                     << "error=" << error;
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
                 emit voiceGenerated(filePath);
             }
             else
             {
-                QString error = json["error"].toString();
                 emit errorOccurred(error.isEmpty() ? "File not found from OpenAI TTS" : error);
             }
         }

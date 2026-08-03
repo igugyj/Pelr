@@ -1172,7 +1172,7 @@ This will restore all options to defaults.</source>
 <context>
     <name>VoiceGenerator</name>
     <message>
-        <location filename="../src/tts/voicegenerator.hpp" line="184"/>
+        <location filename="../src/tts/voicegenerator.hpp" line="185"/>
         <source>Audio file not found: %1</source>
         <translation>未找到音频文件：%1</translation>
     </message>

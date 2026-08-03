@@ -14,7 +14,7 @@
 #include <QReadWriteLock>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.13"
+#define VERSION "v0.7.24"
 
 enum TrayIconMode : int
 {

@@ -10,8 +10,12 @@
 // 定义日志文件路径
 #define QT_LOG_FILE "log/Pelr_qt.log"
 
-// 定义全局变量
+// 定义全局变量（M12: 默认等级条件编译 —— Debug 构建 Debug，Release 构建 Warning）
+#ifdef CONSOLE
 LogLevel g_logLevel = LogLevel::Debug;
+#else
+LogLevel g_logLevel = LogLevel::Warning;
+#endif
 QMutex g_logMutex;
 
 // 输出到控制台的宏（如果启用）

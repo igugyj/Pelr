@@ -6,7 +6,7 @@
 #include <QDataStream>
 #include <QDebug>
 #include <QMessageBox>
-#include <QString>
+#include <QUrl>
 #define LOG_LEVEL_FILE "user/logLevel.dat"
 
 // 定义日志等级枚举
@@ -38,8 +38,12 @@ inline LogLevel read_log_level()
     LogLevel level;
     if (!file.open(QIODevice::ReadOnly))
     {
-        // 返回默认日志等级
+        // 无存档时返回条件编译默认等级：Debug 构建 Debug，Release 构建 Warning
+#ifdef CONSOLE
         return LogLevel::Debug;
+#else
+        return LogLevel::Warning;
+#endif
     }
     QDataStream in(&file);
     in.setVersion(QDataStream::Qt_6_0); // 设置流版本以确保兼容性
@@ -66,4 +70,13 @@ inline void write_log_level(const LogLevel level)
     // 写入数据
     out << level;
     file.close();
+}
+
+// M12: 日志脱敏 —— 去除 URL 中的 userinfo/query 后输出
+inline QString maskUrl(const QString &urlStr)
+{
+    QUrl u(urlStr);
+    if (!u.isValid())
+        return urlStr.left(40);
+    return u.toString(QUrl::RemoveUserInfo | QUrl::RemoveQuery);
 }
