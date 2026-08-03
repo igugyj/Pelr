@@ -38,14 +38,14 @@ WeatherData WeatherManager::getWeatherData(const QString &city, const QString &a
         result.error = "错误：API Key为空！";
         return result;
     }
-    if (apiKey.isEmpty())
+    if (city.isEmpty())
     {
         result.error = "错误：城市名称为空！";
         return result;
     }
 
     // 构建API请求URL
-    QUrl url("http://api.openweathermap.org/data/2.5/weather");
+    QUrl url("https://api.openweathermap.org/data/2.5/weather");
     QUrlQuery query;
     query.addQueryItem("q", city);
     query.addQueryItem("appid", apiKey);
