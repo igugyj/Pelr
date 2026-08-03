@@ -61,12 +61,16 @@ LAppModel::~LAppModel()
         ACubismMotion::Delete(it->Second);
     extraExpressions.Clear();
 
-    for (csmInt32 i = 0; i < _modelSetting->GetMotionGroupCount(); i++)
+    if (_modelSetting)
     {
-        const csmChar *group = _modelSetting->GetMotionGroupName(i);
-        ReleaseMotionGroup(group);
+        for (csmInt32 i = 0; i < _modelSetting->GetMotionGroupCount(); i++)
+        {
+            const csmChar *group = _modelSetting->GetMotionGroupName(i);
+            ReleaseMotionGroup(group);
+        }
+        delete _modelSetting;
+        _modelSetting = nullptr;
     }
-    delete _modelSetting;
     delete _extraFileManager;
 }
 
@@ -82,6 +86,11 @@ void LAppModel::LoadAssets(const csmChar *dir, const csmChar *fileName)
     csmSizeInt size;
     csmString path = csmString(dir) + fileName;
     csmByte *buffer = CreateBuffer(path.GetRawString(), &size);
+    if (buffer == nullptr)
+    {
+        LAppPal::PrintLogLn("Failed to load model setting file: %s", fileName);
+        return;
+    }
     ICubismModelSetting *setting = new CubismModelSettingJson(buffer, size);
     DeleteBuffer(buffer, path.GetRawString());
     SetupModel(setting);

@@ -10,11 +10,9 @@
 NotificationWidget *NotificationWidget::m_instance = nullptr;
 
 NotificationWidget *NotificationWidget::instance() {
-    if (m_instance) {
-        delete m_instance;
-        m_instance = nullptr;
-    }
-    return new NotificationWidget();
+    if (!m_instance)
+        m_instance = new NotificationWidget();
+    return m_instance;
 }
 
 void NotificationWidget::showNotification(
@@ -23,17 +21,13 @@ void NotificationWidget::showNotification(
     int duration,
     MessageType type,
     std::function<void()> clickCallback) {
-    // 获取实例
-    NotificationWidget *inst = instance();
-
     // 如果当前是UI线程,直接调用
     if (QThread::currentThread() == QApplication::instance()->thread()) {
-        inst->showNotificationInternal(title, message, duration, type, clickCallback);
+        instance()->showNotificationInternal(title, message, duration, type, clickCallback);
     } else {
-        // 否则安排到UI线程执行
-        // 注意:不要在Lambda中再次调用instance()
-        QMetaObject::invokeMethod(inst, [inst, title, message, duration, type, clickCallback]() {
-            inst->showNotificationInternal(title, message, duration, type, clickCallback);
+        // 否则安排到UI线程执行（实例也在UI线程创建，保证线程亲和性）
+        QMetaObject::invokeMethod(QApplication::instance(), [title, message, duration, type, clickCallback]() {
+            instance()->showNotificationInternal(title, message, duration, type, clickCallback);
         }, Qt::QueuedConnection);
     }
 }

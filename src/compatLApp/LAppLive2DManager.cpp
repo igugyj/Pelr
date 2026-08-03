@@ -11,6 +11,7 @@
 #include "LAppModel.hpp"
 #include "LAppView.hpp"
 #include "data.hpp" // DataManager
+#include "ExtraMotionManager.h"
 #include <QFileInfo>
 #include <QDebug>
 
@@ -142,6 +143,7 @@ void LAppLive2DManager::ReleaseAllModel()
     for (csmUint32 i = 0; i < _models.GetSize(); ++i)
         delete _models[i];
     _models.Clear();
+    ExtraMotionManager::getInstance()->setModel(nullptr);
 }
 
 void LAppLive2DManager::SetRenderTargetSize(csmUint32 width, csmUint32 height)
