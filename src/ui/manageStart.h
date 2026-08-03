@@ -4,6 +4,7 @@
 
 #include <QWidget>
 #include <QStandardItemModel>
+#include <QPersistentModelIndex>
 #include "editor.h"
 #include "data.hpp"
 #include <QList>
@@ -55,7 +56,7 @@ protected slots:
 private:
     QString currentCategory; // 当前选中项的分类
     QString currentName;     // 当前选中项的名称
-    int currentRow;          // 当前选中项的行号
+    QPersistentModelIndex currentEditIndex; // 当前编辑项的持久索引（排序/移动后仍可定位）
     Ui::manageStart *ui;
 };
 

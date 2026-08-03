@@ -250,9 +250,10 @@ void todoWidget::deleteSelectedItem(QTableView *view)
     // 删除所有选中的行
     for (int row : rows)
     {
-        // 获取整行数据
+        // takeRow 已从 model 移除该行并转移所有权，需自行 delete 释放
         QList<QStandardItem *> rowItems = model->takeRow(row);
-        model->removeRow(row);
+        for (QStandardItem *item : rowItems)
+            delete item;
     }
     qDebug() << "[TODO] Count of deleted items:" << selectedRows.size();
 
