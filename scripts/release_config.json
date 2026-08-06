@@ -1,0 +1,162 @@
+{
+  "project": {
+    "name": "Pelr",
+    "author": "SY Cheng",
+    "homepage": "https://github.com/igugyj/Pelr"
+  },
+  "paths": {
+    "build_dir": "build/Release",
+    "release_dir": "Release",
+    "output": "NOTICE",
+    "licenses_dir": "licenses"
+  },
+  "release": {
+    "wipe_target_first": true
+  },
+  "clean": {
+    "run": true,
+    "dirs": [
+      "*_autogen",
+      ".qt",
+      ".cmake",
+      "CMakeFiles",
+      "log",
+      "user",
+      "voice_files",
+      ".lupdate",
+      "_deps",
+      "FluentUIStylePlugin-prefix"
+    ],
+    "files": [
+      "*.a",
+      "cmake_install.cmake",
+      "CMakeCache.txt",
+      "compile_commands.json",
+      "Makefile",
+      "qrc_Resource.cpp",
+      "*.qm",
+      "*.h"
+    ]
+  },
+  "notice": {
+    "third_party_libs": [
+      {
+        "name": "Qt",
+        "version": "6.10.1",
+        "license_type": "LGPLv3 (with GPLv2 as an alternative)",
+        "copyright": "The Qt Company Ltd.",
+        "homepage": "https://www.qt.io/",
+        "license_path": "",
+        "extra_notes": "This software dynamically links to Qt libraries.\nYou may obtain the source code of Qt and its full license texts from https://www.qt.io/."
+      },
+      {
+        "name": "Live2D Cubism Native Framework",
+        "version": "5-r.5",
+        "license_type": "Live2D Open Software License",
+        "copyright": "Live2D Inc.",
+        "homepage": "https://www.live2d.com/",
+        "license_path": "thirdParty/CubismNativeFramework/LICENSE.md",
+        "extra_notes": "If your annual revenue exceeds 10 million JPY, a separate Cubism SDK Release License is required.\nSee https://www.live2d.com/en/download/cubism-sdk/release-license/"
+      },
+      {
+        "name": "Live2D Cubism Core",
+        "version": "Included with SDK",
+        "license_type": "Live2D Proprietary Software License",
+        "copyright": "Live2D Inc.",
+        "homepage": "https://www.live2d.com/",
+        "license_path": "",
+        "extra_notes": "Cubism Core is under a proprietary license. It must not be redistributed in public repositories.\nObtain it from the official Live2D SDK. License text:\nhttps://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html"
+      },
+      {
+        "name": "GLEW",
+        "version": "2.1.0",
+        "license_type": "Modified BSD License",
+        "copyright": "Milan Ikits, Marcelo E. Magallon, Lev Povalahev",
+        "homepage": "http://glew.sourceforge.net/",
+        "license_path": "thirdParty/glew/LICENSE.txt",
+        "extra_notes": ""
+      },
+      {
+        "name": "GLFW",
+        "version": "3.4.0",
+        "license_type": "zlib/libpng License",
+        "copyright": "Marcus Geelnard, Camilla L\u00f6wy",
+        "homepage": "https://www.glfw.org/",
+        "license_path": "thirdParty/glfw/LICENSE.md",
+        "extra_notes": ""
+      },
+      {
+        "name": "kissfft",
+        "version": "Latest",
+        "license_type": "BSD-3-Clause",
+        "copyright": "Mark Borgerding",
+        "homepage": "https://github.com/mborgerding/kissfft",
+        "license_path": "thirdParty/kissfft/COPYING",
+        "extra_notes": ""
+      },
+      {
+        "name": "miniaudio",
+        "version": "0.11.25",
+        "license_type": "Public Domain (www.unlicense.org) & MIT No Attribution",
+        "copyright": "David Reid",
+        "homepage": "https://github.com/mackron/miniaudio",
+        "license_path": "thirdParty/miniaudio/LICENSE",
+        "extra_notes": ""
+      },
+      {
+        "name": "stb",
+        "version": "Latest",
+        "license_type": "MIT / Public Domain",
+        "copyright": "Sean Barrett",
+        "homepage": "https://github.com/nothings/stb",
+        "license_path": "",
+        "extra_notes": "Each stb header file contains its own license notice at the top, typically public domain\nor the MIT License. Refer to the individual file for exact terms."
+      },
+      {
+        "name": "VOICEVOX CORE",
+        "version": "0.16.4",
+        "license_type": "MIT (with additional terms)",
+        "copyright": "Hiroshiba Kazuyuki",
+        "homepage": "https://github.com/VOICEVOX/voicevox_core",
+        "license_path": "thirdParty/voicevox_core/c_api/LICENSE",
+        "extra_notes": "YOU MUST INCLUDE THE CREDIT 'VOICEVOX: Hiroshiba Kazuyuki' when using the generated audio.\nAdditional terms: see thirdParty/voicevox_core/c_api/TERMS.txt"
+      },
+      {
+        "name": "ONNX Runtime",
+        "version": "Included with voicevox_core",
+        "license_type": "MIT (with VOICEVOX additional terms)",
+        "copyright": "Microsoft Corporation",
+        "homepage": "https://onnxruntime.ai/",
+        "license_path": "thirdParty/voicevox_core/onnxruntime/TERMS.txt",
+        "extra_notes": ""
+      },
+      {
+        "name": "Maple Mono (Maple Font)",
+        "version": "V7",
+        "license_type": "SIL Open Font License 1.1",
+        "copyright": "The Maple Mono Project Authors",
+        "homepage": "https://github.com/subframe7536/maple-font",
+        "license_path": "public/font/OFL.txt",
+        "extra_notes": ""
+      },
+      {
+        "name": "FluentUIStyle",
+        "version": "Latest",
+        "license_type": "MIT License",
+        "copyright": "XuHongYun-ChuJian",
+        "homepage": "https://github.com/XHY-ChuJian/FluentUIStyle",
+        "license_path": "thirdParty/FluentUIStyle/LICENSE",
+        "extra_notes": ""
+      },
+      {
+        "name": "IconaMoon",
+        "version": "1.1",
+        "license_type": "Free for any use",
+        "copyright": "Dariush HPG",
+        "homepage": "https://github.com/dariushhpg1/IconaMoon",
+        "license_path": "",
+        "extra_notes": "The README states: 'IconaMoon is totally free and you can do whatever you want with it. Take a copy and make it your own.'"
+      }
+    ]
+  }
+}

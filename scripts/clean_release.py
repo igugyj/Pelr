@@ -1,56 +1,15 @@
 #!/usr/bin/env python3
 """
-Clean build artifacts from release/ directory.
-Edit the CONFIG section below to customize rules.
+清理发布目录中的构建残留（从 scripts/release_config.json 读取规则）。
+配置字段：paths.release_dir（目标目录）、clean.run / clean.dirs / clean.files。
+clean.run 为 false 时仅预览（dry-run）。返回 True 表示清理流程成功执行（含预览）。
 """
 
+import fnmatch
 import os
 import shutil
-from pathlib import Path
 
-# ============================================================
-# CONFIG — 编辑此处自定义清理规则
-# ============================================================
-
-RELEASE_DIR = Path(__file__).resolve().parent.parent / "release"
-
-# False = 仅预览（dry-run），True = 执行删除
-RUN = True
-
-# 要删除的目录（glob 模式）
-DIRS = [
-    "*_autogen",
-    ".qt",
-    ".cmake",
-    "CMakeFiles",
-    "log",
-    "user",
-    "voice_files",
-    ".lupdate",
-    "_deps",  # FluentUIStyle 构建树
-    "FluentUIStylePlugin-prefix",  # ExternalProject 暂存目录
-]
-
-# 要删除的文件（glob 模式）
-FILES = [
-    "*.a",
-    "cmake_install.cmake",
-    "CMakeCache.txt",
-    "compile_commands.json",
-    "Makefile",
-    "qrc_Resource.cpp",
-    "Resource.qrc.depends",
-    "*.qm",
-    "*.h",
-]
-
-# 用户自定义规则（追加到此列表即可）
-EXTRA_DIRS = []
-EXTRA_FILES = []
-
-# ============================================================
-# 清理逻辑
-# ============================================================
+from release_config import load_config, find_project_root, resolve_path
 
 
 def fmt_size(size: int) -> str:
@@ -62,58 +21,72 @@ def fmt_size(size: int) -> str:
         return f"{size / 1024 / 1024:.1f} MB"
 
 
-def calc_dir_size(path: Path) -> int:
+def calc_dir_size(path: str) -> int:
     total = 0
-    for f in path.rglob("*"):
-        if f.is_file():
-            total += f.stat().st_size
+    for root, _dirs, files in os.walk(path):
+        for f in files:
+            full = os.path.join(root, f)
+            total += os.path.getsize(full)
     return total
 
 
-def main():
-    if not RELEASE_DIR.is_dir():
-        print(f"[ERROR] release/ directory not found: {RELEASE_DIR}")
-        return
+def clean_release() -> bool:
+    """读取配置并清理发布目录；返回 True 表示流程执行成功（非目标目录缺失或异常）。"""
+    config = load_config()
+    release_dir = resolve_path(find_project_root(), config["paths"]["release_dir"])
 
-    mode = "DRY-RUN" if not RUN else "DELETE"
-    print(f"[{mode}] Cleaning: {RELEASE_DIR}")
+    if not os.path.isdir(release_dir):
+        print(f"[ERROR] release directory not found: {release_dir}")
+        return False
+
+    clean_cfg = config["clean"]
+    run = bool(clean_cfg.get("run", True))
+    dirs = clean_cfg.get("dirs", [])
+    files = clean_cfg.get("files", [])
+
+    mode = "DRY-RUN" if not run else "DELETE"
+    print(f"[{mode}] Cleaning: {release_dir}")
     print()
-
-    all_dirs = DIRS + EXTRA_DIRS
-    all_files = FILES + EXTRA_FILES
 
     total_saved = 0
     total_items = 0
 
     # 清理目录
-    for pattern in all_dirs:
-        for entry in RELEASE_DIR.glob(pattern):
-            if entry.is_dir():
-                size = calc_dir_size(entry)
-                total_saved += size
-                total_items += 1
-                print(f"  [dir]  {entry.name}  ({fmt_size(size)})")
-                if RUN:
-                    shutil.rmtree(entry, ignore_errors=True)
+    for pattern in dirs:
+        for entry in os.scandir(release_dir):
+            if not entry.is_dir():
+                continue
+            if not fnmatch.fnmatch(entry.name, pattern):
+                continue
+            size = calc_dir_size(entry.path)
+            total_saved += size
+            total_items += 1
+            print(f"  [dir]  {entry.name}  ({fmt_size(size)})")
+            if run:
+                shutil.rmtree(entry.path, ignore_errors=True)
 
     # 清理文件
-    for pattern in all_files:
-        for entry in RELEASE_DIR.glob(pattern):
-            if entry.is_file():
-                size = entry.stat().st_size
-                total_saved += size
-                total_items += 1
-                print(f"  [file] {entry.name}  ({fmt_size(size)})")
-                if RUN:
-                    entry.unlink(missing_ok=True)
+    for pattern in files:
+        for entry in os.scandir(release_dir):
+            if not entry.is_file():
+                continue
+            if not fnmatch.fnmatch(entry.name, pattern):
+                continue
+            size = entry.stat().st_size
+            total_saved += size
+            total_items += 1
+            print(f"  [file] {entry.name}  ({fmt_size(size)})")
+            if run:
+                os.remove(entry.path)
 
     print()
     if total_items == 0:
         print("Nothing to clean.")
     else:
-        verb = "Deleted" if RUN else "Would delete"
+        verb = "Deleted" if run else "Would delete"
         print(f"{verb} {total_items} items, freed {fmt_size(total_saved)}.")
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(0 if clean_release() else 1)
