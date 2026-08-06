@@ -14,7 +14,7 @@
 #include <QReadWriteLock>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.24"
+#define VERSION "v0.7.25"
 
 enum TrayIconMode : int
 {
@@ -313,11 +313,16 @@ public:
         }
         writeJsonFile(filename, doc);
         if constexpr (std::is_same_v<T, QList<MenuData>>)
-            signMenuData(); // H15: 保存菜单后立即重新签名
+        {
+            const QList<MenuData> snapshot = data; // 拷贝给子线程，避免跨线程读共享状态
+            wl.unlock();                           // 菜单文件已落盘，签名改为后台执行，不再阻塞 UI
+            scheduleMenuResign(snapshot);
+        }
     }
 
-    // H15: 菜单数据签名/验签（HMAC-SHA256 + 逐条目文件 SHA-256，DPAPI 加密存储）
-    void signMenuData();
+    // H15: 菜单数据签名/验签（HMAC-SHA256（密钥由机器标识派生）+ 逐条目文件 SHA-256）
+    void signMenuData(const QList<MenuData> &items, int gen);
+    static void scheduleMenuResign(const QList<MenuData> &items);
     bool verifyMenuData(bool *jsonOk = nullptr, QStringList *failedFiles = nullptr);
 
     void writeData(ToDoSettingData setting);

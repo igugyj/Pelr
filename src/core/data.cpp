@@ -8,6 +8,8 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QSysInfo>
+#include <QtConcurrent>
+#include <atomic>
 
 bool DataManager::writeJsonFile(const QString &filePath, const QJsonDocument &doc)
 {
@@ -64,25 +66,33 @@ QByteArray menuHmacKey()
     }();
     return key;
 }
+
+// 签名代际计数：快速连续保存时只落最新一份，防止旧任务覆盖新签名
+std::atomic<int> g_sigGeneration{0};
 } // namespace
 
-void DataManager::signMenuData()
+void DataManager::signMenuData(const QList<MenuData> &items, int gen)
 {
-    QFile f(FilePaths.menuDataFile);
-    if (!f.open(QIODevice::ReadOnly))
+    QByteArray jsonBytes;
     {
-        qCritical() << "[Data] signMenuData: cannot read" << FilePaths.menuDataFile;
-        return;
+        QFile f(FilePaths.menuDataFile); // 块作用域：读完即关，避免句柄占用影响后续写入
+        if (!f.open(QIODevice::ReadOnly))
+        {
+            qCritical() << "[Data] signMenuData: cannot read" << FilePaths.menuDataFile;
+            return;
+        }
+        jsonBytes = f.readAll();
     }
-    const QByteArray jsonBytes = f.readAll();
     const QByteArray key = menuHmacKey();
 
     QByteArray jsonSalt;
-    QFile sigFile(FilePaths.menuSigFile);
-    if (sigFile.open(QIODevice::ReadOnly))
     {
-        QJsonObject obj = QJsonDocument::fromJson(sigFile.readAll()).object();
-        jsonSalt = QByteArray::fromBase64(obj.value("jsonSalt").toString().toUtf8());
+        QFile sigFile(FilePaths.menuSigFile); // 块作用域：读完即关，否则 QSaveFile 覆盖会被只读句柄阻塞
+        if (sigFile.open(QIODevice::ReadOnly))
+        {
+            QJsonObject obj = QJsonDocument::fromJson(sigFile.readAll()).object();
+            jsonSalt = QByteArray::fromBase64(obj.value("jsonSalt").toString().toUtf8());
+        }
     }
     if (jsonSalt.size() != 16)
     {
@@ -95,7 +105,7 @@ void DataManager::signMenuData()
                                                                  key, QCryptographicHash::Sha256);
 
     QJsonArray filesArr;
-    for (const MenuData &item : cached_menu_data)
+    for (const MenuData &item : items)
     {
         if (item.path.isEmpty() || isUrlPath(item.path))
             continue;
@@ -111,6 +121,7 @@ void DataManager::signMenuData()
             for (int i = 0; i < 16; ++i)
                 salt[i] = static_cast<char>(QRandomGenerator::system()->bounded(256));
             hash = QCryptographicHash::hash(salt + itemFile.readAll(), QCryptographicHash::Sha256);
+            itemFile.close();
         }
         else
         {
@@ -129,13 +140,28 @@ void DataManager::signMenuData()
     payloadObj["json"] = QString::fromLatin1(jsonHmac.toBase64());
     payloadObj["files"] = filesArr;
 
+    if (gen != g_sigGeneration)
+        return; // 陈旧任务：已有更新的保存，丢弃，避免旧签名覆盖新签名
+
+    const QByteArray signedBytes = QJsonDocument(payloadObj).toJson();
     QSaveFile sf(FilePaths.menuSigFile);
-    if (!sf.open(QIODevice::WriteOnly) || sf.write(QJsonDocument(payloadObj).toJson()) < 0 || !sf.commit())
+    if (!sf.open(QIODevice::WriteOnly) || sf.write(signedBytes) < 0 || !sf.commit())
     {
-        qCritical() << "[Data] signMenuData: failed to write signature file";
+        qCritical() << "[Data] signMenuData: failed to write signature file" << FilePaths.menuSigFile;
         return;
     }
-    qDebug() << "[Data] signMenuData: signed" << filesArr.size() << "files";
+    qDebug() << "[Data] signMenuData: rewrote signature file"
+             << QFileInfo(FilePaths.menuSigFile).absoluteFilePath() << ","
+             << signedBytes.size() << "bytes," << filesArr.size() << "files signed";
+}
+
+// 后台异步写签：保存路径调用，避免哈希大文件阻塞 UI 线程
+void DataManager::scheduleMenuResign(const QList<MenuData> &items)
+{
+    const int gen = ++g_sigGeneration;
+    QtConcurrent::run([items, gen]() {
+        DataManager::instance().signMenuData(items, gen);
+    });
 }
 
 bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
@@ -156,9 +182,9 @@ bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
     QFile sigFile(FilePaths.menuSigFile);
     if (!sigFile.open(QIODevice::ReadOnly))
     {
-        // TOFU：升级后首次启动无签名文件 → 信任当前菜单并生成签名
+        // TOFU：升级后首次启动无签名文件 → 生成机器密钥签名（信任当前菜单）
         qDebug() << "[Data] verifyMenuData: no signature file, signing current menu (TOFU)";
-        signMenuData();
+        signMenuData(getMenuData(), ++g_sigGeneration);
         if (jsonOk)
             *jsonOk = true;
         return true;
@@ -234,6 +260,8 @@ bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
             allOk = false;
         }
     }
+    if (!allOk && failedFiles && !failedFiles->isEmpty())
+        qWarning() << "[Data] verifyMenuData: changed files:" << failedFiles->join(", ");
     return allOk;
 }
 
