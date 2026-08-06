@@ -28,7 +28,7 @@ Source files use `file(GLOB ...)` — **re-run cmake configure** after adding ne
 - `src/model/` — Live2D model extension (extra motions, file management).
 - `src/ui/` — Qt `.ui` forms + manual widgets. AUTOUIC searches here.
 - `scripts/` — 发布流程 `release.py`（①`generate_notice.py` 生成 NOTICE → ②复制构建产物 → ③`clean_release.py` 清理残留）；`setup_glew_glfw.bat`。
-- `scripts/release_config.json` — 三脚本次共享的外部配置：路径（`paths.build_dir`/`release_dir`/`licenses_dir`）、`clean.run`（false=清理 dry-run）、`notice.third_party_libs` 清单。脚本内不硬编码配置。
+- `scripts/release_config.json` — 三脚本次共享的外部配置：路径（`paths.build_dir`/`release_dir`/`licenses_dir`）、`clean.run`（false=清理 dry-run）、`release.copy_files`（随产物复制进 Release 根的配套文件/目录）、`notice.third_party_libs` 清单。脚本内不硬编码配置。
 - `licenses/` — NOTICE 许可证全文模板（`MIT.txt`、`BSD-3-Clause.txt`、`ONNX-Runtime-MIT.txt`）。
 - `thirdParty/` — git submodules + downloaded SDKs. See `.gitmodules`. `Live2DCubismCore.dll` NOT in repo (must download).
 

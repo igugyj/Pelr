@@ -11,7 +11,16 @@
     "licenses_dir": "licenses"
   },
   "release": {
-    "wipe_target_first": true
+    "wipe_target_first": true,
+    "copy_files": [
+      "LICENSE",
+      "NOTICE",
+      "README.md",
+      "SECURITY.md",
+      "SUPPORT.md",
+      "THANKS.md",
+      "screenshots"
+    ]
   },
   "clean": {
     "run": true,
@@ -34,6 +43,7 @@
       "compile_commands.json",
       "Makefile",
       "qrc_Resource.cpp",
+      "*.qrc.depends",
       "*.qm",
       "*.h"
     ]
