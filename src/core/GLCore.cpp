@@ -88,7 +88,7 @@ GLCore::GLCore(QWidget *parent) : QOpenGLWidget(parent)
     resize(4 * step, 3 * step);
     initContextMenu();
     overlay->show();
-    move(1400, 300);
+    resetLocation();
     retranslateUI();
 }
 
