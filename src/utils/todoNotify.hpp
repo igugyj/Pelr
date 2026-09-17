@@ -1,101 +1,155 @@
-
 #pragma once
 
+#include <QDate>
 #include <QDateTime>
-#include "data.hpp"
+#include <QSet>
+#include <QString>
+
 #include "BubbleBox.h"
-#include <QList>
 #include "NotificationWidget.h"
+#include "data.hpp"
 
 class TodoNotify : public QObject
 {
     Q_OBJECT
 
-    TodoNotify() = default;                             // 私有构造函数
-    ~TodoNotify() = default;                            // 私有析构函数
-    TodoNotify(const TodoNotify &) = delete;            // 删除拷贝构造函数
-    TodoNotify &operator=(const TodoNotify &) = delete; // 删除赋值运算符
+    TodoNotify() = default;
+    ~TodoNotify() = default;
+    TodoNotify(const TodoNotify &) = delete;
+    TodoNotify &operator=(const TodoNotify &) = delete;
 
 public:
-    QString newest_title = "";
-
     static TodoNotify &instance()
     {
-        static TodoNotify instance;
-        return instance;
+        static TodoNotify inst;
+        return inst;
     }
 
-    // 不会修改数据，只读取
+    // 遍历当前数据，对「刚好到点」的条目发通知（同一条只发一次）
     void todoNotify()
     {
-        // 加载数据
-        QList<TodoData> data = DataManager::instance().todo_data;          // first
-        auto todo_setting_data = DataManager::instance().getTodoSetting(); // second
-        bool is_notify = todo_setting_data.is_show_todo;                   // second
-        bool is_notify_by_tray = todo_setting_data.is_notify_tray;         // second
-        // 遍历比较数据的时间
-        const QString now = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm");
+        clearIfNewDay();
+
+        // 值拷贝：迭代期间数据可能被其它线程/定时器修改
+        const QList<TodoData> data = DataManager::instance().todo_data;
+        const auto setting = DataManager::instance().getTodoSetting();
+        if (!setting.is_show_todo)
+            return;
+
+        const QString now =
+            QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd HH:mm"));
+
         for (const TodoData &item : data)
         {
-            if (now == item.deadline && is_notify && item.title != newest_title && item.isNotify)
-            {
-                // 发送提醒
-                QString msg = tr("Your event \"%1\" is due soon! Please complete it.\n%2").arg(item.title).arg(now);
-                // 如果是待办事项，则显示气泡提示
-                if (item.category == 1)
-                    BubbleBox::instance()->textSet(msg);
-                // 如果选择了托盘提醒，则弹出提示
-                if (is_notify_by_tray)
-                {
-                    QMetaObject::invokeMethod(qApp, [msg]()
-                                              { NotificationWidget::showNotification(
-                                                    tr("Todo Reminder"), msg,
-                                                    10000, NotificationWidget::Information); }, Qt::QueuedConnection);
-                }
-                qDebug() << "[TODO] Notify:" << msg;
-                // 更新最新数据
-                newest_title = item.title;
-            }
+            if (!item.isNotify)
+                continue;
+            if (item.deadline != now) // 只处理恰好到点的这一分钟
+                continue;
+
+            const QString key = notifyKey(item);
+            if (m_notifiedKeys.contains(key))
+                continue; // 这一分钟内已提醒过
+
+            notifyItem(item, now, setting.is_notify_tray);
+            m_notifiedKeys.insert(key);
         }
     }
 
+    // 查询最近的一条未来待办
     static void askLatestNextEvent()
     {
-        // 加载数据
-        QList<TodoData> data = DataManager::instance().todo_data; // first
+        const QList<TodoData> data = DataManager::instance().todo_data;
         if (data.isEmpty())
         {
             qDebug() << "[TODO] TODO data is empty";
             BubbleBox::instance()->textSet(tr("No todo items yet!"));
             return;
         }
+
         const QDateTime now = QDateTime::currentDateTime();
+        const QString timeFormat = QStringLiteral("yyyy-MM-dd HH:mm");
+
         QDateTime nearestFuture;
         TodoData nearestEvent;
+        bool found = false;
 
-        const QString timeFormat = "yyyy-MM-dd HH:mm";
-        for (TodoData const &a : data)
+        for (const TodoData &a : data)
         {
-            QDateTime eventTime = QDateTime::fromString(a.deadline, timeFormat);
-            // 确保时间转换成功且是未来时间
-            if (eventTime.isValid() && eventTime > now)
+            const QDateTime eventTime = QDateTime::fromString(a.deadline, timeFormat);
+            if (!eventTime.isValid() || eventTime <= now)
+                continue;
+
+            if (!found || eventTime < nearestFuture)
             {
-                // 如果是第一个未来时间，或者比当前记录的更近
-                if (!nearestFuture.isValid() || eventTime < nearestFuture)
-                {
-                    nearestFuture = eventTime;
-                    nearestEvent = a;
-                }
+                nearestFuture = eventTime;
+                nearestEvent = a;
+                found = true;
             }
         }
-        qDebug() << "[TODO] nearestFuture:" << nearestFuture << "nearestEvent:" << nearestEvent.title;
-        if (nearestEvent.title.isEmpty())
+
+        qDebug() << "[TODO] nearestFuture:" << nearestFuture
+                 << "nearestEvent:" << nearestEvent.title;
+
+        if (!found)
         {
-            qInfo() << "[TODO] NearestEvent.title isEmpty";
+            qInfo() << "[TODO] no future todo";
             BubbleBox::instance()->textSet(tr("No recent todo items!"));
             return;
         }
-        QString rem = tr("The nearest todo item is \"%1\", deadline: %2").arg(nearestEvent.title).arg(nearestEvent.deadline);
+
+        const QString rem =
+            tr("The nearest todo item is \"%1\", deadline: %2")
+                .arg(nearestEvent.title, nearestEvent.deadline);
         BubbleBox::instance()->textSet(rem);
     }
+
+private:
+    // 业务键：deadline + title，用不可见字符做分隔，避免拼接歧义
+    static QString notifyKey(const TodoData &item)
+    {
+        return item.deadline + QLatin1Char('\x1f') + item.title;
+    }
+
+    // 跨天清理已通知记录
+    void clearIfNewDay()
+    {
+        const QDate today = QDate::currentDate();
+        if (today != m_lastDate)
+        {
+            m_notifiedKeys.clear();
+            m_lastDate = today;
+        }
+    }
+
+    // 真正的「弹通知」逻辑，集中在一处
+    void notifyItem(const TodoData &item, const QString &now, bool viaTray)
+    {
+        const QString msg =
+            tr("Your event \"%1\" is due soon! Please complete it.\n%2")
+                .arg(item.title, now);
+
+        // 待办事项 → 气泡提示
+        if (item.category == TodoCategory::todo)
+            BubbleBox::instance()->textSet(msg);
+
+        // 托盘提醒
+        if (viaTray)
+        {
+            const QString title = tr("Todo Reminder"); // 提前翻译，lambda 里不再调 tr
+            QMetaObject::invokeMethod(
+                qApp,
+                [title, msg]()
+                {
+                    NotificationWidget::showNotification(
+                        title, msg, 10000, NotificationWidget::Information);
+                },
+                Qt::QueuedConnection);
+        }
+
+        qDebug() << "[TODO] Notify:" << msg;
+    }
+
+private:
+    QSet<QString> m_notifiedKeys;            // 已通知过的业务键
+    QDate m_lastDate = QDate::currentDate(); // 用于跨天清理
 };

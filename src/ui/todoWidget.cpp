@@ -276,7 +276,7 @@ void todoWidget::loadAllData()
         QStandardItemModel *model = tv == ui->tableView ? model_todo : model_done;
         for (const TodoData &data : todo_data)
         {
-            if (data.category == (tv == ui->tableView ? 1 : 0))
+            if (data.category == (tv == ui->tableView ? TodoCategory::todo : TodoCategory::done))
             {
                 // 1为待办，0为已完成
                 QStandardItem *title = new QStandardItem(data.title);
@@ -306,7 +306,7 @@ void todoWidget::saveAllData()
         for (int i = 0; i < model->rowCount(); i++)
         {
             TodoData data;
-            data.category = model == model_todo ? 1 : 0; // 1为待办，0为已完成
+            data.category = model == model_todo ? TodoCategory::todo : TodoCategory::done; // 1为待办，0为已完成
             data.title = model->item(i, 0)->text();
             data.content = model->item(i, 1)->text(); // 可选
             data.deadline = model->item(i, 2)->text();

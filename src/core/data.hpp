@@ -14,7 +14,7 @@
 #include <QReadWriteLock>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.25"
+#define VERSION "v0.7.26"
 
 enum TrayIconMode : int
 {
@@ -34,7 +34,7 @@ struct filePaths
     QString llmConfigFile = "user/llmConfig.json";
     QString defaultTextFile = "assets/text/text.json";
     QString userTextFile = "user/text.json";
-    QString menuSigFile = "user/.menuSig";   // H15: 菜单 HMAC 签名（明文 JSON，密钥由机器标识派生）
+    QString menuSigFile = "user/.menuSig"; // H15: 菜单 HMAC 签名（明文 JSON，密钥由机器标识派生）
 };
 inline filePaths FilePaths;
 
@@ -108,6 +108,12 @@ struct LlamaData
     int maxContextMessages;
 };
 
+enum TodoCategory : int
+{
+    done = 0,
+    todo = 1
+};
+
 struct TodoData
 {
     int category;
@@ -116,6 +122,16 @@ struct TodoData
     QString deadline;
     QString remarks;
     bool isNotify;
+
+    bool operator==(const TodoData &other) const
+    {
+        return category == other.category && title == other.title && content == other.content && deadline == other.deadline && remarks == other.remarks && isNotify == other.isNotify;
+    }
+
+    bool operator!=(const TodoData &other) const
+    {
+        return !(*this == other);
+    }
 };
 
 struct MenuData

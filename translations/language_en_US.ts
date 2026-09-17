@@ -1150,28 +1150,28 @@ This will restore all options to defaults.</source>
         <translation type="vanished">The most recent todo item is &quot;%1&quot;, due at: %2</translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="43"/>
+        <location filename="../src/utils/todoNotify.hpp" line="128"/>
         <source>Your event &quot;%1&quot; is due soon! Please complete it.
 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="52"/>
+        <location filename="../src/utils/todoNotify.hpp" line="138"/>
         <source>Todo Reminder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="69"/>
+        <location filename="../src/utils/todoNotify.hpp" line="65"/>
         <source>No todo items yet!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="95"/>
+        <location filename="../src/utils/todoNotify.hpp" line="96"/>
         <source>No recent todo items!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="98"/>
+        <location filename="../src/utils/todoNotify.hpp" line="101"/>
         <source>The nearest todo item is &quot;%1&quot;, deadline: %2</source>
         <translation type="unfinished"></translation>
     </message>

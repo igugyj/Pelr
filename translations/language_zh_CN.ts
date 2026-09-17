@@ -608,12 +608,12 @@ Version: %2</translation>
     <message>
         <location filename="../src/core/GLCore.cpp" line="609"/>
         <source>menuData.json signature verification failed, auto-launch blocked. Please re-save the menu in Manage Start.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">menuData.json 签名验证失败，自动启动已被阻止。请在“管理启动”（Manage Start）中重新保存菜单。</translation>
     </message>
     <message>
         <location filename="../src/core/GLCore.cpp" line="619"/>
         <source>Some launch items were modified and skipped: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">部分启动项已被修改并跳过：%1</translation>
     </message>
 </context>
 <context>
@@ -958,29 +958,29 @@ This will restore all options to defaults.</source>
 <context>
     <name>TodoNotify</name>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="43"/>
+        <location filename="../src/utils/todoNotify.hpp" line="128"/>
         <source>Your event &quot;%1&quot; is due soon! Please complete it.
 %2</source>
         <translation>您的事件&quot;%1&quot;即将到期！请尽快完成。
 %2</translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="52"/>
+        <location filename="../src/utils/todoNotify.hpp" line="138"/>
         <source>Todo Reminder</source>
         <translation>待办提醒</translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="69"/>
+        <location filename="../src/utils/todoNotify.hpp" line="65"/>
         <source>No todo items yet!</source>
         <translation>暂无待办事项！</translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="95"/>
+        <location filename="../src/utils/todoNotify.hpp" line="96"/>
         <source>No recent todo items!</source>
         <translation>暂无近期待办事项！</translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="98"/>
+        <location filename="../src/utils/todoNotify.hpp" line="101"/>
         <source>The nearest todo item is &quot;%1&quot;, deadline: %2</source>
         <translation>最近的待办事项是&quot;%1&quot;，截止日期：%2</translation>
     </message>
