@@ -14,7 +14,7 @@
 #include <QReadWriteLock>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.28"
+#define VERSION "v0.7.29"
 
 enum TrayIconMode : int
 {
@@ -30,7 +30,8 @@ enum RandomSentenceMode : int
 enum ChatScenery : int
 {
     onModel = 1,
-    inUI = 2
+    inUI = 2,
+    bubble = 3
 };
 
 struct filePaths

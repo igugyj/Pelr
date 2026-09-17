@@ -1,65 +1,43 @@
-
 #include "logger.hpp"
-#include <QFile>
-#include <QTextStream>
+
 #include <QDateTime>
-#include <iostream>
 #include <QDir>
+#include <QFileInfo>
+#include <QTextStream>
 #include <QMutexLocker>
 
-// 定义日志文件路径
+#include <cstdio>
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 #define QT_LOG_FILE "log/Pelr_qt.log"
 
-// 定义全局变量（M12: 默认等级条件编译 —— Debug 构建 Debug，Release 构建 Warning）
-#ifdef CONSOLE
-LogLevel g_logLevel = LogLevel::Debug;
-#else
-LogLevel g_logLevel = LogLevel::Warning;
-#endif
+LogLevel g_logLevel = defaultLogLevel();
 QMutex g_logMutex;
 
-// 输出到控制台的宏（如果启用）
-#ifdef CONSOLE
-#define LOG_TO_CONSOLE(txt)               \
-    do                                    \
-    {                                     \
-        QMutexLocker locker(&g_logMutex); \
-        QTextStream out(stdout);          \
-        out << txt << Qt::endl;           \
-    } while (0)
-#else
-#define LOG_TO_CONSOLE(txt)
-#endif
-
-// 初始化日志文件
 void initLogFile()
 {
     QDir().mkpath("log");
 
     QFileInfo fileInfo(QT_LOG_FILE);
     if (fileInfo.exists())
-    {
         QFile::remove(QT_LOG_FILE);
-    }
 }
 
-// 设置日志等级
 void setLogLevel(LogLevel level)
 {
     QMutexLocker locker(&g_logMutex);
     g_logLevel = level;
-    // 测试输出，确认设置成功
-    std::cout << "setLogLevel called: new level = " << static_cast<int>(level) << std::endl;
 }
 
-// 获取当前日志等级
 LogLevel getLogLevel()
 {
     QMutexLocker locker(&g_logMutex);
     return g_logLevel;
 }
 
-// 将QtMsgType转换为自定义LogLevel
 static LogLevel qtMsgTypeToLogLevel(QtMsgType type)
 {
     switch (type)
@@ -79,63 +57,79 @@ static LogLevel qtMsgTypeToLogLevel(QtMsgType type)
     }
 }
 
-// 自定义消息处理函数（核心）
-void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+static const char *logLevelName(QtMsgType type)
 {
-    Q_UNUSED(context)
-
-    // 1. 加锁保证线程安全
-    QMutexLocker locker(&g_logMutex);
-
-    // 2. 转换日志类型，判断是否需要记录
-    LogLevel currentLevel = qtMsgTypeToLogLevel(type);
-    LogLevel filterLevel = g_logLevel; // 先读取到局部变量
-
-    // 3. 调试输出（测试时启用）
-    // std::cout << "Filter: current=" << static_cast<int>(currentLevel)
-    //           << ", filter=" << static_cast<int>(filterLevel) << std::endl;
-
-    // 4. 判断是否需要记录（只有当前等级 >= 过滤等级才记录）
-    if (static_cast<int>(currentLevel) < static_cast<int>(filterLevel))
-    {
-        return; // 不记录低于设置等级的日志
-    }
-    // 5. 拼接日志内容
-    QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
-    QString logTypeStr;
     switch (type)
     {
     case QtDebugMsg:
-        logTypeStr = "Debug";
-        break;
+        return "Debug";
     case QtInfoMsg:
-        logTypeStr = "Info";
-        break;
+        return "Info";
     case QtWarningMsg:
-        logTypeStr = "Warning";
-        break;
+        return "Warning";
     case QtCriticalMsg:
-        logTypeStr = "Critical";
-        break;
+        return "Critical";
     case QtFatalMsg:
-        logTypeStr = "Fatal";
-        break;
+        return "Fatal";
     default:
-        logTypeStr = "Unknown";
-        break;
+        return "Unknown";
     }
-    QString txt = QString("[%1] [%2]: %3").arg(logTime).arg(logTypeStr).arg(msg);
+}
 
-    // 6. 输出到控制台（如果启用）
-    LOG_TO_CONSOLE(txt);
-
-    // 7. 写入日志文件
-    QFile logFile(QT_LOG_FILE);
-    if (logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+static void writeToConsole(const QString &txt)
+{
+#ifdef Q_OS_WIN
+    HANDLE h = GetStdHandle(STD_ERROR_HANDLE);
+    DWORD mode = 0;
+    if (h != INVALID_HANDLE_VALUE && GetConsoleMode(h, &mode))
     {
-        QTextStream textStream(&logFile);
-
-        textStream << txt << Qt::endl;
-        logFile.close();
+        DWORD written = 0;
+        WriteConsoleW(h,
+                      reinterpret_cast<const wchar_t *>(txt.utf16()),
+                      static_cast<DWORD>(txt.size()),
+                      &written,
+                      nullptr);
+        WriteConsoleW(h, L"\n", 1, &written, nullptr);
+        return;
     }
+#endif
+    const QByteArray u = txt.toUtf8();
+    std::fwrite(u.constData(), 1, static_cast<size_t>(u.size()), stderr);
+    std::fputc('\n', stderr);
+    std::fflush(stderr);
+}
+
+static void writeToFile(const QString &txt)
+{
+    QFile logFile(QT_LOG_FILE);
+    if (!logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+        return;
+
+    QTextStream textStream(&logFile);
+    textStream.setEncoding(QStringConverter::Utf8);
+    textStream << txt << Qt::endl;
+}
+
+void messageHandler(QtMsgType type,
+                    const QMessageLogContext &context,
+                    const QString &msg)
+{
+    Q_UNUSED(context)
+
+    QMutexLocker locker(&g_logMutex);
+
+    if (static_cast<int>(qtMsgTypeToLogLevel(type)) < static_cast<int>(g_logLevel))
+        return;
+
+    const QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+    const QString txt = QString("[%1] [%2]: %3")
+                            .arg(logTime)
+                            .arg(QString::fromLatin1(logLevelName(type)))
+                            .arg(msg);
+
+#ifdef CONSOLE
+    writeToConsole(txt);
+#endif
+
+    writeToFile(txt);
 }

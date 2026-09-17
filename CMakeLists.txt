@@ -17,6 +17,11 @@ else()
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# 修复控制台乱码
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+endif()
+
 # 平台与标准设置
 if (WIN32)
     add_compile_definitions(UNICODE _UNICODE)   # Windows Unicode 支持

@@ -51,7 +51,7 @@ private:
     QString getPeriodText();
 
 public:
-    static constexpr int AI_RANDOM_ID = 3;
+    static constexpr int AI_RANDOM_ID = ChatScenery::bubble;
 
 public slots:
     void showTime();

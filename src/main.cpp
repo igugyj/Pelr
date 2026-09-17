@@ -4,7 +4,6 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
-
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -25,14 +24,16 @@ void initTranslator(QApplication &a, const QString &path);
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_WIN
-    // 将工作目录固定为 exe 所在目录，使所有相对路径（user/、assets/、log/ 等）
-    // 与启动时的 CWD 无关，防止从其他目录启动导致配置/启动项读取错位
     wchar_t exeBuf[MAX_PATH];
     DWORD exeLen = GetModuleFileNameW(nullptr, exeBuf, MAX_PATH);
     if (exeLen > 0 && exeLen < MAX_PATH)
     {
         QDir::setCurrent(QFileInfo(QString::fromWCharArray(exeBuf, exeLen)).absolutePath());
     }
+
+    SetConsoleOutputCP(CP_UTF8);
+    qDebug() << "[APP] code page after QApplication:" << GetConsoleOutputCP();
+
 #endif
 
     // ---- 基础初始化（应在 QApplication 之前完成，但注意不要依赖 QSettings 等） ----
@@ -40,15 +41,9 @@ int main(int argc, char *argv[])
     initLogFile();
     CrashHandler::install();
 
-#ifdef Q_OS_WIN
-    SetConsoleOutputCP(CP_UTF8);
-#endif
-
     setLogLevel(read_log_level());
 
-#ifndef CONSOLE // Release 模式（无控制台）才安装消息处理器
     qInstallMessageHandler(messageHandler);
-#endif
 
     QApplication app(argc, argv);
 
@@ -106,7 +101,6 @@ int main(int argc, char *argv[])
     {
         w.show();
     }
-
     return app.exec();
 }
 
