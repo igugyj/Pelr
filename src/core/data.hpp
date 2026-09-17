@@ -14,13 +14,23 @@
 #include <QReadWriteLock>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.27"
+#define VERSION "v0.7.28"
 
 enum TrayIconMode : int
 {
     TrayIcon_Static = 0,
     TrayIcon_Text = 1,
     TrayIcon_Gif = 2
+};
+enum RandomSentenceMode : int
+{
+    automation = 0,
+    click = 1
+};
+enum ChatScenery : int
+{
+    onModel = 1,
+    inUI = 2
 };
 
 struct filePaths

@@ -204,7 +204,7 @@ void GLCore::initContextMenu()
     // 聊天
     RandomSentenceButton = new QPushButton(tr("Say Something"), this);
     connect(RandomSentenceButton, &QPushButton::clicked, [&]()
-            { BubbleBox::instance()->RandomSentence(); });
+            { BubbleBox::instance()->RandomSentence(RandomSentenceMode::click); });
 
     // 启动 把Quick Tray的功能移植到这里
     QuickStartButton = new QPushButton(tr("Launch"), this);

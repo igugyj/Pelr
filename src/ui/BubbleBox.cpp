@@ -119,7 +119,7 @@ void BubbleBox::paintEvent(QPaintEvent *event)
     QLabel::paintEvent(event);
 }
 
-void BubbleBox::RandomSentence()
+void BubbleBox::RandomSentence(int mode)
 {
     const ConfigData basic = DataManager::instance().getBasicData();
     if (basic.isLLMGreeting && LlamaClient::instance()->isConfigured())
@@ -134,7 +134,16 @@ void BubbleBox::RandomSentence()
                 "Never mention that you are an AI or language model.\n"
                 "Match the language of your role description above.\n"),
             AI_RANDOM_ID);
-        setThinkingText();
+        if (mode == RandomSentenceMode::click)
+        {
+            // 点击按钮才使用思考文本（
+            qDebug() << "[BubbleBox] set thinking text by click";
+            setThinkingText();
+        }
+        else
+        {
+            qDebug() << "[BubbleBox] automation do not use thinking text";
+        }
         return;
     }
     qInfo() << "[BubbleBox] RandomSentence: falling back to file";
@@ -223,6 +232,7 @@ void BubbleBox::onRandomSentenceError(const QString &error, int id)
 void BubbleBox::setThinkingText()
 {
     fadeTimer->stop();
+    // 总开关判断在此生效
     if (!DataManager::instance().getBasicData().isShowThinkingBubble)
         return;
     setText(tr("In response..."));

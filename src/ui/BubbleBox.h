@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QElapsedTimer>
 #include "llamaclient.h"
+#include "data.hpp"
 
 class BubbleBox : public QLabel
 {
@@ -59,7 +60,7 @@ public slots:
 
     void textSet(const QString &text);
 
-    void RandomSentence();
+    void RandomSentence(int mode = RandomSentenceMode::automation);
 
     void onRandomSentenceAI(const QString &text, int id);
     void onRandomSentenceError(const QString &error, int id);

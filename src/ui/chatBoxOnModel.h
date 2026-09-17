@@ -2,6 +2,7 @@
 #pragma once
 #include <QLineEdit>
 #include "llamaclient.h"
+#include "data.hpp"
 
 class ChatBoxOnModel : public QLineEdit
 {
@@ -21,5 +22,5 @@ public:
     void onErrorOccurred(const QString &error, const int &id);
 
 private:
-    int ai_id = 1;
+    int ai_id = ChatScenery::onModel;
 };

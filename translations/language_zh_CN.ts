@@ -39,20 +39,20 @@ Match the language of your role description above.
 </translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="183"/>
-        <location filename="../src/ui/BubbleBox.cpp" line="189"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="192"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="198"/>
         <source>%1
 It&apos;s %2</source>
         <translation>%1
 现在是%2</translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="194"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="203"/>
         <source>It&apos;s %1</source>
         <translation>现在是%1</translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="228"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="238"/>
         <source>In response...</source>
         <translation>正在思考...</translation>
     </message>
@@ -148,48 +148,48 @@ Version: %2</translation>
     <name>DateTimePickerDialog</name>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="38"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="187"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="182"/>
         <source>Today</source>
         <translation>今天</translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="39"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="188"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="183"/>
         <source>Tomorrow</source>
         <translation>明天</translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="40"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="189"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="184"/>
         <source>Next Week</source>
         <translation>下周</translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="58"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="190"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="185"/>
         <source>Date:</source>
         <translation>日期：</translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="72"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="191"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="186"/>
         <source>Time:</source>
         <translation>时间：</translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="112"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="192"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="107"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="187"/>
         <source>Select Date:</source>
         <translation>选择日期：</translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="115"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="193"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="110"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="188"/>
         <source>Select Time:</source>
         <translation>选择时间：</translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="186"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="181"/>
         <source>Select Date and Time</source>
         <translation>选择日期和时间</translation>
     </message>
@@ -603,17 +603,17 @@ Version: %2</translation>
         <location filename="../src/core/GLCore.cpp" line="608"/>
         <location filename="../src/core/GLCore.cpp" line="618"/>
         <source>Pelr</source>
-        <translation type="unfinished">Pelr</translation>
+        <translation>Pelr</translation>
     </message>
     <message>
         <location filename="../src/core/GLCore.cpp" line="609"/>
         <source>menuData.json signature verification failed, auto-launch blocked. Please re-save the menu in Manage Start.</source>
-        <translation type="unfinished">menuData.json 签名验证失败，自动启动已被阻止。请在“管理启动”（Manage Start）中重新保存菜单。</translation>
+        <translation>menuData.json 签名验证失败，自动启动已被阻止。请在“管理启动”（Manage Start）中重新保存菜单。</translation>
     </message>
     <message>
         <location filename="../src/core/GLCore.cpp" line="619"/>
         <source>Some launch items were modified and skipped: %1</source>
-        <translation type="unfinished">部分启动项已被修改并跳过：%1</translation>
+        <translation>部分启动项已被修改并跳过：%1</translation>
     </message>
 </context>
 <context>

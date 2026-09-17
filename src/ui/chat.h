@@ -4,6 +4,7 @@
 
 #include <QWidget>
 #include "llamaclient.h"
+#include "data.hpp"
 
 namespace Ui
 {
@@ -32,7 +33,7 @@ private slots:
     void onErrorOccurred(const QString &error, const int &id);
 
 private:
-    int ai_id = 2;
+    int ai_id = ChatScenery::inUI;
     Ui::chat *ui;
     int currentY;
     int standardHeight;

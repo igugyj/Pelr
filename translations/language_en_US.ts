@@ -47,19 +47,19 @@ Match the language of your role description above.
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="183"/>
-        <location filename="../src/ui/BubbleBox.cpp" line="189"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="192"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="198"/>
         <source>%1
 It&apos;s %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="194"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="203"/>
         <source>It&apos;s %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="228"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="238"/>
         <source>In response...</source>
         <translation>In response...</translation>
     </message>
@@ -248,48 +248,48 @@ Version: %2</source>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="38"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="187"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="182"/>
         <source>Today</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="39"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="188"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="183"/>
         <source>Tomorrow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="40"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="189"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="184"/>
         <source>Next Week</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="58"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="190"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="185"/>
         <source>Date:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="72"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="191"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="186"/>
         <source>Time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="112"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="192"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="107"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="187"/>
         <source>Select Date:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="115"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="193"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="110"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="188"/>
         <source>Select Time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="186"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="181"/>
         <source>Select Date and Time</source>
         <translation type="unfinished"></translation>
     </message>
