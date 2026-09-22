@@ -192,7 +192,12 @@ bool VoicevoxTTS::loadModel(const QString &modelPath)
     d->hasModelId = true;
     qDebug() << "[VoicevoxTTS] New model ID obtained";
 
-    rc = voicevox_synthesizer_load_voice_model(d->synthesizer, d->model);
+    VoicevoxLoadVoiceModelOptions loadOpts = voicevox_make_default_load_voice_model_options();
+    // 可选：根据需求设置重复模型加载策略
+    // loadOpts.on_existing = VOICEVOX_ON_EXISTING_VOICE_MODEL_ID_RELOAD; // 重新加载并释放旧内存
+    // loadOpts.on_existing = VOICEVOX_ON_EXISTING_VOICE_MODEL_ID_SKIP;   // 跳过，不重复加载
+    // loadOpts.on_existing = VOICEVOX_ON_EXISTING_VOICE_MODEL_ID_ERROR;  // 默认，报错
+    rc = voicevox_synthesizer_load_voice_model(d->synthesizer, d->model, loadOpts);
     if (rc != VOICEVOX_RESULT_OK)
     {
         qWarning() << "[VoicevoxTTS] Load voice model failed, code:" << rc;

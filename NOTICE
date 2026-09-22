@@ -204,7 +204,7 @@ Each stb header file contains its own license notice at the top, typically publi
 or the MIT License. Refer to the individual file for exact terms.
 
 --- Library 9: VOICEVOX CORE ---
-Version: 0.16.4
+Version: 0.17.0 
 License Type: MIT (with additional terms)
 Copyright (c) Hiroshiba Kazuyuki
 Website: https://github.com/VOICEVOX/voicevox_core

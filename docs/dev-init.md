@@ -18,7 +18,7 @@
 
 ## 依赖情况
 
-- voicevox_core 0.16.4
+- voicevox_core 0.17.0
 - CubismSdkForNative-5-r.5
 
 其他依赖请查看git子模块情况，如有新提交，请不要直接拉取，应当在测试通过后更新，不保证最新依赖能成功工作。
@@ -65,7 +65,7 @@ git clone --depth 1 --recursive https://github.com/igugyj/Pelr.git
 
 参考 [VoiceVox 配置指南](app-voicevox.md)。
 
-1. 前往 [voicevox_core 0.16.4 发布页面](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.16.4)
+1. 前往 [voicevox_core 0.17.0  发布页面](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0)
 2. 下载 `download-windows-x64.exe`
 3. 运行该程序，将生成的 `voicevox_core` 文件夹按以下结构放置：
 
