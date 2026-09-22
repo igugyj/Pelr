@@ -33,10 +33,7 @@
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QMetaObject>
-
-#define RECORD_FILE "user/record.dat"
-#define WINDOW_LOCATION_FILE "user/window_location.dat"
-#define TODO_FEATURE_MSG "暂时不支持这个功能哟，试试别的功能吧！"
+#include <QOpenGLContext>
 
 GLCore::GLCore(QWidget *parent) : QOpenGLWidget(parent)
 {
@@ -51,10 +48,6 @@ GLCore::GLCore(QWidget *parent) : QOpenGLWidget(parent)
     // keyCounterTimer = new QTimer();
     main_widget = new mainWidget();
     // main_widget->show();
-
-    // 读取数据
-    // recorder = new Recorder();
-    // recorder->readBinaryData(RECORD_FILE, keyCounter.first, keyCounter.second);
 
     // 窗口标志
     if (DataManager::instance().getBasicData().isTop)
@@ -376,14 +369,7 @@ void GLCore::connectSignals()
         qDebug() << "[GLCore] Random speech enabled";
         randomSentenceTimer->start(10 * 60 * 1000); // 3min
     }
-    /*
-        keyCounterTimer->setInterval(60000); // 1min
-        connect(keyCounterTimer, &QTimer::timeout, [&]() {
-                    recorder->writeBinaryData(RECORD_FILE, keyCounter.first, keyCounter.second);
-                }
-        );
-        keyCounterTimer->start();
-        */
+
     // 实时预览模型
     // load model //void SettingWidget::selectModelPath()
     //  connect(main_widget->Widget_Setting->ui->lineEdit, &QLineEdit::textChanged, this, &GLCore::loadModel);
@@ -471,7 +457,7 @@ void GLCore::switchListener()
 
 void GLCore::silentMode()
 {
-    if (isSilentMode)
+    if (isSilentMode) // 退出静默
     {
         show();
         timer->start();
@@ -482,6 +468,12 @@ void GLCore::silentMode()
             listener->startListening();
         qDebug() << "[GLCore] Silent mode off";
         isSilentMode = false;
+        if (m_glInitialized && context() && context()->isValid())
+        {
+            makeCurrent();
+            loadModel();
+            doneCurrent();
+        }
     }
     else
     {
@@ -494,6 +486,12 @@ void GLCore::silentMode()
         modelChatBox->hide();
         qDebug() << "[GLCore] Silent mode on";
         isSilentMode = true;
+        if (m_glInitialized && context() && context()->isValid())
+        {
+            makeCurrent();
+            LAppLive2DManager::GetInstance()->ReleaseAllModel();
+            doneCurrent();
+        }
     }
     TrayIcon::instance()->action_silentMode->setChecked(isSilentMode);
 }
@@ -687,12 +685,12 @@ void GLCore::saveWindowLocation()
     // 如果记录窗口位置选项关闭，则不保存
     if (!DataManager::instance().getBasicData().isRecordWindowLocation)
         return;
-    QFile file(WINDOW_LOCATION_FILE);
+    QFile file(FilePaths.windowLocationFile);
     if (!file.open(QIODevice::WriteOnly))
     {
         // 无法打开文件进行写入
         QMessageBox::critical(nullptr, "Error", "写入数据失败！");
-        qCritical() << "[GLCore] Write data failed: can not open file" << WINDOW_LOCATION_FILE;
+        qCritical() << "[GLCore] Write data failed: can not open file" << FilePaths.windowLocationFile;
         return;
     }
 
@@ -710,10 +708,10 @@ void GLCore::loadWindowLocation()
     // 如果记录窗口位置选项关闭，则不加载
     if (!DataManager::instance().getBasicData().isRecordWindowLocation)
         return;
-    QFile file(WINDOW_LOCATION_FILE);
+    QFile file(FilePaths.windowLocationFile);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << "[GLCore] Read data failed: can not open file" << WINDOW_LOCATION_FILE;
+        qDebug() << "[GLCore] Read data failed: can not open file" << FilePaths.windowLocationFile;
         return; // 文件不存在或无法打开，返回空列表
     }
     QDataStream in(&file);
@@ -843,6 +841,7 @@ void GLCore::wheelEvent(QWheelEvent *event)
 void GLCore::initializeGL()
 {
     LAppDelegate::GetInstance()->Initialize(this);
+    m_glInitialized = true;
 }
 
 void GLCore::paintGL()

@@ -72,6 +72,7 @@ private slots:
     void loadWindowLocation();
 
 private:
+    bool m_glInitialized = false;
     // buttons actions
     QPushButton *switchListenerButton;
     QPushButton *RandomSentenceButton;

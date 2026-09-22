@@ -46,6 +46,7 @@ struct filePaths
     QString defaultTextFile = "assets/text/text.json";
     QString userTextFile = "user/text.json";
     QString menuSigFile = "user/.menuSig"; // H15: 菜单 HMAC 签名（明文 JSON，密钥由机器标识派生）
+    QString windowLocationFile = "user/window_location.dat";
 };
 inline filePaths FilePaths;
 
