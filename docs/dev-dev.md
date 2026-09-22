@@ -1,5 +1,9 @@
 # 开发指引
 
+致开发者：通常最新的修改会提交到 [dev](https://github.com/igugyj/Pelr/tree/dev) 分支，只有稳定的 `release` 会 `merge` 到主分支上，想体验最新的功能请用dev分支。
+
+推荐使用VSCode搭配Qt，CMake，C++插件作为本项目默认IDE。
+
 ## Python
 
 自 `0.4.1` 起，Python TTS 服务器已从主项目分离，可作为可选组件进行配置。
@@ -12,14 +16,18 @@
 
 - `FrameworkShaders`
 - `assets`
-- `lib`
+- `public`
 - `Resources`
 - `SampleShaders`
 - `thirdParty/`
   - `Core`
-  - `Framework`
+  - `CubismNativeFramework`
   - `glew`
   - `stb`
+  - `FluentUIStyle`
+  - `kissfft`
+  - `miniaudio`
+  - `voicevox_core`
 
 ## 发布版本配置
 

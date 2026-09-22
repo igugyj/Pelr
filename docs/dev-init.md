@@ -214,3 +214,80 @@ thirdParty/scripts/setup_glew_glfw.bat
 ![alt text](assets/image-30.png)
 
 </details>
+
+## 发布
+
+使用release模式构建后，需调整VSCode的`CMake插件`配置为：
+
+```
+- Configure
+   - GCC 13.1.0 x86_64-w64-mingw32
+   - Release
+```
+
+将`CMakeLists.txt`设置为release构建：
+
+```
+set(DEBUG_MODE OFF)           # ON: Debug, OFF: Release
+```
+
+点击构建，构建完成后在项目根目录运行：
+
+```shell
+py scripts\release.py
+```
+
+可修改[scripts\release_config.json](../scripts/release_config.json)以调整release构建的内容。
+
+```shell
+❮cmd❯  …\Pelr  dev [  ✓] via △ v4.2.3
+の py scripts\release.py
+NOTICE file generated successfully: D:\repos\Pelr\Pelr\NOTICE
+[release] Removing existing target: D:\repos\Pelr\Pelr\Release
+[release] Copied D:\repos\Pelr\Pelr\build/Release -> D:\repos\Pelr\Pelr\Release
+[release] Copied file LICENSE -> D:\repos\Pelr\Pelr\Release\LICENSE
+[release] Copied file NOTICE -> D:\repos\Pelr\Pelr\Release\NOTICE
+[release] Copied file README.md -> D:\repos\Pelr\Pelr\Release\README.md
+[release] Copied file SECURITY.md -> D:\repos\Pelr\Pelr\Release\SECURITY.md
+[release] Copied file SUPPORT.md -> D:\repos\Pelr\Pelr\Release\SUPPORT.md
+[release] Copied file THANKS.md -> D:\repos\Pelr\Pelr\Release\THANKS.md
+[release] Copied dir  screenshots -> D:\repos\Pelr\Pelr\Release\screenshots
+[DELETE] Cleaning: D:\repos\Pelr\Pelr\Release
+
+  [dir]  Framework_autogen  (67 B)
+  [dir]  glew_autogen  (62 B)
+  [dir]  glfw_autogen  (62 B)
+  [dir]  kissfft_autogen  (65 B)
+  [dir]  miniaudio_autogen  (67 B)
+  [dir]  Pelr_autogen  (1.7 MB)
+  [dir]  .qt  (4.1 KB)
+  [dir]  .cmake  (420.9 KB)
+  [dir]  CMakeFiles  (60.9 MB)
+  [dir]  log  (704 B)
+  [dir]  user  (106 B)
+  [dir]  voice_files  (0 B)
+  [dir]  .lupdate  (25.8 KB)
+  [dir]  _deps  (26.9 MB)
+  [dir]  FluentUIStylePlugin-prefix  (3.7 KB)
+  [file] libFramework.a  (983.9 KB)
+  [file] libglew.a  (766.2 KB)
+  [file] libglfw.a  (331.2 KB)
+  [file] libkissfft.a  (12.9 KB)
+  [file] libminiaudio.a  (975.6 KB)
+  [file] cmake_install.cmake  (1.9 KB)
+  [file] CMakeCache.txt  (66.5 KB)
+  [file] compile_commands.json  (119.0 KB)
+  [file] Makefile  (243.2 KB)
+  [file] qrc_Resource.cpp  (85.5 MB)
+  [file] Resource.qrc.depends  (21.8 KB)
+  [file] language_en_US.qm  (5.2 KB)
+  [file] language_zh_CN.qm  (33.4 KB)
+
+Deleted 28 items, freed 178.9 MB.
+[release] done.
+[release] total time: 47.93 s
+```
+
+默认情况下，脚本会复制一些资源、许可文件，清理一些不需要的产物，将最终内容放在`Release`目录。
+
+Release目录内便是一个完整的程序，可打包、分发等，但是需要遵循本项目的[约束协议](../README.md#License)。
