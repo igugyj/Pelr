@@ -1,0 +1,52 @@
+{
+  // setting of https://github.com/igugyj/cpclean
+  // File extensions for reference files (without dot)
+  // These files will be read as content sources
+  "referenceExtensions": [
+    "md",
+    "txt",
+    "rst",
+    "html",
+    "tsx",
+    "css",
+    "py",
+    "json"
+  ],
+  // File extensions for target files (without dot)
+  // These files will be checked against reference content
+  "targetExtensions": [
+    "png",
+    "jpg",
+    "jpeg",
+    "gif",
+    "svg",
+    "ico",
+    "webp"
+  ],
+  // Additional folders to exclude (merged with .gitignore)
+  "excludeFolders": [
+    "node_modules",
+    "dist",
+    ".git",
+    "__pycache__",
+    ".vscode",
+    ".cpcleaner-cache",
+    "thirdParty",
+    "public"
+  ],
+  // Paired delimiters for token extraction
+  // Default pairs are sufficient for most use cases
+  "pairs": {
+    "(": ")",
+    "\"": "\"",
+    "'": "'",
+    "`": "`",
+    "[": "]",
+    "<": ">"
+  },
+  // Scan root directory (relative to workspace root)
+  // Leave empty to use workspace root
+  "scanRoot": "",
+  // Allow scanning outside workspace (default: false)
+  "allowExternalScan": false
+}

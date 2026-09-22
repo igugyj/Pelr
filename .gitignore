@@ -31,3 +31,4 @@ __pycache__/
 # test
 **test**
 !Resources/.Resources
+.cpcleaner-cache

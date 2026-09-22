@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     setLogLevel(read_log_level());
 
-    qInstallMessageHandler(messageHandler);
+    qInstallMessageHandler(messageHandler); // 安装通用消息处理器
 
     QApplication app(argc, argv);
 

@@ -16,6 +16,15 @@
 
 以上软件的安装方法请参考各官方文档。
 
+## 依赖情况
+
+- voicevox_core 0.16.4
+- CubismSdkForNative-5-r.5
+
+其他依赖请查看git子模块情况，如有新提交，请不要直接拉取，应当在测试通过后更新，不保证最新依赖能成功工作。
+
+> 有更新？[催更本项目的懒虫作者](https://github.com/igugyj/Pelr/issues)
+
 ## 系统要求
 
 - 至少 **6 GB** 可用存储空间（本项目所需）
@@ -159,18 +168,20 @@ thirdParty/scripts/setup_glew_glfw.bat
 
 ### 配置 CMake
 
-编辑 `CMakeLists.txt`，确保 Qt MinGW 路径指向本地安装目录：
+编辑 `.vscode\settings.json`，确保 Qt MinGW 路径指向本地安装目录：
+
+```json
+"cmake.configureArgs": [
+   "-DCMAKE_PREFIX_PATH=D:/Qt/6.10.1/mingw_64" // 修改为你的6.10.1/mingw_64路径
+]
+```
+
+保存该JSON文件后，点击`CMakeLists.txt`并保存，若配置正确，Visual Studio Code 应输出（或类似消息）：
 
 ```txt
-set(CMAKE_PREFIX_PATH "D:/Qt/6.10.1/mingw81_64")
-```
-
-保存后，如配置正确，Visual Studio Code 应输出：
-
-```
-[cmake] -- Configuring done (3.8s)
-[cmake] -- Generating done (0.9s)
-[cmake] -- Build files have been written to: D:/repos/Pelr/Pelr/build
+[cmake] -- Configuring done (1.4s)
+[cmake] -- Generating done (0.6s)
+[cmake] -- Build files have been written to: D:/repos/Pelr/Pelr/build/Debug
 ```
 
 <details>
@@ -187,8 +198,8 @@ set(CMAKE_PREFIX_PATH "D:/Qt/6.10.1/mingw81_64")
 ```
 [build] Copying Resources/voicevox_core -> output directory
 [build] [100%] Built target Pelr
-[driver] Build finished: 00:02:56.292
-[build] Build succeeded. Exit code: 0
+[driver] Build completed: 00:07:28.258
+[build] Build finished with exit code 0
 ```
 
 退出代码为 0 表示构建成功。
@@ -200,6 +211,6 @@ set(CMAKE_PREFIX_PATH "D:/Qt/6.10.1/mingw81_64")
 <details>
 <summary>预览</summary>
 
-![alt text](assets/image-28.png)
+![alt text](assets/image-30.png)
 
 </details>

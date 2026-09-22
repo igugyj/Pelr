@@ -12,7 +12,6 @@ set(AUTO_UPDATE_TRANSLATIONS ON)  # ON: 每次构建自动跑 lupdate 更新 .ts
 if(DEBUG_MODE)
     set(CMAKE_BUILD_TYPE Debug)
     add_compile_definitions(CONSOLE)                # 启用控制台输出
-    # Debug 模式不安装自定义消息处理器，消息直接输出到调试器/控制台
 else()
     set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -33,7 +32,7 @@ set(CMAKE_AUTORCC ON)        # 自动处理 Qt RCC
 set(CMAKE_AUTOUIC ON)        # 自动处理 Qt UIC
 
 # Qt 路径与模块查找
-set(CMAKE_PREFIX_PATH "D:/Qt/6.10.1/mingw_64")
+# set(CMAKE_PREFIX_PATH "D:/Qt/6.10.1/mingw_64") # D:/Qt/6.10.1/mingw_64
 find_package(Qt6 REQUIRED COMPONENTS
         Core Gui Widgets Network OpenGL OpenGLWidgets Svg
         WebChannel WebSockets Multimedia Concurrent MultimediaWidgets
@@ -60,7 +59,7 @@ set(TRANSLATION_FILES
 # 设置 Live2D 框架渲染方式（必须）
 set(FRAMEWORK_SOURCE OpenGL)
 
-# Live2D SDK 源文件（你自己的 LApp 封装层）
+# Live2D SDK 源文件（ LApp 封装层）
 file(GLOB LAPP_2D_SRC "thirdParty/CubismNativeSamples/Samples/OpenGL/Demo/proj.win.cmake/src/*.cpp" "thirdParty/CubismNativeSamples/Samples/Common/*.cpp")
 
 # 各功能模块源文件
@@ -177,7 +176,7 @@ target_include_directories(Framework PUBLIC
 # 使每个编译单元自动包含 glew.h，解决 GL 类型未定义
 target_compile_options(Framework PRIVATE -include GL/glew.h)
 
-# 定义 GLEW 静态链接（因为我们编译的是静态 GLEW）
+# 定义 GLEW 静态链接（编译的是静态 GLEW）
 target_compile_definitions(Framework PRIVATE GLEW_STATIC)
 set(CORE_DLL_PATH "${CMAKE_SOURCE_DIR}/thirdParty/Core/dll/windows/x86_64/Live2DCubismCore.dll")
 
