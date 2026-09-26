@@ -145,6 +145,85 @@ Version: %2</translation>
     </message>
 </context>
 <context>
+    <name>ContextMenu</name>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="15"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="134"/>
+        <source>Key Listener</source>
+        <translation>按键监听</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="16"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="135"/>
+        <source>Say Something</source>
+        <translation>说点什么</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="17"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="136"/>
+        <source>Launch</source>
+        <translation>启动</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="18"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="141"/>
+        <source>Settings</source>
+        <translation>设置</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="19"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="142"/>
+        <source>EMO</source>
+        <translation>表情</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="20"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="143"/>
+        <source>Media Player</source>
+        <translation>媒体播放器</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="21"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="140"/>
+        <source>Ask a Question</source>
+        <translation>提问</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="24"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="137"/>
+        <source>Weather</source>
+        <translation>天气</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="25"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="138"/>
+        <source>Power Status</source>
+        <translation>电源状态</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="26"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="139"/>
+        <source>TODO</source>
+        <translation>待办</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="54"/>
+        <source>Master, here is your PC&apos;s power status:
+AC: %1
+Percentage: %2%
+Battery State: %3</source>
+        <translation>主人，这是您电脑的电源状态：
+电源：%1
+电量：%2%%
+电池状态：%3</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="96"/>
+        <source>%1, %2℃, %3, humidity: %4%.</source>
+        <translation>%1，%2℃，%3，湿度：%4%。</translation>
+    </message>
+</context>
+<context>
     <name>DateTimePickerDialog</name>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="38"/>
@@ -255,90 +334,68 @@ Version: %2</translation>
 <context>
     <name>GLCore</name>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="201"/>
-        <location filename="../src/core/GLCore.cpp" line="865"/>
         <source>Key Listener</source>
-        <translation>按键监听</translation>
+        <translation type="vanished">按键监听</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="205"/>
-        <location filename="../src/core/GLCore.cpp" line="866"/>
         <source>Say Something</source>
-        <translation>说点什么</translation>
+        <translation type="vanished">说点什么</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="210"/>
-        <location filename="../src/core/GLCore.cpp" line="867"/>
         <source>Launch</source>
-        <translation>启动</translation>
+        <translation type="vanished">启动</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="217"/>
-        <location filename="../src/core/GLCore.cpp" line="868"/>
         <source>Weather</source>
-        <translation>天气</translation>
+        <translation type="vanished">天气</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="220"/>
-        <location filename="../src/core/GLCore.cpp" line="869"/>
         <source>Power Status</source>
-        <translation>电源状态</translation>
+        <translation type="vanished">电源状态</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="225"/>
         <source>Master, here is your PC&apos;s power status:
 AC: %1
 Percentage: %2%
 Battery State: %3</source>
-        <translation>主人，这是您电脑的电源状态：
+        <translation type="vanished">主人，这是您电脑的电源状态：
 电源：%1
 电量：%2%%
 电池状态：%3</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="230"/>
-        <location filename="../src/core/GLCore.cpp" line="870"/>
         <source>TODO</source>
-        <translation>待办</translation>
+        <translation type="vanished">待办</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="234"/>
-        <location filename="../src/core/GLCore.cpp" line="871"/>
         <source>Ask a Question</source>
-        <translation>提问</translation>
+        <translation type="vanished">提问</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="238"/>
-        <location filename="../src/core/GLCore.cpp" line="872"/>
         <source>Settings</source>
-        <translation>设置</translation>
+        <translation type="vanished">设置</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="259"/>
-        <location filename="../src/core/GLCore.cpp" line="874"/>
         <source>Media Player</source>
-        <translation>媒体播放器</translation>
+        <translation type="vanished">媒体播放器</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="547"/>
+        <location filename="../src/core/GLCore.cpp" line="421"/>
         <source>Uptime too long, skipping startup items</source>
         <translation>运行时间过长，跳过启动项</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="553"/>
+        <location filename="../src/core/GLCore.cpp" line="427"/>
         <source>Will launch startup items in %1 min</source>
         <translation>将在 %1 分钟后启动启动项</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="255"/>
-        <location filename="../src/core/GLCore.cpp" line="873"/>
         <source>EMO</source>
-        <translation>表情</translation>
+        <translation type="vanished">表情</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="519"/>
         <source>%1, %2℃, %3, humidity: %4%.</source>
-        <translation>%1，%2℃，%3，湿度：%4%。</translation>
+        <translation type="vanished">%1，%2℃，%3，湿度：%4%。</translation>
     </message>
 </context>
 <context>
@@ -600,18 +657,18 @@ Version: %2</translation>
         <translation>启动时发生未知异常：%1</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="608"/>
-        <location filename="../src/core/GLCore.cpp" line="618"/>
+        <location filename="../src/core/GLCore.cpp" line="475"/>
+        <location filename="../src/core/GLCore.cpp" line="483"/>
         <source>Pelr</source>
         <translation>Pelr</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="609"/>
+        <location filename="../src/core/GLCore.cpp" line="476"/>
         <source>menuData.json signature verification failed, auto-launch blocked. Please re-save the menu in Manage Start.</source>
         <translation>menuData.json 签名验证失败，自动启动已被阻止。请在“管理启动”（Manage Start）中重新保存菜单。</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="619"/>
+        <location filename="../src/core/GLCore.cpp" line="484"/>
         <source>Some launch items were modified and skipped: %1</source>
         <translation>部分启动项已被修改并跳过：%1</translation>
     </message>
@@ -779,7 +836,7 @@ This will restore all options to defaults.</source>
     <message>
         <location filename="../src/ui/settingslots.cpp" line="97"/>
         <source>GIF Files (*.gif)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/ui/settingslots.cpp" line="111"/>
