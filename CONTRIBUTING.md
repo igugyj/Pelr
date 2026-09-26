@@ -52,14 +52,14 @@ This project is governed by a standard code of conduct. Please be respectful and
 Before building, the following resources must be present:
 
 | Resource | Source | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `thirdParty/Core/` | [Live2D Cubism SDK Native](https://www.live2d.com/en/sdk/download/native/) | **Not included in the repository.** Download `CubismSdkForNative-5-r.5.zip` and extract the `Core` folder. Governed by the Live2D Proprietary Software License. |
 | `thirdParty/Framework/` | Git submodule | Initialize with `git submodule update --init --recursive` |
 | `thirdParty/glew/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
 | `thirdParty/glfw/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
 | `thirdParty/stb/` | Git submodule | Included in submodule init |
 | `Resources/` | Cubism SDK Demo build | See `docs/dev-init.md` for detailed instructions |
-| `Resources/voicevox_core/` | [voicevox_core 0.16.4](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.16.4) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the output in `Resources/voicevox_core/` |
+| `Resources/voicevox_core/` | [voicevox_core 0.17.0](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the output in `Resources/voicevox_core/` |
 | `thirdParty/FluentUIStyle/` | Git submodule | Initialize with `git submodule update --init --recursive`. Built as Qt style plugin (dll) via ExternalProject. |
 
 For detailed setup instructions, refer to [docs/dev-init.md](docs/dev-init.md).
@@ -166,6 +166,7 @@ Optional body with details.
 Types: `feat`, `fix`, `refactor`, `docs`, `style`, `chore`, `build`, `test`.
 
 Examples:
+
 - `feat(core): add mouse transparency check on window activate`
 - `fix(lapp): use px,py arguments in OnTouchesEnded instead of stale touch manager state`
 - `docs: update build instructions for Qt 6.10.1`
@@ -180,7 +181,7 @@ Examples:
 ## Third-Party Dependencies
 
 | Dependency | License | Included? |
-|---|---|---|
+| --- | --- | --- |
 | Live2D Cubism Core | Live2D Proprietary | No — must be downloaded separately |
 | Live2D Cubism Framework | Live2D Proprietary | Yes (git submodule) |
 | Qt 6.10.1 | LGPL | No — system dependency |
