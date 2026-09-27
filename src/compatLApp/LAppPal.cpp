@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <QElapsedTimer>
+#include <QDebug>
 using std::endl;
 using namespace Csm;
 using namespace std;
@@ -174,13 +175,15 @@ void LAppPal::PrintLog(const csmChar *format, ...)
     csmChar buf[256];
     va_start(args, format);
     vsnprintf_s(buf, sizeof(buf), format, args); // 標準出力でレンダリング
-#ifdef CSM_DEBUG_MEMORY_LEAKING
-    // メモリリークチェック時は大量の標準出力がはしり重いのでprintfを利用する
-    std::printf(buf);
-#else
-    std::cout << buf;
-#endif
+
+    // #ifdef CSM_DEBUG_MEMORY_LEAKING
+    //     // メモリリークチェック時は大量の標準出力がはしり重いのでprintfを利用する
+    //     std::printf(buf);
+    // #else
+    //     std::cout << buf;
+    // #endif
     va_end(args);
+    qDebug().noquote() << buf;
 }
 
 void LAppPal::PrintLogLn(const Csm::csmChar *format, ...)
@@ -189,13 +192,15 @@ void LAppPal::PrintLogLn(const Csm::csmChar *format, ...)
     csmChar buf[256];
     va_start(args, format);
     vsnprintf_s(buf, sizeof(buf), format, args); // 標準出力でレンダリング
-#ifdef CSM_DEBUG_MEMORY_LEAKING
-    // メモリリークチェック時は大量の標準出力がはしり重いのでprintfを利用する
-    std::printf("%s\n", buf);
-#else
-    std::cout << buf << std::endl;
-#endif
+
+    // #ifdef CSM_DEBUG_MEMORY_LEAKING
+    //     // メモリリークチェック時は大量の標準出力がはしり重いのでprintfを利用する
+    //     std::printf("%s\n", buf);
+    // #else
+    //     std::cout << buf << std::endl;
+    // #endif
     va_end(args);
+    qDebug().noquote() << buf;
 }
 
 void LAppPal::PrintMessage(const csmChar *message)

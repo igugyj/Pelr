@@ -20,7 +20,6 @@
 #include "Motion/CubismPhysicsUpdater.hpp"
 #include "Motion/CubismPoseUpdater.hpp"
 #include "ExtraMotionManager.h"
-#include <QDebug>
 #include <QRandomGenerator>
 #include <QFile>
 
@@ -81,7 +80,6 @@ void LAppModel::LoadAssets(const csmChar *dir, const csmChar *fileName)
     if (_debugMode)
     {
         LAppPal::PrintLogLn("[APP]load model setting: %s", fileName);
-        qDebug() << "[LApp] Load model setting:" << fileName;
     }
     csmSizeInt size;
     csmString path = csmString(dir) + fileName;
@@ -96,7 +94,7 @@ void LAppModel::LoadAssets(const csmChar *dir, const csmChar *fileName)
     SetupModel(setting);
     if (_model == nullptr)
     {
-        LAppPal::PrintLogLn("Failed to LoadAssets().");
+        LAppPal::PrintLogLn("Failed to LoadAssets.");
         return;
     }
     CreateRenderer(LAppDelegate::GetInstance()->GetWindowWidth(),
@@ -224,11 +222,11 @@ void LAppModel::SetupModel(ICubismModelSetting *setting)
             _lipSyncIds.PushBack(setting->GetLipSyncParameterId(i));
         CubismLipSyncUpdater *lipSync = CSM_NEW CubismLipSyncUpdater(_lipSyncIds, _wavFileHandler);
         _updateScheduler.AddUpdatableList(lipSync);
-        qDebug() << "[LApp] LipSync parameter count:" << count;
+        LAppPal::PrintLogLn("[LApp] LipSync parameter count: %d", count);
         for (csmInt32 i = 0; i < count; i++)
         {
             const csmChar *idName = setting->GetLipSyncParameterId(i)->GetString().GetRawString();
-            qDebug() << "  [" << i << "]" << idName;
+            LAppPal::PrintLogLn("[ %s ]", idName);
         }
     }
 
@@ -403,7 +401,7 @@ void LAppModel::StopLipSync()
 {
     _ttsSync.stop();
     setMouthParameter(0.0f);
-    qDebug() << "[LApp] StopLipSync";
+    LAppPal::PrintLogLn("[LApp] StopLipSync");
 }
 
 void LAppModel::setMouthParameter(csmFloat32 value)
@@ -659,8 +657,8 @@ void LAppModel::LoadExtraFiles()
         }
     }
 
-    qDebug() << "[LApp] Loaded" << extraExpressions.GetSize() << "extra expressions and"
-             << extraMotions.GetSize() << "extra motions";
+    LAppPal::PrintLogLn("[LApp] Loaded %d extra expressions and %d extra motions",
+                        extraExpressions.GetSize(), extraMotions.GetSize());
     ExtraMotionManager::getInstance()->setModel(this);
 }
 
@@ -679,12 +677,12 @@ Csm::CubismMotionQueueEntryHandle LAppModel::StartExtraMotion(const csmChar *mot
         }
         else if (!_motionManager->ReserveMotion(priority))
         {
-            qDebug() << "[LApp] Can't start extra motion - priority reserved";
+            LAppPal::PrintLogLn("[LApp] Can't start extra motion - priority reserved");
             return InvalidMotionQueueEntryHandleValue;
         }
         return _motionManager->StartMotionPriority(motion, false, priority);
     }
-    qDebug() << "[LApp] Extra motion not found:" << motionName;
+    LAppPal::PrintLogLn("[LApp] Extra motion not found: %s", motionName);
     return InvalidMotionQueueEntryHandleValue;
 }
 
@@ -697,7 +695,7 @@ void LAppModel::SetExtraExpression(const csmChar *expressionID)
     }
     else
     {
-        qDebug() << "[LApp] Extra expression not found:" << expressionID;
+        LAppPal::PrintLogLn("[LApp] Extra expression not found: %s", expressionID);
     }
 }
 

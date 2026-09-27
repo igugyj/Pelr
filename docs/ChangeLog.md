@@ -1,5 +1,5 @@
 
-## v0.7.29 - 2026-09-17（unrelease）
+## v0.7.32 - 2026-09-17（unrelease）
 
 ### 新特性
 
@@ -23,16 +23,26 @@
 * **TTS / ONNX 生命周期** — 序列化 `VoicevoxTTS`，应用 `speedScale`，移除 `testSynthesis`；修复 ONNX Runtime 文件名 `QByteArray` 临时对象悬空。 [963dedc](https://github.com/igugyj/Pelr/commit/963dedc9fab9bbabec3ed1f3631e29721c70909d) [8f03b20](https://github.com/igugyj/Pelr/commit/8f03b2037379005ef197f3b1b2ea9e3587718a00)
 * **核心稳定性** — 修复聊天滚动区域内容控件双重删除；修复 `signMenuData` 不可用；修复日志乱码与日志级别设置。 [bbe5b87](https://github.com/igugyj/Pelr/commit/bbe5b87cd5d1e0247f47464ca3302286d2250e7b) [94543a3](https://github.com/igugyj/Pelr/commit/94543a3baed1c3f8ac8e4970a58c59eaaae17dfd) [3b2bf73](https://github.com/igugyj/Pelr/commit/3b2bf734fc3e4350e7080f67630e3566011f5f19) [47eefed](https://github.com/igugyj/Pelr/commit/47eefedb1d53bc5579c42098084bf8f53aded343)
 * **UI 与交互** — 修复 `BubbleBox` 思考文本逻辑；`todoNotify` 逻辑；日期时间选择对话框时间按钮固定宽度；`NotificationWidget` 文本不更新。 [cbe714e](https://github.com/igugyj/Pelr/commit/cbe714ecabee3973689f3c6f442f84feff56631f) [ba2ac5b](https://github.com/igugyj/Pelr/commit/ba2ac5b2f27247b48473c26b0b5559ceab45694a) [afcc829](https://github.com/igugyj/Pelr/commit/afcc829f6cbf3e2af9af896a6d77939a0bc4aeb9) [715607c](https://github.com/igugyj/Pelr/commit/715607cee691ad4e6e69d7189c07cef93e91e290)
+* 修复模型调用时的ID混用，采用枚举替代 3b2bf734fc3e4350e7080f67630e3566011f5f19
+* 优化：当模型没有对应表情/动作时隐藏对应菜单 af426bde44bcf86173dc2891a4c28b3507d44b6f
+* 优化：LApp日志采用Qt模式输出、记录
 
 ### 文档与仓库
 
-* **第三方依赖** — 更新 `thirdParty/kissfft`。 [04e2948](https://github.com/igugyj/Pelr/commit/04e29487992a654b38a3c7819a4a0f9fabe66bb1)
+* **第三方依赖**
+
+* 更新 `thirdParty/kissfft`。 [04e2948](https://github.com/igugyj/Pelr/commit/04e29487992a654b38a3c7819a4a0f9fabe66bb1)
+* 更新 `thirdParty/FluentUIStyle` dc102e88b87a238beab168f331a6bfd1a82c5e39
+* 更新 dep(voicevox_core): 0.16.4 to 0.17.0 f39d387cd37989e67ba20dae4be7e072095261cd
+
 * **仓库整理** — `repo_assets` 移动为 `screenshots`。 [82f6ae5](https://github.com/igugyj/Pelr/commit/82f6ae5cf6bfaead840bdf7c8986c987872174ef)
+
+* 一些文档的内容优化
 
 ### 其他
 
 * 本次不发布，仅记录变更日志。
-* 版本号：v0.7.29。
+* 版本号：v0.7.32。
 
 ## v0.7.4 - 2026-08-01
 
