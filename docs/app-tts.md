@@ -33,10 +33,10 @@ TTS 服务程序是一个基于 Python 的本地网络服务器。该程序与�
 
 ## 支持的服务
 
-1. 讯飞 TTS
-2. OpenAI-Edge-TTS
-3. VOICEVOX（本地）
-4. OpenAI-Compatible TTS
-5. 翻译功能
+1. 讯飞 TTS（Python）
+2. OpenAI-Edge-TTS（Python）
+3. VOICEVOX（C++）
+4. OpenAI-Compatible TTS (C++)
+5. 翻译功能 （Python/C++）
 
 > 其他 TTS 或翻译服务可通过 Pelr C++ 前端独立运行。

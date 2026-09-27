@@ -37,7 +37,7 @@
 set(DEBUG_MODE OFF)     # ON: Debug, OFF: Release
 ```
 
-## Python 包管理
+## Python 包管理（可选）
 
 仓库地址：<https://github.com/igugyj/Pelr_tts_tr>
 

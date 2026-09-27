@@ -32,3 +32,8 @@ __pycache__/
 **test**
 !Resources/.Resources
 .cpcleaner-cache
+
+# docs
+docs/.ai
+docs/architecture
+audit*.md

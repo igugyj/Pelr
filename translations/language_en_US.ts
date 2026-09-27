@@ -430,7 +430,7 @@ Battery State: %3</source>
     </message>
     <message>
         <location filename="../src/model/ExtraMotionManager.cpp" line="13"/>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="28"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="27"/>
         <source>Extra Content</source>
         <translation type="unfinished"></translation>
     </message>
@@ -445,7 +445,7 @@ Battery State: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="66"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="65"/>
         <source>No Model Loaded</source>
         <translation type="unfinished"></translation>
     </message>
@@ -455,7 +455,7 @@ Battery State: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="111"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="112"/>
         <source>Expressions (%1)</source>
         <translation type="unfinished"></translation>
     </message>

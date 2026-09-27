@@ -301,7 +301,7 @@ Battery State: %3</source>
     <name>ExtraMotionManager</name>
     <message>
         <location filename="../src/model/ExtraMotionManager.cpp" line="13"/>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="28"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="27"/>
         <source>Extra Content</source>
         <translation>额外内容</translation>
     </message>
@@ -316,7 +316,7 @@ Battery State: %3</source>
         <translation>表情</translation>
     </message>
     <message>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="66"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="65"/>
         <source>No Model Loaded</source>
         <translation>未加载模型</translation>
     </message>
@@ -326,7 +326,7 @@ Battery State: %3</source>
         <translation>动作 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="111"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="112"/>
         <source>Expressions (%1)</source>
         <translation>表情 (%1)</translation>
     </message>
