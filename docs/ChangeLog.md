@@ -4,7 +4,7 @@
 
 * **发布流水线** — 新增 `release.py` 发布流程：生成 NOTICE → 复制构建产物 → 清理；支持外部配置，内置 MIT / BSD-3-Clause / ONNX Runtime MIT 许可模板，`clean_release.py` 与 `generate_notice.py` 改为配置驱动。 [42c1efe](https://github.com/igugyj/Pelr/commit/42c1efe53f0d493c6db10a3c0e923f4c3cc83924) [f396686](https://github.com/igugyj/Pelr/commit/f396686120cdf843947fb4ef86c2bbcf3eb5dc1a)
 * 始终启用托盘动效 的设置与相关逻辑 820e8ab7d72109e99cf7ae7dae1825c67d67c6bc
-* 去除Visual Studio依赖
+* 去除Visual Studio依赖，优化资源配置逻辑 f51b038ab57305100c46108240b16cdc432e2314
 
 ### 重构与优化
 

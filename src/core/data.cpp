@@ -439,7 +439,7 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.trayIconMode = obj["trayIconMode"].toInt(TrayIcon_Static);
     d.trayGifPath = obj["trayGifPath"].toString().trimmed();
     d.ShowLaunchMenuinTrayMenu = obj["ShowLaunchMenuinTrayMenu"].toBool(true);
-    d.alwaysDynamicEffects = obj["alwaysDynamicEffects"].toBool(true);
+    d.alwaysDynamicEffects = obj["alwaysDynamicEffects"].toBool(false);
     d.isShowThinkingBubble = obj["isShowThinkingBubble"].toBool();
     d.isLLMGreeting = obj["isLLMGreeting"].toBool();
     d.language = obj["language"].toString().trimmed();
