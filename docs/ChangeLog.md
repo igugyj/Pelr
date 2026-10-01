@@ -1,9 +1,9 @@
-
-## v0.7.32 - 2026-09-17（unrelease）
+## v0.8.0 - 2026-10-02（unrelease）
 
 ### 新特性
 
 * **发布流水线** — 新增 `release.py` 发布流程：生成 NOTICE → 复制构建产物 → 清理；支持外部配置，内置 MIT / BSD-3-Clause / ONNX Runtime MIT 许可模板，`clean_release.py` 与 `generate_notice.py` 改为配置驱动。 [42c1efe](https://github.com/igugyj/Pelr/commit/42c1efe53f0d493c6db10a3c0e923f4c3cc83924) [f396686](https://github.com/igugyj/Pelr/commit/f396686120cdf843947fb4ef86c2bbcf3eb5dc1a)
+* 始终启用托盘动效 的设置与相关逻辑
 
 ### 重构与优化
 
@@ -25,7 +25,7 @@
 * **UI 与交互** — 修复 `BubbleBox` 思考文本逻辑；`todoNotify` 逻辑；日期时间选择对话框时间按钮固定宽度；`NotificationWidget` 文本不更新。 [cbe714e](https://github.com/igugyj/Pelr/commit/cbe714ecabee3973689f3c6f442f84feff56631f) [ba2ac5b](https://github.com/igugyj/Pelr/commit/ba2ac5b2f27247b48473c26b0b5559ceab45694a) [afcc829](https://github.com/igugyj/Pelr/commit/afcc829f6cbf3e2af9af896a6d77939a0bc4aeb9) [715607c](https://github.com/igugyj/Pelr/commit/715607cee691ad4e6e69d7189c07cef93e91e290)
 * 修复模型调用时的ID混用，采用枚举替代 3b2bf734fc3e4350e7080f67630e3566011f5f19
 * 优化：当模型没有对应表情/动作时隐藏对应菜单 af426bde44bcf86173dc2891a4c28b3507d44b6f
-* 优化：LApp日志采用Qt模式输出、记录
+* 优化：LApp日志采用Qt模式输出、记录 52afeb980e822382009646e85b7df53b3ca4615f
 
 ### 文档与仓库
 

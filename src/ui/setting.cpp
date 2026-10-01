@@ -79,6 +79,7 @@ ConfigData SettingWidget::getAllValues()
     data.trayIconMode = ui->comboBox_9->currentData().toInt();
     data.trayGifPath = ui->lineEdit_29->text(); // 做了路径输入
     data.ShowLaunchMenuinTrayMenu = ui->checkBox_12->isChecked();
+    data.alwaysDynamicEffects = ui->checkBox_15->isChecked();
 
     data.LookingMouseStrength = ui->doubleSpinBox_3->value();
     data.StarCheckTime = ui->spinBox_5->value();
@@ -314,6 +315,7 @@ void SettingWidget::setAllValues(const ConfigData &data)
     if (idx >= 0)
         ui->comboBox_9->setCurrentIndex(idx);
     ui->checkBox_12->setChecked(data.ShowLaunchMenuinTrayMenu);
+    ui->checkBox_15->setChecked(data.alwaysDynamicEffects);
     loadNotice();
 }
 
@@ -457,12 +459,15 @@ void SettingWidget::connectSignals()
                 for (int i = 0; i < groupBoxes.size(); i++)
                 {
                     if(!groupBoxes[i])continue;
-                    if (i == index )
+                    if (i == index)
                         groupBoxes[i]->setVisible(true);
                     else
                         groupBoxes[i]->setVisible(false);
                 }
+                ui->checkBox_15->setVisible(index != 0);
                 TrayIcon::instance()->setTrayIconMode(ui->comboBox_9->currentData().toInt(), ui->lineEdit_29->text()); });
+    connect(ui->checkBox_15, &QCheckBox::checkStateChanged, this, [](int state)
+            { TrayIcon::instance()->setAlwaysDynamicEffects(state == Qt::Checked); });
     // bool
     connect(ui->checkBox, &QCheckBox::clicked, [&]()
             { startupSwitch(!ui->checkBox->isChecked()); });

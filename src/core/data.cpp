@@ -37,38 +37,39 @@ bool DataManager::writeJsonFile(const QString &filePath, const QJsonDocument &do
 
 namespace
 {
-bool constantTimeEqual(const QByteArray &a, const QByteArray &b)
-{
-    if (a.size() != b.size())
-        return false;
-    bool ok = true;
-    for (int i = 0; i < a.size(); ++i)
-        ok = ok && (a.at(i) == b.at(i));
-    return ok;
-}
+    bool constantTimeEqual(const QByteArray &a, const QByteArray &b)
+    {
+        if (a.size() != b.size())
+            return false;
+        bool ok = true;
+        for (int i = 0; i < a.size(); ++i)
+            ok = ok && (a.at(i) == b.at(i));
+        return ok;
+    }
 
-bool isUrlPath(const QString &path)
-{
-    return path.startsWith("http://") || path.startsWith("https://") ||
-           path.startsWith("ftp://") || path.startsWith("file://");
-}
+    bool isUrlPath(const QString &path)
+    {
+        return path.startsWith("http://") || path.startsWith("https://") ||
+               path.startsWith("ftp://") || path.startsWith("file://");
+    }
 
-// 跨版本稳定契约：菜单签名密钥派生规则（机器标识），改动需 bump payload v + 一次重签过渡
-QByteArray menuHmacKey()
-{
-    static const QByteArray key = []() {
-        // 每台机器唯一：MachineGuid（Windows 注册表）；空（极端情况）回退主机名
-        QString seed = QSysInfo::machineUniqueId();
-        if (seed.isEmpty())
-            seed = QSysInfo::machineHostName();
-        return QCryptographicHash::hash(QByteArrayLiteral("Pelr-MenuSig-v1|") + seed.toUtf8(),
-                                        QCryptographicHash::Sha256);
-    }();
-    return key;
-}
+    // 跨版本稳定契约：菜单签名密钥派生规则（机器标识），改动需 bump payload v + 一次重签过渡
+    QByteArray menuHmacKey()
+    {
+        static const QByteArray key = []()
+        {
+            // 每台机器唯一：MachineGuid（Windows 注册表）；空（极端情况）回退主机名
+            QString seed = QSysInfo::machineUniqueId();
+            if (seed.isEmpty())
+                seed = QSysInfo::machineHostName();
+            return QCryptographicHash::hash(QByteArrayLiteral("Pelr-MenuSig-v1|") + seed.toUtf8(),
+                                            QCryptographicHash::Sha256);
+        }();
+        return key;
+    }
 
-// 签名代际计数：快速连续保存时只落最新一份，防止旧任务覆盖新签名
-std::atomic<int> g_sigGeneration{0};
+    // 签名代际计数：快速连续保存时只落最新一份，防止旧任务覆盖新签名
+    std::atomic<int> g_sigGeneration{0};
 } // namespace
 
 void DataManager::signMenuData(const QList<MenuData> &items, int gen)
@@ -101,8 +102,9 @@ void DataManager::signMenuData(const QList<MenuData> &items, int gen)
             jsonSalt[i] = static_cast<char>(QRandomGenerator::system()->bounded(256));
     }
 
-    const QByteArray jsonHmac = QMessageAuthenticationCode::hash(jsonSalt + jsonBytes,
-                                                                 key, QCryptographicHash::Sha256);
+    const QByteArray jsonHmac = QMessageAuthenticationCode::hash(
+        jsonSalt + jsonBytes,
+        key, QCryptographicHash::Sha256);
 
     QJsonArray filesArr;
     for (const MenuData &item : items)
@@ -159,9 +161,8 @@ void DataManager::signMenuData(const QList<MenuData> &items, int gen)
 void DataManager::scheduleMenuResign(const QList<MenuData> &items)
 {
     const int gen = ++g_sigGeneration;
-    QtConcurrent::run([items, gen]() {
-        DataManager::instance().signMenuData(items, gen);
-    });
+    QtConcurrent::run([items, gen]()
+                      { DataManager::instance().signMenuData(items, gen); });
 }
 
 bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
@@ -205,8 +206,9 @@ bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
         return false;
     }
 
-    const QByteArray calcJson = QMessageAuthenticationCode::hash(jsonSalt + jsonBytes,
-                                                                 menuHmacKey(), QCryptographicHash::Sha256);
+    const QByteArray calcJson = QMessageAuthenticationCode::hash(
+        jsonSalt + jsonBytes,
+        menuHmacKey(), QCryptographicHash::Sha256);
     if (!constantTimeEqual(storedJson, calcJson))
     {
         qWarning() << "[Data] verifyMenuData: menuData.json HMAC mismatch (tampered?)";
@@ -247,8 +249,10 @@ bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
         {
             QFile itemFile(item.path);
             if (itemFile.open(QIODevice::ReadOnly))
-                ok = constantTimeEqual(storedHash, QCryptographicHash::hash(
-                                                         salt + itemFile.readAll(), QCryptographicHash::Sha256));
+                ok = constantTimeEqual(
+                    storedHash,
+                    QCryptographicHash::hash(
+                        salt + itemFile.readAll(), QCryptographicHash::Sha256));
             else
                 ok = false;
         }
@@ -389,6 +393,7 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
     obj["trayIconMode"] = d.trayIconMode;
     obj["trayGifPath"] = d.trayGifPath;
     obj["ShowLaunchMenuinTrayMenu"] = d.ShowLaunchMenuinTrayMenu;
+    obj["alwaysDynamicEffects"] = d.alwaysDynamicEffects;
     obj["isShowThinkingBubble"] = d.isShowThinkingBubble;
     obj["isLLMGreeting"] = d.isLLMGreeting;
     obj["language"] = d.language;
@@ -434,6 +439,7 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.trayIconMode = obj["trayIconMode"].toInt(TrayIcon_Static);
     d.trayGifPath = obj["trayGifPath"].toString().trimmed();
     d.ShowLaunchMenuinTrayMenu = obj["ShowLaunchMenuinTrayMenu"].toBool(true);
+    d.alwaysDynamicEffects = obj["alwaysDynamicEffects"].toBool(true);
     d.isShowThinkingBubble = obj["isShowThinkingBubble"].toBool();
     d.isLLMGreeting = obj["isLLMGreeting"].toBool();
     d.language = obj["language"].toString().trimmed();
@@ -566,9 +572,11 @@ void DataManager::readTodoNotify()
 void DataManager::readTTSConfig()
 {
     QJsonDocument doc = readJsonFile(FilePaths.ttsConfigFile);
-    if (!doc.isObject()) return;
+    if (!doc.isObject())
+        return;
     QJsonObject obj = doc.object();
-    if (obj.isEmpty()) return;
+    if (obj.isEmpty())
+        return;
 
     tts_config.provider = obj["provider"].toInt(0);
     if (tts_config.provider < 0 || tts_config.provider >= TTSProviderList.length())
@@ -613,7 +621,8 @@ void DataManager::readTTSConfig()
 void DataManager::readLlamaData()
 {
     QJsonDocument doc = readJsonFile(FilePaths.llmConfigFile);
-    if (!doc.isObject()) return;
+    if (!doc.isObject())
+        return;
     QJsonObject obj = doc.object();
 
     llama_data.maxContextMessages = obj["maxContextMessages"].toInt(10);
@@ -627,7 +636,8 @@ void DataManager::readLlamaData()
 void DataManager::readOpenWeatherData()
 {
     QJsonDocument doc = readJsonFile(FilePaths.openWeatherFile);
-    if (!doc.isObject()) return;
+    if (!doc.isObject())
+        return;
     QJsonObject obj = doc.object();
 
     openWeather_data.api_key = obj["api_key"].toString().trimmed();
@@ -661,63 +671,77 @@ QFont DataManager::loadFont()
 
 void DataManager::ensureMenuLoaded()
 {
-    if (menuLoaded) return;
+    if (menuLoaded)
+        return;
     QWriteLocker wl(&rwlock);
-    if (menuLoaded) return;
+    if (menuLoaded)
+        return;
     readMenuData();
     menuLoaded = true;
 }
 
 void DataManager::ensureBasicLoaded()
 {
-    if (basicLoaded) return;
+    if (basicLoaded)
+        return;
     QWriteLocker wl(&rwlock);
-    if (basicLoaded) return;
+    if (basicLoaded)
+        return;
     readBasicData();
     basicLoaded = true;
 }
 
 void DataManager::ensureTodoLoaded()
 {
-    if (todoLoaded) return;
+    if (todoLoaded)
+        return;
     QWriteLocker wl(&rwlock);
-    if (todoLoaded) return;
+    if (todoLoaded)
+        return;
     readTodoData();
     todoLoaded = true;
 }
 
 void DataManager::ensureTodoSettingLoaded()
 {
-    if (todoSettingLoaded) return;
+    if (todoSettingLoaded)
+        return;
     QWriteLocker wl(&rwlock);
-    if (todoSettingLoaded) return;
+    if (todoSettingLoaded)
+        return;
     readTodoNotify();
     todoSettingLoaded = true;
 }
 
 void DataManager::ensureTTSLoaded()
 {
-    if (ttsLoaded) return;
+    if (ttsLoaded)
+        return;
     QWriteLocker wl(&rwlock);
-    if (ttsLoaded) return;
+    if (ttsLoaded)
+        return;
     readTTSConfig();
     ttsLoaded = true;
 }
 
 void DataManager::ensureOpenWeatherLoaded()
 {
-    if (openWeatherLoaded) return;
+    if (openWeatherLoaded)
+        return;
     QWriteLocker wl(&rwlock);
-    if (openWeatherLoaded) return;
+    if (openWeatherLoaded)
+        return;
     readOpenWeatherData();
     openWeatherLoaded = true;
 }
 
 void DataManager::ensureLlamaLoaded()
 {
-    if (llamaLoaded) return;
+    if (llamaLoaded)
+        return;
     QWriteLocker wl(&rwlock);
-    if (llamaLoaded) return;
+    if (llamaLoaded)
+        return;
     readLlamaData();
     llamaLoaded = true;
 }

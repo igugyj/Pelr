@@ -14,7 +14,7 @@
 #include <QReadWriteLock>
 #include "llamaclient.h"
 
-#define VERSION "v0.7.32"
+#define VERSION "v0.8.0"
 
 enum TrayIconMode : int
 {
@@ -84,6 +84,7 @@ struct ConfigData
     bool isRecordWindowLocation = false;
     int trayIconMode = TrayIconMode::TrayIcon_Static;
     bool ShowLaunchMenuinTrayMenu = true;
+    bool alwaysDynamicEffects = false;
     QString trayGifPath;
     bool isShowThinkingBubble = false;
     bool isLLMGreeting = false;

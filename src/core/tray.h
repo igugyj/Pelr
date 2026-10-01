@@ -27,6 +27,7 @@ public:
                             int timeout = 10000);
 
     void setTrayIconMode(int mode, const QString &gifPath = QString());
+    void setAlwaysDynamicEffects(bool enabled);
 
     QAction *action_resetWinLoc;
     QAction *action_showWin;
@@ -52,11 +53,14 @@ private:
     QAction *m_actionOpenLogPath;
     QAction *m_actionStartApp;
     bool m_silentMode = false;
+    bool m_alwaysDynamicEffects = false;
 
     void initializeAudioDetector();
     void stopAudioDetector();
+    void destroyAudioDetectorOnly();
     QTimer *m_audioCheckTimer;
     AudioSpectrumDetector *m_audioDetector = nullptr;
+    qint64 m_audioInitRetryDeadlineMs = 0;
 
     int m_mode = TrayIcon_Static;
     QIcon m_appIcon;
