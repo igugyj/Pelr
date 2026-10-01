@@ -8,11 +8,10 @@
 
 ## 前置要求
 
-- Microsoft Visual Studio 2022（C++ 开发环境）
 - Visual Studio Code（或其他 IDE，建议安装 CMake Tools 扩展）
 - Python 3.11（可选）
 - Git
-- Qt 6.10.1（CMake）
+- Qt 6.10.1（CMake，MinGW）
 
 以上软件的安装方法请参考各官方文档。
 
@@ -28,7 +27,6 @@
 ## 系统要求
 
 - 至少 **6 GB** 可用存储空间（本项目所需）
-- 约 **20 GB** Visual Studio 2022 C++ 开发环境（仅需其编译输出的资源文件，本项目不由该 IDE 开发）
 
 ## 下载源代码
 
@@ -67,16 +65,16 @@ git clone --depth 1 --recursive https://github.com/igugyj/Pelr.git
 
 1. 前往 [voicevox_core 0.17.0  发布页面](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0)
 2. 下载 `download-windows-x64.exe`
-3. 运行该程序，将生成的 `voicevox_core` 文件夹按以下结构放置：
+3. 运行该程序，将生成的 `voicevox_core` 文件夹**直接放到 `thirdParty` 下**
 
-推荐目录结构：
+推荐目录结构（整包落盘）：
 
 - `thirdParty/voicevox_core/c_api`
 - `thirdParty/voicevox_core/onnxruntime`
-- `Resources/voicevox_core/dict`
-- `Resources/voicevox_core/models`
+- `thirdParty/voicevox_core/dict`
+- `thirdParty/voicevox_core/models`
 
-也可将整个 `voicevox_core` 文件夹同时放置于 `thirdParty` 和 `Resources` 目录。
+构建时 CMake 会将 `dict`、`models` 拷贝到输出目录的 `voicevox_core/`；`c_api`/`onnxruntime` 整目录不拷，其中的 DLL 复制到 exe 同级。
 
 ---
 
@@ -106,59 +104,22 @@ thirdParty/scripts/setup_glew_glfw.bat
 
 ## 资源文件
 
-`Resources` 目录用于存放运行时资源。这些文件不会被编译进二进制文件，而是在构建过程中复制到输出目录。
+构建期从 `thirdParty` 复制到输出目录（对使用者透明，也无需安装 Visual Studio）：
 
-**VoiceVox 词典目录：**
-`Resources/voicevox_core/dict`
+**VoiceVox（仅日语 TTS，可选）：**
 
-**VoiceVox 模型目录：**
-`Resources/voicevox_core/models`
+- 整包放置于 `thirdParty/voicevox_core/`
+- 输出：`voicevox_core/dict` ← `thirdParty/voicevox_core/dict`
+- 输出：`voicevox_core/models` ← `thirdParty/voicevox_core/models`
+- DLL（原逻辑）：`voicevox_core.dll`、`voicevox_onnxruntime.dll` → exe 同级
 
-**Live2D 资源：**
+**Live2D 运行时资源（着色器与示例模型）：**
 
-需在 `Resources/` 目录下包含以下文件夹：
+- `FrameworkShaders` ← `thirdParty/CubismNativeFramework/.../OpenGL/Shaders/Standard`
+- `SampleShaders` ← `thirdParty/CubismNativeSamples/Samples/OpenGL/Shaders/Standard`
+- `Resources/`（示例模型）← `thirdParty/CubismNativeSamples/Samples/Resources` 的模型子目录
 
-- `Resources/FrameworkShaders`
-- `Resources/Resources`
-- `Resources/SampleShaders`
-
-以上文件可从 Cubism SDK 获取：
-
-1. 进入 `CubismSdkForNative-5-r.5\Samples\OpenGL`
-2. 运行 `thirdParty\scripts\setup_glew_glfw.bat` 配置第三方库（该脚本与项目 `thirdParty` 目录下的脚本相同）
-3. 进入 `CubismSdkForNative-5-r.5\Samples\OpenGL\Demo\proj.win.cmake\scripts`
-4. 运行 `proj_msvc2022.bat`（确保已正确安装 Visual Studio 2022）
-
-5. 进入 `CubismSdkForNative-5-r.5\Samples\OpenGL\Demo\proj.win.cmake\build\proj_msvc2022_x64_mt`
-6. 使用 Visual Studio 打开 `Demo.sln`
-7. 构建解决方案（Debug 或 Release 配置均可）
-
-<details>
-<summary>预览</summary>
-
-![alt text](assets/image-24.png)
-
-</details>
-
-<details>
-<summary>预览</summary>
-
-![alt text](assets/image-25.png)
-
-</details>
-
-<details>
-<summary>预览</summary>
-
-![alt text](assets/image-26.png)
-
-</details>
-
-1. 构建成功后，进入 `proj_msvc2022_x64_mt\bin\Demo\Debug`（或 `Release`）
-2. 复制以下三个文件夹到项目的 `Resources` 目录：
-   - `FrameworkShaders`
-   - `Resources`
-   - `SampleShaders`
+注意：输出目录中的 `Resources/` 仅存放 Cubism 示例模型（由 submodule 自动生成），与源码树无关。
 
 资源配置完成。
 
@@ -196,7 +157,8 @@ thirdParty/scripts/setup_glew_glfw.bat
 从 Visual Studio Code 或命令行启动构建。预期输出：
 
 ```
-[build] Copying Resources/voicevox_core -> output directory
+[build] Copying voicevox dict -> output voicevox_core/dict
+[build] Copying voicevox models -> output voicevox_core/models
 [build] [100%] Built target Pelr
 [driver] Build completed: 00:07:28.258
 [build] Build finished with exit code 0

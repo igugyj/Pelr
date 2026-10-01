@@ -10,10 +10,11 @@
 lib
 log
 release
-Resources/**
 voice_files
 thirdParty/voicevox_core/onnxruntime/**
 thirdParty/voicevox_core/c_api/**
+thirdParty/voicevox_core/dict/**
+thirdParty/voicevox_core/models/**
 thirdParty/core/**
 thirdParty/Framework
 thirdParty/glew
@@ -30,7 +31,6 @@ __pycache__/
 !thirdParty/Core/README.md
 # test
 **test**
-!Resources/.Resources
 .cpcleaner-cache
 
 # docs

@@ -363,22 +363,71 @@ if (WIN32)
         message(WARNING "Folder not found: ${CMAKE_SOURCE_DIR}/assets")
     endif()
 
-    # 2. 自动复制 Resources 下的所有子文件夹，直接放到输出根目录
-    set(RES_DIR "${CMAKE_SOURCE_DIR}/Resources")
-    if(EXISTS "${RES_DIR}")
-        file(GLOB RES_ITEMS RELATIVE "${RES_DIR}" "${RES_DIR}/*")
-        foreach(ITEM ${RES_ITEMS})
-            if(IS_DIRECTORY "${RES_DIR}/${ITEM}")
+    # Voicevox dict/models：仅拷贝数据目录（c_api/onnxruntime 整目录不拷，DLL 已单独处理）
+    set(VOICEVOX_TP_DIR "${CMAKE_SOURCE_DIR}/thirdParty/voicevox_core")
+    if(EXISTS "${VOICEVOX_TP_DIR}/dict")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${VOICEVOX_TP_DIR}/dict"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/voicevox_core/dict"
+            COMMENT "Copying voicevox dict -> output voicevox_core/dict"
+        )
+    else()
+        message(STATUS "voicevox dict not found: ${VOICEVOX_TP_DIR}/dict (skip)")
+    endif()
+    if(EXISTS "${VOICEVOX_TP_DIR}/models")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${VOICEVOX_TP_DIR}/models"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/voicevox_core/models"
+            COMMENT "Copying voicevox models -> output voicevox_core/models"
+        )
+    else()
+        message(STATUS "voicevox models not found: ${VOICEVOX_TP_DIR}/models (skip)")
+    endif()
+
+    # Cubism OpenGL 运行时资源：从 submodule 直接复制到输出（无需 VS 构建 Demo）
+    # 着色器为 GLSL 文本，构建期仅复制；示例模型只拷子目录，跳过根目录 Demo UI PNG
+    set(CUBISM_FW_SHADERS "${CMAKE_SOURCE_DIR}/thirdParty/CubismNativeFramework/src/Rendering/OpenGL/Shaders/Standard")
+    set(CUBISM_SAMPLE_SHADERS "${CMAKE_SOURCE_DIR}/thirdParty/CubismNativeSamples/Samples/OpenGL/Shaders/Standard")
+    set(CUBISM_SAMPLE_RES "${CMAKE_SOURCE_DIR}/thirdParty/CubismNativeSamples/Samples/Resources")
+
+    if(EXISTS "${CUBISM_FW_SHADERS}")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${CUBISM_FW_SHADERS}"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/FrameworkShaders"
+            COMMENT "Copying Cubism FrameworkShaders -> output"
+        )
+    else()
+        message(WARNING "Cubism FrameworkShaders not found: ${CUBISM_FW_SHADERS}")
+    endif()
+
+    if(EXISTS "${CUBISM_SAMPLE_SHADERS}")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${CUBISM_SAMPLE_SHADERS}"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/SampleShaders"
+            COMMENT "Copying Cubism SampleShaders -> output"
+        )
+    else()
+        message(WARNING "Cubism SampleShaders not found: ${CUBISM_SAMPLE_SHADERS}")
+    endif()
+
+    if(EXISTS "${CUBISM_SAMPLE_RES}")
+        file(GLOB CUBISM_MODEL_DIRS RELATIVE "${CUBISM_SAMPLE_RES}" "${CUBISM_SAMPLE_RES}/*")
+        foreach(ITEM ${CUBISM_MODEL_DIRS})
+            if(IS_DIRECTORY "${CUBISM_SAMPLE_RES}/${ITEM}")
                 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy_directory
-                        "${RES_DIR}/${ITEM}"
-                        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${ITEM}"
-                    COMMENT "Copying Resources/${ITEM} -> output directory"
+                        "${CUBISM_SAMPLE_RES}/${ITEM}"
+                        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/Resources/${ITEM}"
+                    COMMENT "Copying Cubism sample model Resources/${ITEM} -> output"
                 )
             endif()
         endforeach()
     else()
-        message(WARNING "Resources directory not found: ${RES_DIR}")
+        message(WARNING "Cubism sample Resources not found: ${CUBISM_SAMPLE_RES}")
     endif()
 endif ()
 

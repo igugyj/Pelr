@@ -97,7 +97,9 @@ glClear(GL_COLOR_BUFFER_BIT);
 - GLEW is static (`GLEW_STATIC` defined globally).
 - `voicevox_core.dll`, `voicevox_onnxruntime.dll`, `Live2DCubismCore.dll` copied to output via post-build.
 - `windeployqt` runs as post-build to deploy Qt DLLs.
-- `assets/` folder and `Resources/*` subdirectories are copied to output via post-build.
+- `assets/` folder copied to output via post-build. Source-tree `Resources/` is not required and not copied.
+- Voicevox: drop the whole `download-windows-x64` package at `thirdParty/voicevox_core/`. Post-build copies `dict` and `models` to output `voicevox_core/` only if present; `c_api`/`onnxruntime` dirs are not copied as wholes (DLLs still come from `c_api/lib` and `onnxruntime/lib`).
+- Cubism OpenGL runtime files are copied from submodules to output on Windows post-build (output `Resources/` holds sample models only): `FrameworkShaders` from `CubismNativeFramework` OpenGL `Shaders/Standard`, `SampleShaders` from `CubismNativeSamples` OpenGL `Shaders/Standard`, and sample model dirs from `CubismNativeSamples/Samples/Resources` (root demo PNGs excluded).
 
 ## Debug vs Release
 

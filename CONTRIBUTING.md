@@ -43,7 +43,6 @@ This project is governed by a standard code of conduct. Please be respectful and
 - **Windows 10 or 11** (this is a Windows-only application)
 - **Qt 6.10.1** with MinGW 64-bit toolchain (available at `D:/Qt/6.10.1/mingw_64`)
 - **CMake** (bundled with Qt: `D:/Qt/Tools/CMake_64/bin/cmake.exe`)
-- **Visual Studio 2022** (C++ workload required for Cubism SDK resource generation)
 - **Git**
 - **Python 3.10+** (optional, for TTS server and translation services)
 
@@ -58,8 +57,7 @@ Before building, the following resources must be present:
 | `thirdParty/glew/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
 | `thirdParty/glfw/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
 | `thirdParty/stb/` | Git submodule | Included in submodule init |
-| `Resources/` | Cubism SDK Demo build | See `docs/dev-init.md` for detailed instructions |
-| `Resources/voicevox_core/` | [voicevox_core 0.17.0](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the output in `Resources/voicevox_core/` |
+| `thirdParty/voicevox_core/` | [voicevox_core 0.17.0](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the generated `voicevox_core` folder directly under `thirdParty/` (`c_api` / `onnxruntime` / `dict` / `models`). Build copies `dict`/`models` to the output `voicevox_core/`; DLLs are copied from `c_api/lib` and `onnxruntime/lib` as before. |
 | `thirdParty/FluentUIStyle/` | Git submodule | Initialize with `git submodule update --init --recursive`. Built as Qt style plugin (dll) via ExternalProject. |
 
 For detailed setup instructions, refer to [docs/dev-init.md](docs/dev-init.md).

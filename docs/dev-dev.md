@@ -14,20 +14,18 @@
 
 构建前需确保以下资源已就位：
 
-- `FrameworkShaders`
 - `assets`
 - `public`
-- `Resources`
-- `SampleShaders`
 - `thirdParty/`
   - `Core`
   - `CubismNativeFramework`
+  - `CubismNativeSamples`
   - `glew`
   - `stb`
   - `FluentUIStyle`
   - `kissfft`
   - `miniaudio`
-  - `voicevox_core`
+  - `voicevox_core`（整包：`c_api` / `onnxruntime` / `dict` / `models`；仅日语 TTS 需要 dict/models）
 
 ## 发布版本配置
 
