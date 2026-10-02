@@ -135,7 +135,7 @@ jobs:
           target: 'desktop'
           arch: 'win64_mingw'
           tools: 'tools_mingw1310,qt.tools.win64_mingw1310'
-          modules: 'qtsvg qtwebchannel qtwebsockets qtmultimedia qttools'
+          modules: 'qtwebchannel qtwebsockets qtmultimedia'
           cache: 'true'
 
       # 参考工作流没有这一步；显式补上，避免依赖 runner 镜像的隐式 PATH。
