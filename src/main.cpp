@@ -16,7 +16,7 @@
 #include "logger.hpp"
 #include "NotificationWidget.h"
 #include "initFileSys.h"
-#include "voicevox_tts.h"
+#include "componentmanager.hpp"
 #include "CrashHandler.h"
 
 void initTranslator(QApplication &a, const QString &path);
@@ -85,11 +85,8 @@ int main(int argc, char *argv[])
 
     TrayIcon::instance()->show();
 
-    // ONNX 初始化（如可能耗时，可考虑异步，此处保持简单）
-    if (!VoicevoxTTS::initializeOnnxRuntime())
-    {
-        qWarning() << "[APP] Failed to initialize OnnxRuntime";
-    }
+    // 自动解包可选组件（Live2D SDK 压缩包 -> Live2D/）
+    ComponentManager::instance().scanAllForZip();
 
     // 根据静默启动选项决定是否显示主窗口
     GLCore w;

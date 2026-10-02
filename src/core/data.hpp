@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QReadWriteLock>
 #include "llamaclient.h"
+#include "ttsconfig.hpp"
 
 #define VERSION "v0.8.0"
 
@@ -98,6 +99,8 @@ struct constConfigData
     const QString iFlytek_tts_url = "https://console.xfyun.cn/services/tts";
     const QString openWeather_url = "https://home.openweathermap.org/api_keys";
     const QString docs_link = "https://github.com/igugyj/Pelr/tree/master/docs";
+    // Components 页顶部引导链接（与 docs/app-components.md 对应）
+    const QString components_doc_link = "https://github.com/igugyj/Pelr/blob/master/docs/app-components.md";
     const QString version = VERSION;
     const QString Gitee_repo_owner = "Pfolg";
     const QString Gitee_repo_name = "Pelr";
@@ -165,37 +168,6 @@ struct ToDoSettingData
 {
     bool is_show_todo = true;
     bool is_notify_tray = true;
-};
-
-struct TTSConfig
-{
-    int provider = 0;
-    QString speaker_openai_edge_tts = "zh-CN-XiaoxiaoNeural";
-    double speed_openai_edge_tts = 1.0;
-    QString openai_endpoint;
-    QString openai_apiKey;
-    QString openai_model = "tts-1";
-    QString openai_voice = "alloy";
-    double openai_speed = 1.0;
-    QString iFlytek_APPID;
-    QString iFlytek_APISecret;
-    QString iFlytek_APIKey;
-    QString iFlytek_speaker = "x4_yezi";
-    QString voicevox_dict_dir;
-    QString voicevox_model;
-    int voicevox_style_id;
-    double voicevox_speed = 1.0;
-    int tr_point;
-    QString tr_provider;
-    QString tr_lang_translators;
-    QString tr_lang_libretranslate;
-    QString tr_libretranslate_port = "5000";
-    QString tr_tx_secret_id;
-    QString tr_tx_secret_key;
-    QString tr_tx_region;
-    int tr_tx_project_id = 0;
-    QString tr_tx_source_lang = "auto";
-    QString tr_tx_target_lang;
 };
 
 static QVector<QPair<QString, int>> TTSProviderList = {

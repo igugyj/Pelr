@@ -5,15 +5,30 @@ cmake_minimum_required(VERSION 3.16)
 project(Pelr)
 
 # ====================== 全局配置开关 ======================
-set(DEBUG_MODE OFF)           # ON: Debug, OFF: Release
 set(AUTO_UPDATE_TRANSLATIONS ON)  # ON: 每次构建自动跑 lupdate 更新 .ts
 
-# 根据 DEBUG_MODE 设置构建类型和子系统
-if(DEBUG_MODE)
+# 单配置生成器必须给出构建类型。留空会让子工程拿到空值 ——
+# FluentUIStyle ExternalProject 经 $<CONFIG> 透传该值（见文件末尾）。
+# 保留原默认 Debug，因此不带 -DCMAKE_BUILD_TYPE 的旧命令行仍然可用。
+if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
+    message(STATUS "CMAKE_BUILD_TYPE not set, defaulting to Debug")
+endif()
+message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
+
+# 调试特性总开关：控制台子系统(EXE_WIN32/WIN32_EXECUTABLE) + CONSOLE 宏 + 日志级别。
+# 默认由构建类型推导，可用 -DDEBUG_MODE=ON/OFF 单独覆盖
+# （例如在 Release 包上临时开详细日志，抓用户 bug）。
+if(NOT DEFINED DEBUG_MODE)
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(DEBUG_MODE OFF)
+    else()
+        set(DEBUG_MODE ON)
+    endif()
+endif()
+message(STATUS "DEBUG_MODE = ${DEBUG_MODE}")
+if(DEBUG_MODE)
     add_compile_definitions(CONSOLE)                # 启用控制台输出
-else()
-    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 # 修复控制台乱码
@@ -73,19 +88,21 @@ file(GLOB TTS_SRC "src/tts/*.cpp" "src/tts/*.h" "src/tts/*.hpp")
 file(GLOB UTILS_SRC "src/utils/*.cpp" "src/utils/*.h" "src/utils/*.hpp")
 file(GLOB UI_SRC "src/ui/*.cpp" "src/ui/*.h" "src/ui/*.hpp")
 file(GLOB UI_FILES "src/ui/*.ui")                     # .ui 文件单独收集
+file(GLOB LIVE2D_SRC "src/live2d/*.cpp" "src/live2d/*.h" "src/live2d/*.hpp")
 
 # 合并所有源文件（.cpp），供编译使用
 set(ALL_CPP_SOURCES
         ${LAPP_2D_SRC}
         ${AI_SRC} ${COMPATLAPP_SRC} ${CORE_SRC} ${KEYBOARD_SRC} ${MODEL_SRC}
         ${TRANSLATION_SRC} ${TTS_SRC} ${UI_SRC} ${UTILS_SRC}
+        ${LIVE2D_SRC}
         "src/main.cpp"
 )
 
 # 合并所有头文件（.h/.hpp），供 MOC 处理
 set(ALL_HEADER_FILES
         ${AI_SRC} ${COMPATLAPP_SRC} ${CORE_SRC} ${KEYBOARD_SRC} ${MODEL_SRC}
-        ${TRANSLATION_SRC} ${TTS_SRC} ${UI_SRC} ${UTILS_SRC}
+        ${TRANSLATION_SRC} ${TTS_SRC} ${UI_SRC} ${UTILS_SRC} ${LIVE2D_SRC}
 )
 
 # 注意：${ALL_CPP_SOURCES} 只包含 .cpp，${ALL_HEADER_FILES} 包含 .h/.hpp
@@ -123,6 +140,34 @@ add_library(miniaudio STATIC
 )
 target_include_directories(miniaudio PUBLIC thirdParty/miniaudio)
 set_target_properties(miniaudio PROPERTIES AUTOMOC OFF)
+
+# ============================================================================
+# 第三方库：miniz (ZIP 解包，用于 Live2D 可选组件投放)
+# 独立 target，不 add_subdirectory(miniz)，避免其 CMakeLists 污染全局 cache
+# ============================================================================
+add_library(miniz STATIC
+    thirdParty/miniz/miniz.c
+    thirdParty/miniz/miniz_tdef.c
+    thirdParty/miniz/miniz_tinfl.c
+    thirdParty/miniz/miniz_zip.c
+)
+# miniz_export.h 是 CMake 生成文件，submodule 中不含该文件。
+# miniz 是静态库，导出宏恒为空 —— 直接生成最简头文件，不依赖 GenerateExportHeader 的语义。
+set(MINIZ_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/miniz_include")
+file(MAKE_DIRECTORY "${MINIZ_INCLUDE_DIR}")
+file(WRITE "${MINIZ_INCLUDE_DIR}/miniz_export.h"
+     "#ifndef MINIZ_EXPORT\n"
+     "#define MINIZ_EXPORT\n"
+     "#endif\n"
+     "#ifndef MINIZ_NO_EXPORT\n"
+     "#define MINIZ_NO_EXPORT\n"
+     "#endif\n"
+)
+target_include_directories(miniz PUBLIC
+    ${CMAKE_SOURCE_DIR}/thirdParty/miniz
+    ${MINIZ_INCLUDE_DIR}
+)
+set_target_properties(miniz PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
 
 # ============================================================================
 # 第三方库：GLEW (从源码编译)
@@ -178,7 +223,6 @@ target_compile_options(Framework PRIVATE -include GL/glew.h)
 
 # 定义 GLEW 静态链接（编译的是静态 GLEW）
 target_compile_definitions(Framework PRIVATE GLEW_STATIC)
-set(CORE_DLL_PATH "${CMAKE_SOURCE_DIR}/thirdParty/Core/dll/windows/x86_64/Live2DCubismCore.dll")
 
 # 链接依赖
 target_link_libraries(Framework PUBLIC
@@ -186,7 +230,6 @@ target_link_libraries(Framework PUBLIC
     glfw
     opengl32
     glu32
-    ${CORE_DLL_PATH}
 )
 
 # ============================================================================
@@ -202,6 +245,7 @@ include_directories(
         src/tts
         src/ui
         src/utils
+        src/live2d
         ${PROJECT_SOURCE_DIR}/thirdParty/CubismNativeFramework/src
         ${PROJECT_SOURCE_DIR}/thirdParty/Core/include
         ${PROJECT_SOURCE_DIR}/thirdParty/glew/include
@@ -213,18 +257,11 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/thirdParty/CubismNativeSamples/Samples/Common
         ${PROJECT_SOURCE_DIR}/thirdParty/CubismNativeSamples/Samples/OpenGL/Demo/proj.win.cmake/src
         ${PROJECT_SOURCE_DIR}/thirdParty/kissfft
-        ${PROJECT_SOURCE_DIR}/thirdParty/voicevox_core/c_api/include
         ${CMAKE_CURRENT_BINARY_DIR}      # 存放生成的 ui_*.h 文件
 )
 
 # 指定 UI 文件搜索路径（AUTOUIC 需要）
 set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/src/ui")
-# ============================================================================
-# 链接库路径
-# ============================================================================
-link_directories(
-    "${CMAKE_SOURCE_DIR}/thirdParty/voicevox_core/c_api/lib"
-)
 
 # ===== 兼容 SDK 补丁 =====
 # 优先搜索包装头文件（修复 OpenGL 类型缺失）
@@ -267,7 +304,7 @@ target_link_libraries(${PROJECT_NAME}
         Framework          # Cubism Framework 静态库
         kissfft
         miniaudio          # 音频解码 (WAV/MP3)
-        voicevox_core
+        miniz         # ZIP 解包 (Live2D 组件投放)
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
@@ -288,6 +325,27 @@ if(AUTO_UPDATE_TRANSLATIONS)
 endif()
 # 强制在 Qt OpenGL 头前包含 GLEW，避免符号冲突
 target_compile_options(${PROJECT_NAME} PRIVATE -include GL/glew.h)
+
+# ============================================================================
+# voicevox 插件（唯一接触 voicevox_core 的目标）
+# voicevox_core.h 的函数全部带 __declspec(dllimport)，主 exe 无法用 QLibrary
+# 自行绑定，因此必须隔离到独立 DLL；主 exe 不再链接 voicevox。
+# ============================================================================
+file(GLOB VOICEVOX_PLUGIN_SRC
+        "src/plugins/voicevox/*.cpp"
+        "src/plugins/voicevox/*.hpp")
+add_library(local_voicevox MODULE ${VOICEVOX_PLUGIN_SRC})
+set_target_properties(local_voicevox PROPERTIES
+        PREFIX ""                                   # MinGW 默认加 lib 前缀，必须去掉
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugins")
+target_include_directories(local_voicevox PRIVATE
+        "${PROJECT_SOURCE_DIR}/thirdParty/voicevox_core/c_api/include")
+target_link_directories(local_voicevox PRIVATE
+        "${CMAKE_SOURCE_DIR}/thirdParty/voicevox_core/c_api/lib")
+target_link_libraries(local_voicevox PRIVATE
+        voicevox_core
+        Qt6::Core)
 
 # 将 .qm 文件复制到 translations/ 子目录
 file(MAKE_DIRECTORY ${QM_OUTPUT_DIR})
@@ -328,28 +386,54 @@ if (WIN32)
         endif()
     endif ()
 
-    # 单独复制 voicevox_core.dll（如果没有放入 lib）
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/thirdParty/voicevox_core/c_api/lib/voicevox_core.dll"
-                "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-            COMMENT "Copying voicevox_core DLL: voicevox_core.dll"
+    # ==================== 可选组件投放（仅 Debug）====================
+    # Release 构建不投放第三方可选组件，程序以"组件缺失"状态启动。
+    # 注：copy_directory_if_different 为纯增量、不会删除目标已有文件，
+    #     因此本地已有的 voicevox_core/models (1.6GB) 不会被清掉。
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CORE_TP_DIR "${CMAKE_SOURCE_DIR}/thirdParty/Core")
+        set(VOICEVOX_TP_DIR "${CMAKE_SOURCE_DIR}/thirdParty/voicevox_core")
 
+        # 1) Live2D Cubism Core -> Live2D/（规范加载位置，不再落 exe 根）
+        #    LICENSE.md 已被 git 跟踪、恒存在，故不加 EXISTS 守卫；
+        #    Live2DCubismCore.dll 被 .gitignore 忽略，缺则跳过。
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/Live2D"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${CORE_TP_DIR}/LICENSE.md"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/Live2D"
+            COMMENT "Live2D Cubism Core LICENSE -> Live2D/ (debug only)"
         )
-    # voicevox_onnxruntime.dll 到 exe 同目录
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/thirdParty/voicevox_core/onnxruntime/lib/voicevox_onnxruntime.dll"
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-    COMMENT "Copying voicevox_core DLL: voicevox_onnxruntime.dll"
-)
-    # 复制 Live2DCubismCore.dll 到 exe 同目录
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/thirdParty/Core/dll/windows/x86_64/Live2DCubismCore.dll"
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-    COMMENT "Copying Live2DCubismCore DLL: Live2DCubismCore.dll"
-)
+        if(EXISTS "${CORE_TP_DIR}/dll/windows/x86_64/Live2DCubismCore.dll")
+            add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    "${CORE_TP_DIR}/dll/windows/x86_64/Live2DCubismCore.dll"
+                    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/Live2D"
+                COMMENT "Live2D Cubism Core -> Live2D/ (debug only)"
+            )
+        else()
+            message(STATUS "Live2DCubismCore.dll not found under thirdParty/Core (skip)")
+        endif()
+
+        # 2) voicevox_core 官方目录结构 -> 程序根 voicevox_core/
+        #    投放 c_api/onnxruntime/dict，命中 ComponentPaths 的推荐候选(rank1)。
+        foreach(_vpart IN ITEMS c_api onnxruntime dict)
+            if(EXISTS "${VOICEVOX_TP_DIR}/${_vpart}")
+                add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+                        "${VOICEVOX_TP_DIR}/${_vpart}"
+                        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/voicevox_core/${_vpart}"
+                    COMMENT "voicevox_core/${_vpart} -> voicevox_core/ (debug only)"
+                )
+            else()
+                message(STATUS "voicevox_core/${_vpart} not found (skip)")
+            endif()
+        endforeach()
+        message(STATUS "voicevox_core/models not auto-copied by design (1.6GB); copy it manually to <out>/voicevox_core/models to enable voicevox")
+    else()
+        message(STATUS "Release build: optional components (Live2D Cubism Core, voicevox_core) not deployed")
+    endif()
 
     # 复制 assets 文件夹（如果存在）
     if(EXISTS "${CMAKE_SOURCE_DIR}/assets")
@@ -361,29 +445,6 @@ if (WIN32)
         )
     else()
         message(WARNING "Folder not found: ${CMAKE_SOURCE_DIR}/assets")
-    endif()
-
-    # Voicevox dict/models：仅拷贝数据目录（c_api/onnxruntime 整目录不拷，DLL 已单独处理）
-    set(VOICEVOX_TP_DIR "${CMAKE_SOURCE_DIR}/thirdParty/voicevox_core")
-    if(EXISTS "${VOICEVOX_TP_DIR}/dict")
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                "${VOICEVOX_TP_DIR}/dict"
-                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/voicevox_core/dict"
-            COMMENT "Copying voicevox dict -> output voicevox_core/dict"
-        )
-    else()
-        message(STATUS "voicevox dict not found: ${VOICEVOX_TP_DIR}/dict (skip)")
-    endif()
-    if(EXISTS "${VOICEVOX_TP_DIR}/models")
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                "${VOICEVOX_TP_DIR}/models"
-                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/voicevox_core/models"
-            COMMENT "Copying voicevox models -> output voicevox_core/models"
-        )
-    else()
-        message(STATUS "voicevox models not found: ${VOICEVOX_TP_DIR}/models (skip)")
     endif()
 
     # Cubism OpenGL 运行时资源：从 submodule 直接复制到输出（无需 VS 构建 Demo）

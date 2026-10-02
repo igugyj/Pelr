@@ -12,12 +12,8 @@ log
 release
 voice_files
 Liv2d_SDK
-thirdParty/voicevox_core/onnxruntime/**
-thirdParty/voicevox_core/c_api/**
-thirdParty/voicevox_core/dict/**
-thirdParty/voicevox_core/models/**
+thirdParty/voicevox_core/**
 thirdParty/core/**
-thirdParty/Framework
 thirdParty/glew
 thirdParty/glfw
 lib

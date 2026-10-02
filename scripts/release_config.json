@@ -26,6 +26,7 @@
     "run": true,
     "dirs": [
       "*_autogen",
+      "*_include",
       ".qt",
       ".cmake",
       "CMakeFiles",
@@ -67,6 +68,15 @@
         "homepage": "https://www.live2d.com/",
         "license_path": "thirdParty/CubismNativeFramework/LICENSE.md",
         "extra_notes": "If your annual revenue exceeds 10 million JPY, a separate Cubism SDK Release License is required.\nSee https://www.live2d.com/en/download/cubism-sdk/release-license/"
+      },
+      {
+        "name": "Live2D Cubism Native Samples",
+        "version": "5-r.5",
+        "license_type": "Live2D Open Software License (sample models: Free Material License)",
+        "copyright": "Live2D Inc.",
+        "homepage": "https://www.live2d.com/",
+        "license_path": "thirdParty/CubismNativeSamples/LICENSE.md",
+        "extra_notes": "Shipped in this build, copied from CubismNativeSamples at build time:\n- SampleShaders/ (OpenGL shader source used by the renderer)\n- Resources/ sample models: Haru, Hiyori, Mao, Mark, Natori, Ren, Rice, Wanko\n  (Resources/Hiyori is the default model when no user model is configured)\nThe sample models are made available under the Free Material License; using them\nconstitutes agreement to https://www.live2d.com/eula/live2d-sample-model-terms_en.html\nFrameworkShaders/ comes from Live2D Cubism Native Framework (see Library above).\nIf your annual revenue exceeds 10 million JPY, a separate Cubism SDK Release License is required.\nSee https://www.live2d.com/en/download/cubism-sdk/release-license/"
       },
       {
         "name": "Live2D Cubism Core",

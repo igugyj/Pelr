@@ -150,6 +150,7 @@ See [docs/dev-structure.md](docs/dev-structure.md) for details.
 |  ONNX Runtime      (bundled with voicevox_core)               |
 |  stb               (image loading)                             |
 |  FluentUI3Style    (Qt style plugin: Fluent UI 3 look)        |
+|  miniz             (ZIP extraction for component install)     |
 |                                                                 |
 +---------------------------------------------------------------+
                                |
@@ -188,6 +189,7 @@ See [NOTICE](NOTICE) for third-party notices.
 - **VOICEVOX** - Free, medium-quality TTS engine
 - **kissfft** - Real-time spectrum analysis and audio detection
 - **FluentUI3Style** - Fluent UI 3 style for Qt widgets (built as plugin via ExternalProject)
+- **miniz** - ZIP compression/decompression, used to extract Live2D component archives
 
 ### Python Toolchain (optional)
 
@@ -231,6 +233,7 @@ Different components use different licenses:
 - [kissfft](https://github.com/mborgerding/kissfft) - Fast Fourier transform library
 - [FluentUI3Style](https://github.com/XHY-ChuJian/FluentUIStyle) - Fluent UI 3 Qt style implementation
 - [miniaudio](https://github.com/mackron/miniaudio) - Single-file audio decoding library
+- [miniz](https://github.com/richgel999/miniz) - Single-file ZIP compression/decompression library
 - [stb](https://github.com/nothings/stb) - Single-header image processing library
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - Free TTS engine
 - [ONNX Runtime](https://github.com/microsoft/onnxruntime) - Cross-platform ML inference engine

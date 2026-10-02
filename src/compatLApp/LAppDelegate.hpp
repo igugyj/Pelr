@@ -40,7 +40,7 @@ public:
     virtual ~LAppDelegate();
 
 private:
-    void InitializeCubism();
+    bool InitializeCubism();
 
     LAppAllocator_Common _cubismAllocator;
     Csm::CubismFramework::Option _cubismOption;

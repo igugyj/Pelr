@@ -150,6 +150,7 @@ git fetch && git pull
 |  ONNX Runtime      (随 voicevox_core 提供，推理)              |
 |  stb               (图像加载)                                  |
 |  FluentUI3Style    (Qt 样式插件：Fluent UI 3 风格)             |
+|  miniz             (ZIP 解压：可选组件安装)                    |
 |                                                                 |
 +---------------------------------------------------------------+
                                |
@@ -188,6 +189,7 @@ git fetch && git pull
 - **VOICEVOX** - 免费中高质量 TTS
 - **kissfft** - 实时频谱分析与音频检测
 - **FluentUI3Style** - Fluent UI 3 Qt 样式库（以 ExternalProject 插件形式构建）
+- **miniz** - ZIP 压缩/解压，用于解包 Live2D 组件归档
 
 ### Python 工具链（可选）
 
@@ -231,6 +233,7 @@ git fetch && git pull
 - [kissfft](https://github.com/mborgerding/kissfft) - 快速傅里叶变换库
 - [FluentUI3Style](https://github.com/XHY-ChuJian/FluentUIStyle) - Fluent UI 3 Qt 样式实现
 - [miniaudio](https://github.com/mackron/miniaudio) - 单文件音频解码库
+- [miniz](https://github.com/richgel999/miniz) - 单文件 ZIP 压缩/解压库
 - [stb](https://github.com/nothings/stb) - 单头文件图像处理库
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - 免费中高质量 TTS 引擎
 - [ONNX Runtime](https://github.com/microsoft/onnxruntime) - 机器学习推理引擎

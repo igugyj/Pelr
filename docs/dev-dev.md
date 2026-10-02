@@ -29,11 +29,17 @@
 
 ## 发布版本配置
 
-在打包发布前，需确保 `CMakeLists.txt` 中的以下配置正确：
+构建类型决定 `DEBUG_MODE`，无需手动改 `CMakeLists.txt`：
 
-```txt
-set(DEBUG_MODE OFF)     # ON: Debug, OFF: Release
+```shell
+# 独立的 Release 构建目录（推荐，与日常 Debug 构建互不干扰）
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Release -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Release
 ```
+
+- `CMAKE_BUILD_TYPE=Release` → `DEBUG_MODE=OFF`（无控制台、`WIN32_EXECUTABLE`、装 Qt 消息处理器）
+- 需要在 Release 包上开详细日志抓 bug 时，追加 `-DDEBUG_MODE=ON` 单独覆盖
+- 注意：Release 构建**不会投放**可选组件（Live2D Cubism Core、`voicevox_core`），首次启动即为"组件缺失"状态，需手动补齐（见 [组件安装](app-components.md)）
 
 ## Python 包管理（可选）
 

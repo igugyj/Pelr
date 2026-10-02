@@ -21,6 +21,7 @@
 #include "UpdateDialog.h"
 #include "voicevox_tts.h"
 #include "voicegenerator.hpp"
+#include "componentmanager.hpp"
 #include <QProcess>
 #include <QStandardPaths>
 using MessageType = NotificationWidget::MessageType;
@@ -245,6 +246,15 @@ void SettingWidget::loadNotice()
 }
 void SettingWidget::onTestVoicevox()
 {
+    if (!ComponentManager::voicevoxAvailable())
+    {
+        NotificationWidget::showNotification(
+            tr("Warning"),
+            tr("VOICEVOX CORE is not installed. Install it from the Components tab first."),
+            5000, MessageType::Warning);
+        return;
+    }
+
     TTSConfig cfg = getTTSConfigValue();
     cfg.provider = 2; // 强制使用 VOICEVOX
 

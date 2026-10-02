@@ -23,10 +23,15 @@
 #include "UpdateDialog.h"
 #include "voicevox_tts.h"
 #include "voicegenerator.hpp"
+#include "componentcard.hpp"
+#include "componentmanager.hpp"
+#include "componentpaths.hpp"
 #include <QProcess>
 #include <QRandomGenerator>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QDesktopServices>
+#include <QUrl>
 #if __has_include(<FluentUI3Style/fluentui3styleproperties.h>)
 #include <FluentUI3Style/fluentui3styleproperties.h>
 #endif
@@ -94,9 +99,9 @@ ConfigData SettingWidget::getAllValues()
 TTSConfig SettingWidget::getTTSConfigValue() const
 {
     TTSConfig data;
-    data.provider = ui->comboBox_4->currentIndex();
+    data.provider = ui->comboBox_4->currentData().toInt();
     qDebug() << "[Settings] TTS provider:" << data.provider;
-    data.tr_point = ui->comboBox_7->currentIndex();
+    data.tr_point = ui->comboBox_7->currentData().toInt();
     qDebug() << "[Settings] TRA provider:" << data.tr_point;
     // openai_edge_tts
     data.speaker_openai_edge_tts = ui->lineEdit_11->text();
@@ -161,9 +166,11 @@ void SettingWidget::setTTSConfig(const TTSConfig &data) const
 {
     // TTS
     qDebug() << "[Settings] TTS provider:" << data.provider;
-    ui->comboBox_4->setCurrentIndex(static_cast<int>(data.provider));
+    const int providerIdx = ui->comboBox_4->findData(data.provider);
+    ui->comboBox_4->setCurrentIndex(providerIdx >= 0 ? providerIdx : 0);
     qDebug() << "[Settings] TRA point:" << data.tr_point;
-    ui->comboBox_7->setCurrentIndex(static_cast<int>(data.tr_point));
+    const int trPointIdx = ui->comboBox_7->findData(data.tr_point);
+    ui->comboBox_7->setCurrentIndex(trPointIdx >= 0 ? trPointIdx : 0);
     // openai-edge-tts
     ui->lineEdit_11->setText(data.speaker_openai_edge_tts);
     ui->doubleSpinBox->setValue(data.speed_openai_edge_tts);
@@ -382,6 +389,97 @@ SettingWidget::SettingWidget(QWidget *parent) : QWidget(parent), ui(new Ui::sett
 
     onTTSProviderChanged();
     onTranslatorsChanged();
+    // Components（可选组件）页
+    buildComponentsTab();
+    refreshVoicevoxAvailability();
+}
+
+void SettingWidget::buildComponentsTab()
+{
+    m_live2dCard = new ComponentCard(tr("Live2D Cubism Core"), this);
+    m_voicevoxCard = new ComponentCard(tr("VOICEVOX CORE"), this);
+    refreshComponentCardTexts();
+    refreshComponentsDocsLink();
+
+    ui->verticalLayout_components->addWidget(m_live2dCard);
+    ui->verticalLayout_components->addWidget(m_voicevoxCard);
+    ui->verticalLayout_components->addStretch(1);
+
+    connect(m_live2dCard, &ComponentCard::extractRequested, this, []()
+            { ComponentManager::instance().scanAllForZip(); });
+    connect(m_live2dCard, &ComponentCard::browseRequested, this, []()
+            {
+                QDir().mkpath(ComponentPaths::live2dDir());
+                QDesktopServices::openUrl(QUrl::fromLocalFile(ComponentPaths::live2dDir())); });
+    connect(m_live2dCard, &ComponentCard::deleteZipRequested, this, []()
+            { ComponentManager::instance().deleteZips(ComponentPaths::live2dDir()); });
+
+    connect(m_voicevoxCard, &ComponentCard::browseRequested, this, []()
+            {
+                QDir().mkpath(ComponentPaths::voicevoxDir());
+                QDesktopServices::openUrl(QUrl::fromLocalFile(ComponentPaths::voicevoxDir())); });
+
+    connect(&ComponentManager::instance(), &ComponentManager::componentsChanged,
+            this, &SettingWidget::refreshComponents);
+
+    refreshComponents();
+}
+
+// 卡片安装指引文案的唯一定义处：构建期与语言热载期共用，避免 tr() 字面量重复
+void SettingWidget::refreshComponentCardTexts()
+{
+    if (m_live2dCard)
+        m_live2dCard->retranslateUI(
+            tr("Required by the desktop pet. Drop the Live2D SDK archive into the Live2D folder, "
+               "or place Live2DCubismCore.dll there directly."));
+    if (m_voicevoxCard)
+        m_voicevoxCard->retranslateUI(
+            tr("Optional Japanese TTS. Place the voicevox_core runtime, dictionary and models "
+               "in the voicevox_core folder."));
+}
+
+// Components 页顶部常驻引导链接。文案来自 .ui（translate 上下文 "setting"，
+// 由 retranslateUi 负责翻译），这里只负责套上 <a href>；URL 统一走 constConfigData。
+void SettingWidget::refreshComponentsDocsLink()
+{
+    const QString text = ui->label_componentsDocs->text();
+    if (text.contains(QLatin1String("<a href")))
+        return; // 已套链接；下一次 retranslateUi 会还原为纯文案
+
+    ui->label_componentsDocs->setText(
+        QStringLiteral("<a href=\"%1\">%2</a>")
+            .arg(DataManager::instance().const_config_data.components_doc_link, text));
+}
+
+void SettingWidget::refreshComponents()
+{
+    const QList<ComponentManager::Info> infos = ComponentManager::scanAll();
+    for (const auto &info : infos)
+    {
+        if (info.id == QLatin1String("live2d"))
+        {
+            if (m_live2dCard)
+                m_live2dCard->updateInfo(info);
+        }
+        else if (info.id == QLatin1String("voicevox"))
+        {
+            if (m_voicevoxCard)
+                m_voicevoxCard->updateInfo(info);
+        }
+    }
+    refreshVoicevoxAvailability();
+}
+
+void SettingWidget::refreshVoicevoxAvailability()
+{
+    const bool available = ComponentManager::voicevoxAvailable();
+    ui->groupBox_4->setTitle(available ? tr("voicevox (Japanese, Local)")
+                                       : tr("voicevox (Japanese, Local) - not installed"));
+    // 插件(local_voicevox.dll)不可用 -> 整个 voicevox 选项卡禁用。
+    // 这里刻意不 gate dict/models：设置页内的 Browse 词典/模型是自救路径，
+    // 封死会让用户无法在设置页内补齐（见 voicevoxhost.cpp 关于 gate 粒度的说明）。
+    ui->groupBox_4->setEnabled(ComponentManager::voicevoxPluginAvailable());
+    ui->pushButton_26->setEnabled(available);
 }
 
 void SettingWidget::connectSignals()
@@ -637,6 +735,9 @@ void SettingWidget::retranslateUI()
         ui->comboBox_3->addItem(item.first, static_cast<int>(item.second));
 
     setAllValues(data); // 恢复所有控件状态（包括 label_2、comboBox_3 索引等）
+    refreshComponentsDocsLink(); // 须在 retranslateUi 之后：它会把链接还原成纯文案
+    refreshComponentCardTexts(); // 必须先于 refreshComponents：updateInfo 会用新的 m_hint 重写 m_detail
+    refreshComponents();
 }
 
 QSlider *SettingWidget::getHorizontalSlider()

@@ -9,6 +9,7 @@ void initFileSys()
         "voice_files",
         "Resources",
         "voicevox_core",
+        "Live2D",
     };
     for (auto &path : paths)
     {

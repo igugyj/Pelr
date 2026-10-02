@@ -406,6 +406,8 @@ void LAppModel::StopLipSync()
 
 void LAppModel::setMouthParameter(csmFloat32 value)
 {
+    if (!_model)
+        return;
     if (_lipSyncIds.GetSize() > 0)
     {
         for (auto it = _lipSyncIds.Begin(); it != _lipSyncIds.End(); ++it)
@@ -509,6 +511,8 @@ void LAppModel::DoDraw()
 // ---------- 点击测试 ----------
 csmBool LAppModel::HitTest(const csmChar *hitAreaName, csmFloat32 x, csmFloat32 y)
 {
+    if (!_model || !_modelSetting)
+        return false;
     if (_opacity < 1)
         return false;
     const csmInt32 count = _modelSetting->GetHitAreasCount();

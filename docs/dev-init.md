@@ -109,9 +109,14 @@ thirdParty/scripts/setup_glew_glfw.bat
 **VoiceVox（仅日语 TTS，可选）：**
 
 - 整包放置于 `thirdParty/voicevox_core/`
-- 输出：`voicevox_core/dict` ← `thirdParty/voicevox_core/dict`
-- 输出：`voicevox_core/models` ← `thirdParty/voicevox_core/models`
-- DLL（原逻辑）：`voicevox_core.dll`、`voicevox_onnxruntime.dll` → exe 同级
+- 输出（仅 Debug 构建）：`voicevox_core/c_api`、`voicevox_core/onnxruntime`、`voicevox_core/dict`
+- 输出（**不自动复制**）：`voicevox_core/models`（约 1.6 GB），需手动复制到 `<输出目录>/voicevox_core/models`
+- DLL 位于 `voicevox_core/c_api/lib/`、`voicevox_core/onnxruntime/lib/`（随上述目录一并复制）
+
+**Live2D Cubism Core（必需，仅 Debug 构建投放）：**
+
+- `thirdParty/Core/LICENSE.md` → 输出 `Live2D/LICENSE.md`
+- `thirdParty/Core/dll/windows/x86_64/Live2DCubismCore.dll` → 输出 `Live2D/Live2DCubismCore.dll`（该 DLL 不入库，缺失则跳过）
 
 **Live2D 运行时资源（着色器与示例模型）：**
 
@@ -119,7 +124,7 @@ thirdParty/scripts/setup_glew_glfw.bat
 - `SampleShaders` ← `thirdParty/CubismNativeSamples/Samples/OpenGL/Shaders/Standard`
 - `Resources/`（示例模型）← `thirdParty/CubismNativeSamples/Samples/Resources` 的模型子目录
 
-注意：输出目录中的 `Resources/` 仅存放 Cubism 示例模型（由 submodule 自动生成），与源码树无关。
+注意：输出目录中的 `Resources/` 仅存放 Cubism 示例模型（由 submodule 自动生成），**源码树中不存在 `Resources/` 目录**。Release 构建不投放以上可选组件，需手动补齐（见 [组件安装](app-components.md)）。
 
 资源配置完成。
 
@@ -157,8 +162,9 @@ thirdParty/scripts/setup_glew_glfw.bat
 从 Visual Studio Code 或命令行启动构建。预期输出：
 
 ```
-[build] Copying voicevox dict -> output voicevox_core/dict
-[build] Copying voicevox models -> output voicevox_core/models
+[build] Live2D Cubism Core LICENSE -> Live2D/ (debug only)
+[build] voicevox_core/dict -> voicevox_core/ (debug only)
+[build] voicevox_core/models not auto-copied by design (1.6GB); copy it manually to <out>/voicevox_core/models to enable voicevox
 [build] [100%] Built target Pelr
 [driver] Build completed: 00:07:28.258
 [build] Build finished with exit code 0
@@ -179,7 +185,9 @@ thirdParty/scripts/setup_glew_glfw.bat
 
 ## 发布
 
-使用release模式构建后，需调整VSCode的`CMake插件`配置为：
+构建类型直接决定 `DEBUG_MODE`，只需在配置时指定 Release：
+
+1. 将 VSCode `CMake 插件`的 Configure 设为 Release：
 
 ```
 - Configure
@@ -187,13 +195,15 @@ thirdParty/scripts/setup_glew_glfw.bat
    - Release
 ```
 
-将`CMakeLists.txt`设置为release构建：
+2. 等价于命令行指定构建类型（**不要**再手动编辑 `CMakeLists.txt`）：
 
-```
-set(DEBUG_MODE OFF)           # ON: Debug, OFF: Release
+```shell
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Release -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 ```
 
-点击构建，构建完成后在项目根目录运行：
+> `DEBUG_MODE` 由 `CMAKE_BUILD_TYPE` 自动推导（Release → OFF）。需要临时在 Release 包上开详细日志时追加 `-DDEBUG_MODE=ON`。
+
+3. 构建完成后在项目根目录运行：
 
 ```shell
 py scripts\release.py

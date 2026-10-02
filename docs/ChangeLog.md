@@ -1,4 +1,4 @@
-## v0.8.0 - 2026-10-02（unrelease）
+## v0.8.0 - 2026-10-03（unrelease）
 
 ### 新特性
 
@@ -10,6 +10,7 @@
 
 * **DataManager 内存缓存** — 引入 `QReadWriteLock` 与惰性加载缓存，避免每帧、每次语音重复读盘解析；写入同步更新内存缓存，`writeJsonFile` 改用 `QSaveFile` 原子写入。注意：手动修改磁盘 JSON 不再运行时生效，需重启加载。 da7f01b2f8e22bb3bb748f6addb0b9661d34b189
 * **GLCore 生命周期治理** — 新增析构清理无父堆成员；修复 `QFutureWatcher` 生命周期，取消并等待 `QtConcurrent` 任务，避免 `this` 捕获导致 use-after-free；单例 listener/tray 连接绑定 GLCore 上下文。 f62a053f66bd0f39d5449b77e0e2e3b2add178da 7ccbc2694baddf926eb2592a074356332431dcb2
+* live2d core 和 voicevox 插件化，项目正式进入打包分发阶段
 
 ### 问题修复
 
@@ -42,6 +43,7 @@
 * 更新 `thirdParty/kissfft`。 04e29487992a654b38a3c7819a4a0f9fabe66bb1
 * 更新 `thirdParty/FluentUIStyle` dc102e88b87a238beab168f331a6bfd1a82c5e39
 * 更新 dep(voicevox_core): 0.16.4 to 0.17.0 f39d387cd37989e67ba20dae4be7e072095261cd
+* 新增 miniz 用于压缩包解压 2eb200b0d7925eb6322da7bb93899714d2b33461
 
 * **仓库整理** — `repo_assets` 移动为 `screenshots`。 82f6ae5cf6bfaead840bdf7c8986c987872174ef
 
