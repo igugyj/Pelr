@@ -2,48 +2,50 @@
 
 ### 新特性
 
-* **发布流水线** — 新增 `release.py` 发布流程：生成 NOTICE → 复制构建产物 → 清理；支持外部配置，内置 MIT / BSD-3-Clause / ONNX Runtime MIT 许可模板，`clean_release.py` 与 `generate_notice.py` 改为配置驱动。 [42c1efe](https://github.com/igugyj/Pelr/commit/42c1efe53f0d493c6db10a3c0e923f4c3cc83924) [f396686](https://github.com/igugyj/Pelr/commit/f396686120cdf843947fb4ef86c2bbcf3eb5dc1a)
+* **发布流水线** — 新增 `release.py` 发布流程：生成 NOTICE → 复制构建产物 → 清理；支持外部配置，内置 MIT / BSD-3-Clause / ONNX Runtime MIT 许可模板，`clean_release.py` 与 `generate_notice.py` 改为配置驱动。 42c1efe53f0d493c6db10a3c0e923f4c3cc83924 f396686120cdf843947fb4ef86c2bbcf3eb5dc1a
 * 始终启用托盘动效 的设置与相关逻辑 820e8ab7d72109e99cf7ae7dae1825c67d67c6bc
-* 去除Visual Studio依赖，优化资源配置逻辑 f51b038ab57305100c46108240b16cdc432e2314
+* 去除Visual Studio依赖，优化资源配置逻辑，移除部分复杂用户配置，优化仓库资源结构 f51b038ab57305100c46108240b16cdc432e2314
 
 ### 重构与优化
 
-* **DataManager 内存缓存** — 引入 `QReadWriteLock` 与惰性加载缓存，避免每帧、每次语音重复读盘解析；写入同步更新内存缓存，`writeJsonFile` 改用 `QSaveFile` 原子写入。注意：手动修改磁盘 JSON 不再运行时生效，需重启加载。 [da7f01b](https://github.com/igugyj/Pelr/commit/da7f01b2f8e22bb3bb748f6addb0b9661d34b189)
-* **GLCore 生命周期治理** — 新增析构清理无父堆成员；修复 `QFutureWatcher` 生命周期，取消并等待 `QtConcurrent` 任务，避免 `this` 捕获导致 use-after-free；单例 listener/tray 连接绑定 GLCore 上下文。 [f62a053](https://github.com/igugyj/Pelr/commit/f62a053f66bd0f39d5449b77e0e2e3b2add178da) [7ccbc26](https://github.com/igugyj/Pelr/commit/7ccbc2694baddf926eb2592a074356332431dcb2)
+* **DataManager 内存缓存** — 引入 `QReadWriteLock` 与惰性加载缓存，避免每帧、每次语音重复读盘解析；写入同步更新内存缓存，`writeJsonFile` 改用 `QSaveFile` 原子写入。注意：手动修改磁盘 JSON 不再运行时生效，需重启加载。 da7f01b2f8e22bb3bb748f6addb0b9661d34b189
+* **GLCore 生命周期治理** — 新增析构清理无父堆成员；修复 `QFutureWatcher` 生命周期，取消并等待 `QtConcurrent` 任务，避免 `this` 捕获导致 use-after-free；单例 listener/tray 连接绑定 GLCore 上下文。 f62a053f66bd0f39d5449b77e0e2e3b2add178da 7ccbc2694baddf926eb2592a074356332431dcb2
 
 ### 问题修复
 
-* **H15 配置篡改导致任意代码执行** — 启动时自动静默运行 Star 类目全部程序；增加确认/签名校验，`user/` 路径不再依赖 CWD。 [94bddec](https://github.com/igugyj/Pelr/commit/94bddec55e07b3e7c51cfef931674129dd5a2625)
-* **H12 WeatherManager API Key 明文 HTTP** — 改用 HTTPS，并修正空城市检查误查 API Key。 [dee40f2](https://github.com/igugyj/Pelr/commit/dee40f241dc5679d84f23d94e5d51da7faf274a6)
-* **H11 launcherMenu::initMenu() 重建泄漏** — 重建前删除旧 submenu 与 `QueueTimer`。 [5202faf](https://github.com/igugyj/Pelr/commit/5202faf6ec2cfc80e32dfe1ad7a1dcdba0120f52)
-* **H8 & H9** — 修复对应高危问题。 [26121e1](https://github.com/igugyj/Pelr/commit/26121e1c2e88a7fdf38b39f4d4fc13b8bcb353f4)
-* **H7 LibreTranslateClient 旧 reply 误删新 reply** — 校验 `sender() == m_currentReply` 或按 reply 连接。 [c759542](https://github.com/igugyj/Pelr/commit/c759542cd93820000432c47f385b28dc05a3a181)
-* **H6 VoiceGenerator pending 状态被覆盖** — 加入请求序列号/队列。 [3e80b9b](https://github.com/igugyj/Pelr/commit/3e80b9bcbdc5d13015df34f0673f736c55f47367)
-* **H5 LlamaClient::m_id 并发响应串号** — 每个请求使用独立 id 并校验；补充 `llamaclient.cpp` 修复。 [9703f11](https://github.com/igugyj/Pelr/commit/9703f11251f1af5b42e6591935da180b4947c78e) [f2c4720](https://github.com/igugyj/Pelr/commit/f2c4720e37f84784b0211b316966e21a10da1d61)
-* **H1/H2/H3** — H1 `ExtraMotionManager::model` 悬空；H2 `LAppModel` 析构空指针；H3 `NotificationWidget::instance()` 泄漏与跨线程创建。已分别清理指针、判空、单例持久化复用。 [b314560](https://github.com/igugyj/Pelr/commit/b314560e87e80c4736f087b41df43d313b87271b)
-* **TTS / ONNX 生命周期** — 序列化 `VoicevoxTTS`，应用 `speedScale`，移除 `testSynthesis`；修复 ONNX Runtime 文件名 `QByteArray` 临时对象悬空。 [963dedc](https://github.com/igugyj/Pelr/commit/963dedc9fab9bbabec3ed1f3631e29721c70909d) [8f03b20](https://github.com/igugyj/Pelr/commit/8f03b2037379005ef197f3b1b2ea9e3587718a00)
-* **核心稳定性** — 修复聊天滚动区域内容控件双重删除；修复 `signMenuData` 不可用；修复日志乱码与日志级别设置。 [bbe5b87](https://github.com/igugyj/Pelr/commit/bbe5b87cd5d1e0247f47464ca3302286d2250e7b) [94543a3](https://github.com/igugyj/Pelr/commit/94543a3baed1c3f8ac8e4970a58c59eaaae17dfd) [3b2bf73](https://github.com/igugyj/Pelr/commit/3b2bf734fc3e4350e7080f67630e3566011f5f19) [47eefed](https://github.com/igugyj/Pelr/commit/47eefedb1d53bc5579c42098084bf8f53aded343)
-* **UI 与交互** — 修复 `BubbleBox` 思考文本逻辑；`todoNotify` 逻辑；日期时间选择对话框时间按钮固定宽度；`NotificationWidget` 文本不更新。 [cbe714e](https://github.com/igugyj/Pelr/commit/cbe714ecabee3973689f3c6f442f84feff56631f) [ba2ac5b](https://github.com/igugyj/Pelr/commit/ba2ac5b2f27247b48473c26b0b5559ceab45694a) [afcc829](https://github.com/igugyj/Pelr/commit/afcc829f6cbf3e2af9af896a6d77939a0bc4aeb9) [715607c](https://github.com/igugyj/Pelr/commit/715607cee691ad4e6e69d7189c07cef93e91e290)
+修复若干问题
+
+<details>
+<summary>details</summary>
+
+* **H15 配置篡改导致任意代码执行** — 启动时自动静默运行 Star 类目全部程序；增加确认/签名校验，`user/` 路径不再依赖 CWD。 94bddec55e07b3e7c51cfef931674129dd5a2625
+* **H12 WeatherManager API Key 明文 HTTP** — 改用 HTTPS，并修正空城市检查误查 API Key。 dee40f241dc5679d84f23d94e5d51da7faf274a6
+* **H11 launcherMenu::initMenu() 重建泄漏** — 重建前删除旧 submenu 与 `QueueTimer`。 5202faf6ec2cfc80e32dfe1ad7a1dcdba0120f52
+* **H8 & H9** — 修复对应高危问题。 26121e1c2e88a7fdf38b39f4d4fc13b8bcb353f4
+* **H7 LibreTranslateClient 旧 reply 误删新 reply** — 校验 `sender() == m_currentReply` 或按 reply 连接。 c759542cd93820000432c47f385b28dc05a3a181
+* **H6 VoiceGenerator pending 状态被覆盖** — 加入请求序列号/队列。 3e80b9bcbdc5d13015df34f0673f736c55f47367
+* **H5 LlamaClient::m_id 并发响应串号** — 每个请求使用独立 id 并校验；补充 `llamaclient.cpp` 修复。 9703f11251f1af5b42e6591935da180b4947c78e f2c4720e37f84784b0211b316966e21a10da1d61
+* **H1/H2/H3** — H1 `ExtraMotionManager::model` 悬空；H2 `LAppModel` 析构空指针；H3 `NotificationWidget::instance()` 泄漏与跨线程创建。已分别清理指针、判空、单例持久化复用。 b314560e87e80c4736f087b41df43d313b87271b
+* **TTS / ONNX 生命周期** — 序列化 `VoicevoxTTS`，应用 `speedScale`，移除 `testSynthesis`；修复 ONNX Runtime 文件名 `QByteArray` 临时对象悬空。 963dedc9fab9bbabec3ed1f3631e29721c70909d 8f03b2037379005ef197f3b1b2ea9e3587718a00
+* **核心稳定性** — 修复聊天滚动区域内容控件双重删除；修复 `signMenuData` 不可用；修复日志乱码与日志级别设置。 bbe5b87cd5d1e0247f47464ca3302286d2250e7b 94543a3baed1c3f8ac8e4970a58c59eaaae17dfd 3b2bf734fc3e4350e7080f67630e3566011f5f19 47eefedb1d53bc5579c42098084bf8f53aded343
+* **UI 与交互** — 修复 `BubbleBox` 思考文本逻辑；`todoNotify` 逻辑；日期时间选择对话框时间按钮固定宽度；`NotificationWidget` 文本不更新。 be714ecabee3973689f3c6f442f84feff56631f ba2ac5b2f27247b48473c26b0b5559ceab45694a afcc829f6cbf3e2af9af896a6d77939a0bc4aeb9 715607cee691ad4e6e69d7189c07cef93e91e290
 * 修复模型调用时的ID混用，采用枚举替代 3b2bf734fc3e4350e7080f67630e3566011f5f19
 * 优化：当模型没有对应表情/动作时隐藏对应菜单 af426bde44bcf86173dc2891a4c28b3507d44b6f
 * 优化：LApp日志采用Qt模式输出、记录 52afeb980e822382009646e85b7df53b3ca4615f
+
+</details>
 
 ### 文档与仓库
 
 * **第三方依赖**
 
-* 更新 `thirdParty/kissfft`。 [04e2948](https://github.com/igugyj/Pelr/commit/04e29487992a654b38a3c7819a4a0f9fabe66bb1)
+* 更新 `thirdParty/kissfft`。 04e29487992a654b38a3c7819a4a0f9fabe66bb1
 * 更新 `thirdParty/FluentUIStyle` dc102e88b87a238beab168f331a6bfd1a82c5e39
 * 更新 dep(voicevox_core): 0.16.4 to 0.17.0 f39d387cd37989e67ba20dae4be7e072095261cd
 
-* **仓库整理** — `repo_assets` 移动为 `screenshots`。 [82f6ae5](https://github.com/igugyj/Pelr/commit/82f6ae5cf6bfaead840bdf7c8986c987872174ef)
+* **仓库整理** — `repo_assets` 移动为 `screenshots`。 82f6ae5cf6bfaead840bdf7c8986c987872174ef
 
 * 一些文档的内容优化
-
-### 其他
-
-* 本次不发布，仅记录变更日志。
-* 版本号：v0.7.32。
 
 ## v0.7.4 - 2026-08-01
 
