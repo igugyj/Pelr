@@ -123,6 +123,15 @@
         "extra_notes": "Each stb header file contains its own license notice at the top, typically public domain\nor the MIT License. Refer to the individual file for exact terms."
       },
       {
+        "name": "miniz",
+        "version": "Latest",
+        "license_type": "MIT",
+        "copyright": "RAD Game Tools and Valve Software, Rich Geldreich and Tenacious Software LLC",
+        "homepage": "https://github.com/richgel999/miniz",
+        "license_path": "thirdParty/miniz/LICENSE",
+        "extra_notes": ""
+      },
+      {
         "name": "VOICEVOX CORE",
         "version": "0.17.0 ",
         "license_type": "MIT (with additional terms)",

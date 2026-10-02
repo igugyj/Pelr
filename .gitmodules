@@ -13,3 +13,6 @@
 [submodule "thirdParty/FluentUIStyle"]
 	path = thirdParty/FluentUIStyle
 	url = https://github.com/igugyj/FluentUIStyle.git
+[submodule "thirdParty/miniz"]
+	path = thirdParty/miniz
+	url = https://github.com/richgel999/miniz.git
