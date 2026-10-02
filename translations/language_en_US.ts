@@ -47,19 +47,19 @@ Match the language of your role description above.
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="183"/>
-        <location filename="../src/ui/BubbleBox.cpp" line="189"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="192"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="198"/>
         <source>%1
 It&apos;s %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="194"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="203"/>
         <source>It&apos;s %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/BubbleBox.cpp" line="228"/>
+        <location filename="../src/ui/BubbleBox.cpp" line="238"/>
         <source>In response...</source>
         <translation>In response...</translation>
     </message>
@@ -89,17 +89,17 @@ It&apos;s %2</source>
     <name>ChatWidget</name>
     <message>
         <location filename="../src/ui/chat.cpp" line="18"/>
-        <location filename="../src/ui/chat.cpp" line="117"/>
+        <location filename="../src/ui/chat.cpp" line="115"/>
         <source>Hello, welcome to Pelr!</source>
         <translation>Hello, welcome to Pelr!</translation>
     </message>
     <message>
-        <location filename="../src/ui/chat.cpp" line="91"/>
+        <location filename="../src/ui/chat.cpp" line="89"/>
         <source>Message cannot be empty!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/chat.cpp" line="112"/>
+        <location filename="../src/ui/chat.cpp" line="110"/>
         <source>Error: %1</source>
         <translation></translation>
     </message>
@@ -217,6 +217,217 @@ Version: %2</source>
     </message>
 </context>
 <context>
+    <name>ComponentCard</name>
+    <message>
+        <location filename="../src/ui/componentcard.cpp" line="42"/>
+        <location filename="../src/ui/componentcard.cpp" line="93"/>
+        <source>Extract now</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/componentcard.cpp" line="43"/>
+        <location filename="../src/ui/componentcard.cpp" line="94"/>
+        <source>Open folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/componentcard.cpp" line="44"/>
+        <location filename="../src/ui/componentcard.cpp" line="95"/>
+        <source>Delete archive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/componentcard.cpp" line="67"/>
+        <source>Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/componentcard.cpp" line="71"/>
+        <source>Archive ready — extract to install</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/componentcard.cpp" line="75"/>
+        <source>Layout not recognized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/componentcard.cpp" line="80"/>
+        <source>Not installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ComponentManager</name>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="97"/>
+        <source>Live2D Cubism Core</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="120"/>
+        <source>Live2DCubismCore.dll not found in %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="125"/>
+        <source>Directory not found: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="134"/>
+        <source>VOICEVOX CORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="150"/>
+        <source>voicevox_core.dll / voicevox_onnxruntime.dll</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="152"/>
+        <source>dict</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="154"/>
+        <source>models</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="157"/>
+        <source>Missing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="181"/>
+        <source>Cannot open archive: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="242"/>
+        <source>Unsafe path in archive: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="252"/>
+        <source>Extract failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="265"/>
+        <source>Cannot write: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="275"/>
+        <source>Short write: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="330"/>
+        <source>Live2DCubismCore.dll not found in extracted content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="342"/>
+        <source>Cannot move %1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="428"/>
+        <source>Extracted layout is invalid: %1 not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="438"/>
+        <location filename="../src/core/componentmanager.cpp" line="445"/>
+        <source>Components</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/componentmanager.cpp" line="439"/>
+        <source>Live2D Cubism Core extracted to %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ContextMenu</name>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="15"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="134"/>
+        <source>Key Listener</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="16"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="135"/>
+        <source>Say Something</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="17"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="136"/>
+        <source>Launch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="18"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="141"/>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="19"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="142"/>
+        <source>EMO</source>
+        <translation type="unfinished">EMO</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="20"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="143"/>
+        <source>Media Player</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="21"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="140"/>
+        <source>Ask a Question</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="24"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="137"/>
+        <source>Weather</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="25"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="138"/>
+        <source>Power Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="26"/>
+        <location filename="../src/ui/ContextMenu.cpp" line="139"/>
+        <source>TODO</source>
+        <translation type="unfinished">TODO</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="54"/>
+        <source>Master, here is your PC&apos;s power status:
+AC: %1
+Percentage: %2%
+Battery State: %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ContextMenu.cpp" line="96"/>
+        <source>%1, %2℃, %3, humidity: %4%.</source>
+        <translation type="unfinished">%1, %2℃, %3, humidity: %4%.</translation>
+    </message>
+</context>
+<context>
     <name>DateTimePickerDialog</name>
     <message>
         <source>今天</source>
@@ -248,48 +459,48 @@ Version: %2</source>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="38"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="187"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="182"/>
         <source>Today</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="39"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="188"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="183"/>
         <source>Tomorrow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="40"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="189"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="184"/>
         <source>Next Week</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="58"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="190"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="185"/>
         <source>Date:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/datetimepickerdialog.cpp" line="72"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="191"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="186"/>
         <source>Time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="112"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="192"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="107"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="187"/>
         <source>Select Date:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="115"/>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="193"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="110"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="188"/>
         <source>Select Time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/datetimepickerdialog.cpp" line="186"/>
+        <location filename="../src/ui/datetimepickerdialog.cpp" line="181"/>
         <source>Select Date and Time</source>
         <translation type="unfinished"></translation>
     </message>
@@ -354,7 +565,7 @@ Version: %2</source>
     </message>
     <message>
         <location filename="../src/model/ExtraMotionManager.cpp" line="13"/>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="28"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="27"/>
         <source>Extra Content</source>
         <translation type="unfinished"></translation>
     </message>
@@ -369,7 +580,7 @@ Version: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="66"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="65"/>
         <source>No Model Loaded</source>
         <translation type="unfinished"></translation>
     </message>
@@ -379,7 +590,7 @@ Version: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/model/ExtraMotionManager.cpp" line="111"/>
+        <location filename="../src/model/ExtraMotionManager.cpp" line="112"/>
         <source>Expressions (%1)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -417,74 +628,16 @@ Percentage: %2%
 Battery State: %3</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="179"/>
-        <location filename="../src/core/GLCore.cpp" line="814"/>
-        <source>Key Listener</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="183"/>
-        <location filename="../src/core/GLCore.cpp" line="815"/>
-        <source>Say Something</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="188"/>
-        <location filename="../src/core/GLCore.cpp" line="816"/>
-        <source>Launch</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="195"/>
-        <location filename="../src/core/GLCore.cpp" line="817"/>
-        <source>Weather</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="198"/>
-        <location filename="../src/core/GLCore.cpp" line="818"/>
-        <source>Power Status</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="203"/>
-        <source>Master, here is your PC&apos;s power status:
-AC: %1
-Percentage: %2%
-Battery State: %3</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="208"/>
-        <location filename="../src/core/GLCore.cpp" line="819"/>
         <source>TODO</source>
-        <translation>TODO</translation>
+        <translation type="vanished">TODO</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="212"/>
-        <location filename="../src/core/GLCore.cpp" line="820"/>
-        <source>Ask a Question</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="216"/>
-        <location filename="../src/core/GLCore.cpp" line="821"/>
-        <source>Settings</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="237"/>
-        <location filename="../src/core/GLCore.cpp" line="823"/>
-        <source>Media Player</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/core/GLCore.cpp" line="524"/>
+        <location filename="../src/core/GLCore.cpp" line="421"/>
         <source>Uptime too long, skipping startup items</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="530"/>
+        <location filename="../src/core/GLCore.cpp" line="427"/>
         <source>Will launch startup items in %1 min</source>
         <translation></translation>
     </message>
@@ -497,19 +650,16 @@ Battery State: %3</source>
         <translation type="vanished">Interface</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="233"/>
-        <location filename="../src/core/GLCore.cpp" line="822"/>
         <source>EMO</source>
-        <translation>EMO</translation>
+        <translation type="vanished">EMO</translation>
     </message>
     <message>
         <source>媒体播放</source>
         <translation type="vanished">Media Player</translation>
     </message>
     <message>
-        <location filename="../src/core/GLCore.cpp" line="496"/>
         <source>%1, %2℃, %3, humidity: %4%.</source>
-        <translation>%1, %2℃, %3, humidity: %4%.</translation>
+        <translation type="vanished">%1, %2℃, %3, humidity: %4%.</translation>
     </message>
 </context>
 <context>
@@ -748,6 +898,22 @@ Version: %2</source>
         <source>Unknown exception occurred while launching: %1</source>
         <translation>Unknown exception occurred while launching: %1</translation>
     </message>
+    <message>
+        <location filename="../src/core/GLCore.cpp" line="475"/>
+        <location filename="../src/core/GLCore.cpp" line="483"/>
+        <source>Pelr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/GLCore.cpp" line="476"/>
+        <source>menuData.json signature verification failed, auto-launch blocked. Please re-save the menu in Manage Start.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/core/GLCore.cpp" line="484"/>
+        <source>Some launch items were modified and skipped: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingWidget</name>
@@ -756,8 +922,8 @@ Version: %2</source>
         <translation type="obsolete">Custom Role</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="489"/>
-        <location filename="../src/ui/setting.cpp" line="526"/>
+        <location filename="../src/ui/setting.cpp" line="592"/>
+        <location filename="../src/ui/setting.cpp" line="629"/>
         <source>Please fill in all fields first.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -768,102 +934,132 @@ Version: %2</source>
 Will take effect on next application launch.</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="740"/>
+        <location filename="../src/ui/setting.cpp" line="846"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="549"/>
-        <location filename="../src/ui/setting.cpp" line="588"/>
-        <location filename="../src/ui/setting.cpp" line="757"/>
-        <location filename="../src/ui/setting.cpp" line="795"/>
-        <location filename="../src/ui/setting.cpp" line="806"/>
-        <location filename="../src/ui/setting.cpp" line="842"/>
-        <location filename="../src/ui/settingslots.cpp" line="140"/>
+        <location filename="../src/ui/setting.cpp" line="652"/>
+        <location filename="../src/ui/setting.cpp" line="691"/>
+        <location filename="../src/ui/setting.cpp" line="863"/>
+        <location filename="../src/ui/setting.cpp" line="901"/>
+        <location filename="../src/ui/setting.cpp" line="912"/>
+        <location filename="../src/ui/setting.cpp" line="948"/>
+        <location filename="../src/ui/settingslots.cpp" line="139"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="588"/>
+        <location filename="../src/ui/setting.cpp" line="691"/>
         <source>Saved!
 Will take effect on next startup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="697"/>
-        <location filename="../src/ui/setting.cpp" line="705"/>
+        <location filename="../src/ui/setting.cpp" line="803"/>
+        <location filename="../src/ui/setting.cpp" line="811"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="340"/>
-        <location filename="../src/ui/setting.cpp" line="626"/>
+        <location filename="../src/ui/setting.cpp" line="349"/>
+        <location filename="../src/ui/setting.cpp" line="729"/>
         <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="341"/>
-        <location filename="../src/ui/setting.cpp" line="627"/>
+        <location filename="../src/ui/setting.cpp" line="350"/>
+        <location filename="../src/ui/setting.cpp" line="730"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="342"/>
-        <location filename="../src/ui/setting.cpp" line="489"/>
-        <location filename="../src/ui/setting.cpp" line="526"/>
-        <location filename="../src/ui/setting.cpp" line="551"/>
-        <location filename="../src/ui/setting.cpp" line="628"/>
-        <location filename="../src/ui/setting.cpp" line="802"/>
-        <location filename="../src/ui/setting.cpp" line="837"/>
-        <location filename="../src/ui/settingslots.cpp" line="124"/>
-        <location filename="../src/ui/settingslots.cpp" line="197"/>
-        <location filename="../src/ui/settingslots.cpp" line="262"/>
-        <location filename="../src/ui/settingslots.cpp" line="274"/>
-        <location filename="../src/ui/settingslots.cpp" line="281"/>
-        <location filename="../src/ui/settingslots.cpp" line="294"/>
+        <location filename="../src/ui/setting.cpp" line="351"/>
+        <location filename="../src/ui/setting.cpp" line="592"/>
+        <location filename="../src/ui/setting.cpp" line="629"/>
+        <location filename="../src/ui/setting.cpp" line="654"/>
+        <location filename="../src/ui/setting.cpp" line="731"/>
+        <location filename="../src/ui/setting.cpp" line="908"/>
+        <location filename="../src/ui/setting.cpp" line="943"/>
+        <location filename="../src/ui/settingslots.cpp" line="123"/>
+        <location filename="../src/ui/settingslots.cpp" line="196"/>
+        <location filename="../src/ui/settingslots.cpp" line="252"/>
+        <location filename="../src/ui/settingslots.cpp" line="270"/>
+        <location filename="../src/ui/settingslots.cpp" line="282"/>
+        <location filename="../src/ui/settingslots.cpp" line="291"/>
         <source>Warning</source>
         <translation type="unfinished">Warning</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="343"/>
-        <location filename="../src/ui/setting.cpp" line="629"/>
+        <location filename="../src/ui/setting.cpp" line="352"/>
+        <location filename="../src/ui/setting.cpp" line="732"/>
         <source>Critical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="344"/>
-        <location filename="../src/ui/setting.cpp" line="630"/>
+        <location filename="../src/ui/setting.cpp" line="353"/>
+        <location filename="../src/ui/setting.cpp" line="733"/>
         <source>Fatal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="539"/>
+        <location filename="../src/ui/setting.cpp" line="399"/>
+        <source>Live2D Cubism Core</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.cpp" line="433"/>
+        <source>Required by the desktop pet. Drop the Live2D SDK archive into the Live2D folder, or place Live2DCubismCore.dll there directly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.cpp" line="400"/>
+        <source>VOICEVOX CORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.cpp" line="437"/>
+        <source>Optional Japanese TTS. Place the voicevox_core runtime, dictionary and models in the voicevox_core folder.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.cpp" line="476"/>
+        <source>voicevox (Japanese, Local)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.cpp" line="477"/>
+        <source>voicevox (Japanese, Local) - not installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.cpp" line="642"/>
         <source>Select Prompt File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="541"/>
+        <location filename="../src/ui/setting.cpp" line="644"/>
         <source>Text Files (*.txt *.md *.json);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="549"/>
+        <location filename="../src/ui/setting.cpp" line="652"/>
         <source>Loaded prompt from [%1] successfully.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="551"/>
+        <location filename="../src/ui/setting.cpp" line="654"/>
         <source>Failed to load prompt from [%1].</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="698"/>
+        <location filename="../src/ui/setting.cpp" line="804"/>
         <source>Are you sure you want to reset all settings?
 This will restore all options to defaults.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="706"/>
+        <location filename="../src/ui/setting.cpp" line="812"/>
         <source>Delete all user data (logs, cache, user folder, etc.) as well?
 
 &quot;Yes&quot; will clean everything and restart - all data will be lost permanently.
@@ -871,37 +1067,37 @@ This will restore all options to defaults.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="741"/>
+        <location filename="../src/ui/setting.cpp" line="847"/>
         <source>Some data folders could not be deleted. Please clean them manually and restart.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="757"/>
+        <location filename="../src/ui/setting.cpp" line="863"/>
         <source>Settings have been reset!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="795"/>
+        <location filename="../src/ui/setting.cpp" line="901"/>
         <source>Shortcut no longer exists!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="802"/>
+        <location filename="../src/ui/setting.cpp" line="908"/>
         <source>Failed to remove shortcut!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="806"/>
+        <location filename="../src/ui/setting.cpp" line="912"/>
         <source>Shortcut removed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="837"/>
+        <location filename="../src/ui/setting.cpp" line="943"/>
         <source>Failed to create shortcut!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="842"/>
+        <location filename="../src/ui/setting.cpp" line="948"/>
         <source>Shortcut created!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -922,78 +1118,78 @@ This will restore all options to defaults.</source>
         <translation type="vanished">Select Model File</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="83"/>
+        <location filename="../src/ui/settingslots.cpp" line="82"/>
         <source>Select Model File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="99"/>
+        <location filename="../src/ui/settingslots.cpp" line="98"/>
         <source>Select GIF File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="99"/>
+        <location filename="../src/ui/settingslots.cpp" line="98"/>
         <source>GIF Files (*.gif)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="113"/>
+        <location filename="../src/ui/settingslots.cpp" line="112"/>
         <source>Select Voice Model File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="115"/>
+        <location filename="../src/ui/settingslots.cpp" line="114"/>
         <source>VVM Files (*.vvm);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="125"/>
+        <location filename="../src/ui/settingslots.cpp" line="124"/>
         <source>Model loading failed. Please check the model file and reload.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="140"/>
+        <location filename="../src/ui/settingslots.cpp" line="139"/>
         <source>Model loaded successfully. Style list updated.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="153"/>
+        <location filename="../src/ui/settingslots.cpp" line="152"/>
         <source>(No available styles)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="197"/>
+        <location filename="../src/ui/settingslots.cpp" line="196"/>
         <source>Dictionary loading failed. Please check the path and ensure it contains valid dictionary files.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="223"/>
+        <location filename="../src/ui/settingslots.cpp" line="222"/>
         <source>Select Dictionary Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="263"/>
-        <source>Failed to apply configuration. Please check the dictionary directory and model file.</source>
+        <location filename="../src/ui/settingslots.cpp" line="253"/>
+        <source>VOICEVOX CORE is not installed. Install it from the Components tab first.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/settingslots.cpp" line="271"/>
+        <source>Failed to apply configuration. Please check the dictionary directory and model file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/settingslots.cpp" line="279"/>
         <source>Current style is invalid (ID: %1), available styles: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="273"/>
+        <location filename="../src/ui/settingslots.cpp" line="281"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingslots.cpp" line="281"/>
+        <location filename="../src/ui/settingslots.cpp" line="291"/>
         <source>TTS failed. Please check the logs.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/settingslots.cpp" line="294"/>
-        <source>Cannot write temporary file.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1140,28 +1336,28 @@ This will restore all options to defaults.</source>
         <translation type="vanished">The most recent todo item is &quot;%1&quot;, due at: %2</translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="43"/>
+        <location filename="../src/utils/todoNotify.hpp" line="128"/>
         <source>Your event &quot;%1&quot; is due soon! Please complete it.
 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="52"/>
+        <location filename="../src/utils/todoNotify.hpp" line="138"/>
         <source>Todo Reminder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="69"/>
+        <location filename="../src/utils/todoNotify.hpp" line="65"/>
         <source>No todo items yet!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="95"/>
+        <location filename="../src/utils/todoNotify.hpp" line="96"/>
         <source>No recent todo items!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/todoNotify.hpp" line="98"/>
+        <location filename="../src/utils/todoNotify.hpp" line="101"/>
         <source>The nearest todo item is &quot;%1&quot;, deadline: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1218,74 +1414,74 @@ This will restore all options to defaults.</source>
         <translation type="obsolete">Key Listener</translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="48"/>
-        <location filename="../src/core/tray.cpp" line="106"/>
+        <location filename="../src/core/tray.cpp" line="49"/>
+        <location filename="../src/core/tray.cpp" line="108"/>
         <source>Reset Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="49"/>
-        <location filename="../src/core/tray.cpp" line="107"/>
+        <location filename="../src/core/tray.cpp" line="50"/>
+        <location filename="../src/core/tray.cpp" line="109"/>
         <source>Show Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="50"/>
-        <location filename="../src/core/tray.cpp" line="108"/>
+        <location filename="../src/core/tray.cpp" line="51"/>
+        <location filename="../src/core/tray.cpp" line="110"/>
         <source>Silent Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="51"/>
-        <location filename="../src/core/tray.cpp" line="109"/>
+        <location filename="../src/core/tray.cpp" line="52"/>
+        <location filename="../src/core/tray.cpp" line="111"/>
         <source>Lock Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="52"/>
-        <location filename="../src/core/tray.cpp" line="110"/>
+        <location filename="../src/core/tray.cpp" line="53"/>
+        <location filename="../src/core/tray.cpp" line="112"/>
         <source>Play Media</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="53"/>
-        <location filename="../src/core/tray.cpp" line="111"/>
+        <location filename="../src/core/tray.cpp" line="54"/>
+        <location filename="../src/core/tray.cpp" line="113"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="54"/>
-        <location filename="../src/core/tray.cpp" line="112"/>
+        <location filename="../src/core/tray.cpp" line="55"/>
+        <location filename="../src/core/tray.cpp" line="114"/>
         <source>Key Listener</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="60"/>
-        <location filename="../src/core/tray.cpp" line="113"/>
+        <location filename="../src/core/tray.cpp" line="61"/>
+        <location filename="../src/core/tray.cpp" line="115"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="62"/>
-        <location filename="../src/core/tray.cpp" line="114"/>
+        <location filename="../src/core/tray.cpp" line="63"/>
+        <location filename="../src/core/tray.cpp" line="116"/>
         <source>Program Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="63"/>
-        <location filename="../src/core/tray.cpp" line="115"/>
+        <location filename="../src/core/tray.cpp" line="64"/>
+        <location filename="../src/core/tray.cpp" line="117"/>
         <source>User Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="64"/>
-        <location filename="../src/core/tray.cpp" line="116"/>
+        <location filename="../src/core/tray.cpp" line="65"/>
+        <location filename="../src/core/tray.cpp" line="118"/>
         <source>Log Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/tray.cpp" line="73"/>
-        <location filename="../src/core/tray.cpp" line="117"/>
+        <location filename="../src/core/tray.cpp" line="74"/>
+        <location filename="../src/core/tray.cpp" line="119"/>
         <source>Launch Item</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1389,7 +1585,7 @@ This will restore all options to defaults.</source>
 <context>
     <name>VoiceGenerator</name>
     <message>
-        <location filename="../src/tts/voicegenerator.hpp" line="186"/>
+        <location filename="../src/tts/voicegenerator.hpp" line="185"/>
         <source>Audio file not found: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1712,7 +1908,7 @@ This will restore all options to defaults.</source>
         <translation type="vanished">Launch in Silent Mode</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="684"/>
+        <location filename="../src/ui/setting.ui" line="739"/>
         <source>TTS</source>
         <translation>TTS</translation>
     </message>
@@ -1721,12 +1917,12 @@ This will restore all options to defaults.</source>
         <translation type="vanished">Get API</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="902"/>
+        <location filename="../src/ui/setting.ui" line="957"/>
         <source>APIKey</source>
         <translation>API Key</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="874"/>
+        <location filename="../src/ui/setting.ui" line="929"/>
         <source>APPID</source>
         <translation>APP ID</translation>
     </message>
@@ -1735,7 +1931,7 @@ This will restore all options to defaults.</source>
         <translation type="vanished">Speaker</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="888"/>
+        <location filename="../src/ui/setting.ui" line="943"/>
         <source>APISecret</source>
         <translation>API Secret</translation>
     </message>
@@ -1772,7 +1968,7 @@ This will restore all options to defaults.</source>
         <translation type="vanished">qwen2.5:3b</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1415"/>
+        <location filename="../src/ui/setting.ui" line="1470"/>
         <source>Weather API</source>
         <translation>Weather API</translation>
     </message>
@@ -1781,12 +1977,12 @@ This will restore all options to defaults.</source>
         <translation type="vanished">Get OpenWeather API</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1421"/>
+        <location filename="../src/ui/setting.ui" line="1476"/>
         <source>Chengdu</source>
         <translation>Chengdu</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1435"/>
+        <location filename="../src/ui/setting.ui" line="1490"/>
         <source>Key</source>
         <translation>Key</translation>
     </message>
@@ -1795,12 +1991,12 @@ This will restore all options to defaults.</source>
         <translation type="vanished">City</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1442"/>
+        <location filename="../src/ui/setting.ui" line="1497"/>
         <source>https://home.openweathermap.org/api_keys</source>
         <translation>https://home.openweathermap.org/api_keys</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1445"/>
+        <location filename="../src/ui/setting.ui" line="1500"/>
         <source>OpenWeather</source>
         <translation>OpenWeather</translation>
     </message>
@@ -1813,12 +2009,12 @@ This will restore all options to defaults.</source>
         <translation type="vanished">About</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1540"/>
+        <location filename="../src/ui/setting.ui" line="1595"/>
         <source>GitHub</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1520"/>
+        <location filename="../src/ui/setting.ui" line="1575"/>
         <source>Contributors</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1849,10 +2045,10 @@ This will restore all options to defaults.</source>
     </message>
     <message>
         <location filename="../src/ui/setting.ui" line="167"/>
-        <location filename="../src/ui/setting.ui" line="447"/>
-        <location filename="../src/ui/setting.ui" line="962"/>
-        <location filename="../src/ui/setting.ui" line="979"/>
-        <location filename="../src/ui/setting.ui" line="1404"/>
+        <location filename="../src/ui/setting.ui" line="495"/>
+        <location filename="../src/ui/setting.ui" line="1017"/>
+        <location filename="../src/ui/setting.ui" line="1034"/>
+        <location filename="../src/ui/setting.ui" line="1459"/>
         <source>Browse</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1868,8 +2064,8 @@ This will restore all options to defaults.</source>
     </message>
     <message>
         <location filename="../src/ui/setting.ui" line="201"/>
-        <location filename="../src/ui/setting.ui" line="1075"/>
-        <location filename="../src/ui/setting.ui" line="1271"/>
+        <location filename="../src/ui/setting.ui" line="1130"/>
+        <location filename="../src/ui/setting.ui" line="1326"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1914,12 +2110,12 @@ This will restore all options to defaults.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="400"/>
+        <location filename="../src/ui/setting.ui" line="448"/>
         <source>Music Icon Color - Inactive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="414"/>
+        <location filename="../src/ui/setting.ui" line="462"/>
         <source>Music Icon Color - Active</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1930,363 +2126,383 @@ This will restore all options to defaults.</source>
     </message>
     <message>
         <location filename="../src/ui/setting.ui" line="350"/>
+        <source>Components</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.ui" line="368"/>
+        <source>Optional components are not bundled with Pelr. Install them here.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.ui" line="381"/>
+        <source>Read the setup guide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.ui" line="398"/>
         <source>Tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="374"/>
+        <location filename="../src/ui/setting.ui" line="422"/>
         <source>Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="387"/>
+        <location filename="../src/ui/setting.ui" line="435"/>
         <source>Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="393"/>
+        <location filename="../src/ui/setting.ui" line="441"/>
         <source>Music Icon Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="407"/>
+        <location filename="../src/ui/setting.ui" line="455"/>
         <source>Music Icon Color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="421"/>
+        <location filename="../src/ui/setting.ui" line="469"/>
         <source>Music Icon Symbol</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="434"/>
+        <location filename="../src/ui/setting.ui" line="482"/>
         <source>GIF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="440"/>
+        <location filename="../src/ui/setting.ui" line="488"/>
         <source>GIF Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="460"/>
+        <location filename="../src/ui/setting.ui" line="508"/>
         <source>Show Launch Menu in Tray Menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="485"/>
+        <location filename="../src/ui/setting.ui" line="515"/>
+        <source>Always enable dynamic effects</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.ui" line="540"/>
         <source>Toggles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="506"/>
+        <location filename="../src/ui/setting.ui" line="561"/>
         <source>Start with System</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="513"/>
+        <location filename="../src/ui/setting.ui" line="568"/>
         <source>Listen for Keys on Startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="520"/>
+        <location filename="../src/ui/setting.ui" line="575"/>
         <source>Eye Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="530"/>
+        <location filename="../src/ui/setting.ui" line="585"/>
         <source>Strength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="550"/>
+        <location filename="../src/ui/setting.ui" line="605"/>
         <source>Launch &quot;Star&quot; Items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="560"/>
+        <location filename="../src/ui/setting.ui" line="615"/>
         <source>Detection Duration (min)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="567"/>
+        <location filename="../src/ui/setting.ui" line="622"/>
         <source>-1 disables check</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="580"/>
+        <location filename="../src/ui/setting.ui" line="635"/>
         <source>Launch Delay (min)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="587"/>
+        <location filename="../src/ui/setting.ui" line="642"/>
         <source>-1 disables launch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="603"/>
+        <location filename="../src/ui/setting.ui" line="658"/>
         <source>Random Speech</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="610"/>
+        <location filename="../src/ui/setting.ui" line="665"/>
         <source>Enable Voice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="617"/>
+        <location filename="../src/ui/setting.ui" line="672"/>
         <source>Hourly Chime</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="624"/>
+        <location filename="../src/ui/setting.ui" line="679"/>
         <source>Always on Top</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="631"/>
+        <location filename="../src/ui/setting.ui" line="686"/>
         <source>Tray Hourly Chime</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="638"/>
+        <location filename="../src/ui/setting.ui" line="693"/>
         <source>Silent Boot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="645"/>
+        <location filename="../src/ui/setting.ui" line="700"/>
         <source>Remember Window Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="652"/>
+        <location filename="../src/ui/setting.ui" line="707"/>
         <source>Show Thinking Bubble</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="659"/>
+        <location filename="../src/ui/setting.ui" line="714"/>
         <source>AI Greeting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="708"/>
+        <location filename="../src/ui/setting.ui" line="763"/>
         <source>TTS Selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="721"/>
+        <location filename="../src/ui/setting.ui" line="776"/>
         <source>OpenAI-Edge-TTS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="727"/>
-        <location filename="../src/ui/setting.ui" line="916"/>
+        <location filename="../src/ui/setting.ui" line="782"/>
+        <location filename="../src/ui/setting.ui" line="971"/>
         <source>Speaker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="741"/>
+        <location filename="../src/ui/setting.ui" line="796"/>
         <source>Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="767"/>
+        <location filename="../src/ui/setting.ui" line="822"/>
         <source>How to set up speaker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="777"/>
+        <location filename="../src/ui/setting.ui" line="832"/>
         <source>OpenAI-Compatible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="868"/>
+        <location filename="../src/ui/setting.ui" line="923"/>
         <source>iFlytek TTS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="926"/>
+        <location filename="../src/ui/setting.ui" line="981"/>
         <source>Get API</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="933"/>
+        <location filename="../src/ui/setting.ui" line="988"/>
         <source>iFlytek Speech Synthesis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="946"/>
+        <location filename="../src/ui/setting.ui" line="1001"/>
         <source>voicevox (Japanese, Local)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="952"/>
+        <location filename="../src/ui/setting.ui" line="1007"/>
         <source>Dictionary Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="969"/>
+        <location filename="../src/ui/setting.ui" line="1024"/>
         <source>Model File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="986"/>
+        <location filename="../src/ui/setting.ui" line="1041"/>
         <source>Voice Style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="996"/>
+        <location filename="../src/ui/setting.ui" line="1051"/>
         <source>Speech Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1022"/>
-        <location filename="../src/ui/setting.ui" line="1029"/>
-        <location filename="../src/ui/setting.ui" line="1096"/>
-        <location filename="../src/ui/setting.ui" line="1110"/>
-        <location filename="../src/ui/setting.ui" line="1212"/>
-        <location filename="../src/ui/setting.ui" line="1245"/>
+        <location filename="../src/ui/setting.ui" line="1077"/>
+        <location filename="../src/ui/setting.ui" line="1084"/>
+        <location filename="../src/ui/setting.ui" line="1151"/>
+        <location filename="../src/ui/setting.ui" line="1165"/>
+        <location filename="../src/ui/setting.ui" line="1267"/>
+        <location filename="../src/ui/setting.ui" line="1300"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1042"/>
+        <location filename="../src/ui/setting.ui" line="1097"/>
         <source>Translation Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1055"/>
+        <location filename="../src/ui/setting.ui" line="1110"/>
         <source>TTS Server (translators)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1061"/>
+        <location filename="../src/ui/setting.ui" line="1116"/>
         <source>Provider</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1089"/>
+        <location filename="../src/ui/setting.ui" line="1144"/>
         <source>Refresh Providers &amp; Languages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1103"/>
-        <location filename="../src/ui/setting.ui" line="1219"/>
+        <location filename="../src/ui/setting.ui" line="1158"/>
+        <location filename="../src/ui/setting.ui" line="1274"/>
         <source>Enter test text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1120"/>
+        <location filename="../src/ui/setting.ui" line="1175"/>
         <source>Tencent (Cloud)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1229"/>
+        <location filename="../src/ui/setting.ui" line="1284"/>
         <source>&lt;Test Result&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1255"/>
+        <location filename="../src/ui/setting.ui" line="1310"/>
         <source>LibreTranslate (Local)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1261"/>
+        <location filename="../src/ui/setting.ui" line="1316"/>
         <source>Port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1302"/>
+        <location filename="../src/ui/setting.ui" line="1357"/>
         <source>llm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1322"/>
+        <location filename="../src/ui/setting.ui" line="1377"/>
         <source>Max History Messages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1336"/>
+        <location filename="../src/ui/setting.ui" line="1391"/>
         <source>-1 means unlimited</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1352"/>
+        <location filename="../src/ui/setting.ui" line="1407"/>
         <source>Enter system prompt here. If a prompt file is set, this is ignored.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1373"/>
+        <location filename="../src/ui/setting.ui" line="1428"/>
         <source>Custom Prompt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1387"/>
+        <location filename="../src/ui/setting.ui" line="1442"/>
         <source>Prompt File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1397"/>
+        <location filename="../src/ui/setting.ui" line="1452"/>
         <source>If set, the custom prompt above is ignored.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1428"/>
+        <location filename="../src/ui/setting.ui" line="1483"/>
         <source>This feature may be inaccessible in mainland China.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1452"/>
+        <location filename="../src/ui/setting.ui" line="1507"/>
         <source>Get OpenWeather API</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1459"/>
+        <location filename="../src/ui/setting.ui" line="1514"/>
         <source>City</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1483"/>
+        <location filename="../src/ui/setting.ui" line="1538"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1492"/>
+        <location filename="../src/ui/setting.ui" line="1547"/>
         <source>Voice Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1499"/>
+        <location filename="../src/ui/setting.ui" line="1554"/>
         <source>Program Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1506"/>
+        <location filename="../src/ui/setting.ui" line="1561"/>
         <source>Check for Updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1513"/>
+        <location filename="../src/ui/setting.ui" line="1568"/>
         <source>Reset App</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1547"/>
+        <location filename="../src/ui/setting.ui" line="1602"/>
         <source>Issue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1554"/>
+        <location filename="../src/ui/setting.ui" line="1609"/>
         <source>Custom Phrases</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1561"/>
+        <location filename="../src/ui/setting.ui" line="1616"/>
         <source>Documentation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1572"/>
+        <location filename="../src/ui/setting.ui" line="1627"/>
         <source>Open Source License</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2316,7 +2532,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="734"/>
+        <location filename="../src/ui/setting.ui" line="789"/>
         <source>zh-CN-XiaoxiaoNeural</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2325,112 +2541,112 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Browse</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="783"/>
+        <location filename="../src/ui/setting.ui" line="838"/>
         <source>endpoint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="790"/>
+        <location filename="../src/ui/setting.ui" line="845"/>
         <source>http://example.com/v1/audio/speech</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="797"/>
+        <location filename="../src/ui/setting.ui" line="852"/>
         <source>apiKey</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="811"/>
+        <location filename="../src/ui/setting.ui" line="866"/>
         <source>model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="825"/>
+        <location filename="../src/ui/setting.ui" line="880"/>
         <source>voice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="832"/>
+        <location filename="../src/ui/setting.ui" line="887"/>
         <source>alloy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="839"/>
+        <location filename="../src/ui/setting.ui" line="894"/>
         <source>speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1126"/>
+        <location filename="../src/ui/setting.ui" line="1181"/>
         <source>SecretId</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1136"/>
+        <location filename="../src/ui/setting.ui" line="1191"/>
         <source>SecretKey</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1150"/>
+        <location filename="../src/ui/setting.ui" line="1205"/>
         <source>region</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1160"/>
+        <location filename="../src/ui/setting.ui" line="1215"/>
         <source>ap-guangzhou</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1167"/>
+        <location filename="../src/ui/setting.ui" line="1222"/>
         <source>project_id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1181"/>
+        <location filename="../src/ui/setting.ui" line="1236"/>
         <source>source_lang</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1191"/>
+        <location filename="../src/ui/setting.ui" line="1246"/>
         <source>zh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1198"/>
+        <location filename="../src/ui/setting.ui" line="1253"/>
         <source>target_lang</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1205"/>
+        <location filename="../src/ui/setting.ui" line="1260"/>
         <source>en</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1308"/>
+        <location filename="../src/ui/setting.ui" line="1363"/>
         <source>http://example.com</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1349"/>
+        <location filename="../src/ui/setting.ui" line="1404"/>
         <source>You are a friendly AI assistant.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1359"/>
+        <location filename="../src/ui/setting.ui" line="1414"/>
         <source>API Base URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1366"/>
+        <location filename="../src/ui/setting.ui" line="1421"/>
         <source>API Key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1380"/>
+        <location filename="../src/ui/setting.ui" line="1435"/>
         <source>AI Model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.ui" line="1578"/>
+        <location filename="../src/ui/setting.ui" line="1633"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }

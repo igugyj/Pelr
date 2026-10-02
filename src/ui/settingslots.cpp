@@ -21,9 +21,8 @@
 #include "UpdateDialog.h"
 #include "voicevox_tts.h"
 #include "voicegenerator.hpp"
+#include "componentmanager.hpp"
 #include <QProcess>
-#include <QRandomGenerator>
-#include <QDateTime>
 #include <QStandardPaths>
 using MessageType = NotificationWidget::MessageType;
 void SettingWidget::onTranslatorsChanged()
@@ -247,6 +246,15 @@ void SettingWidget::loadNotice()
 }
 void SettingWidget::onTestVoicevox()
 {
+    if (!ComponentManager::voicevoxAvailable())
+    {
+        NotificationWidget::showNotification(
+            tr("Warning"),
+            tr("VOICEVOX CORE is not installed. Install it from the Components tab first."),
+            5000, MessageType::Warning);
+        return;
+    }
+
     TTSConfig cfg = getTTSConfigValue();
     cfg.provider = 2; // 强制使用 VOICEVOX
 
@@ -275,28 +283,15 @@ void SettingWidget::onTestVoicevox()
         return;
     }
 
-    QByteArray wav = VoicevoxTTS::instance().testSynthesis(cfg);
-    if (wav.isEmpty())
+    const QString testText = QString::fromUtf8(u8"こんにちは、テストです。");
+    QString filePath = VoicevoxTTS::instance().synthesizeToFile(
+        cfg, testText, cfg.voicevox_style_id, cfg.voicevox_speed);
+    if (filePath.isEmpty())
     {
         NotificationWidget::showNotification(tr("Warning"), tr("TTS failed. Please check the logs."), 5000, MessageType::Warning);
         return;
     }
 
-    // 生成唯一临时文件名（时间戳 + 随机数）
-    QString testFile = QDir::tempPath() + "/voicevox_test_" +
-                       QString::number(QDateTime::currentMSecsSinceEpoch()) +
-                       "_" + QString::number(QRandomGenerator::global()->generate()) +
-                       ".wav";
-
-    QFile file(testFile);
-    if (!file.open(QIODevice::WriteOnly))
-    {
-        NotificationWidget::showNotification(tr("Warning"), tr("Cannot write temporary file."), 5000, MessageType::Warning);
-        return;
-    }
-    file.write(wav);
-    file.close();
-
-    VoiceGenerator::instance()->playVoice(testFile);
-    qDebug() << "[Settings] Test synthesis and playback completed.";
+    VoiceGenerator::instance()->playVoice(filePath);
+    qDebug() << "[Settings] Test synthesis and playback completed:" << filePath;
 }

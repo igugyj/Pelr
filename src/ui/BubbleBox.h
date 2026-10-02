@@ -6,7 +6,9 @@
 #include <QString>
 #include <QMediaPlayer>
 #include <QThread>
+#include <QElapsedTimer>
 #include "llamaclient.h"
+#include "data.hpp"
 
 class BubbleBox : public QLabel
 {
@@ -43,11 +45,13 @@ private:
     static BubbleBox *m_instance;
     bool isFirst = true;
     QString m_text;
+    QString m_lastDebounceText;       // 防抖：上次接受的文本
+    QElapsedTimer m_lastDebounceTimer; // 防抖：上次接受文本的时间
 
     QString getPeriodText();
 
 public:
-    static constexpr int AI_RANDOM_ID = 3;
+    static constexpr int AI_RANDOM_ID = ChatScenery::bubble;
 
 public slots:
     void showTime();
@@ -56,7 +60,7 @@ public slots:
 
     void textSet(const QString &text);
 
-    void RandomSentence();
+    void RandomSentence(int mode = RandomSentenceMode::automation);
 
     void onRandomSentenceAI(const QString &text, int id);
     void onRandomSentenceError(const QString &error, int id);

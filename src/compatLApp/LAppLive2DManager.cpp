@@ -11,8 +11,10 @@
 #include "LAppModel.hpp"
 #include "LAppView.hpp"
 #include "data.hpp" // DataManager
+#include "ExtraMotionManager.h"
 #include <QFileInfo>
 #include <QDebug>
+#include "cubismcoreloader.hpp"
 
 using namespace Csm;
 using namespace LAppDefine;
@@ -68,6 +70,11 @@ LAppLive2DManager::~LAppLive2DManager()
 // ---------- 从文件路径加载模型 ----------
 void LAppLive2DManager::LoadModelFromPath(const std::string &modelPath, const std::string &fileName)
 {
+    if (!CubismCoreLoader::instance().isLoaded())
+    {
+        LAppPal::PrintLogLn("[LApp] Live2D Cubism Core unavailable, model load skipped.");
+        return;
+    }
     ReleaseAllModel();
     _models.PushBack(new LAppModel());
     _models[0]->LoadAssets(modelPath.c_str(), fileName.c_str());
@@ -142,6 +149,7 @@ void LAppLive2DManager::ReleaseAllModel()
     for (csmUint32 i = 0; i < _models.GetSize(); ++i)
         delete _models[i];
     _models.Clear();
+    ExtraMotionManager::getInstance()->setModel(nullptr);
 }
 
 void LAppLive2DManager::SetRenderTargetSize(csmUint32 width, csmUint32 height)
@@ -236,6 +244,11 @@ void LAppLive2DManager::NextScene()
 
 void LAppLive2DManager::ChangeScene(Csm::csmInt32 index)
 {
+    if (!CubismCoreLoader::instance().isLoaded())
+    {
+        LAppPal::PrintLogLn("[LApp] Live2D Cubism Core unavailable, scene change skipped.");
+        return;
+    }
     _sceneIndex = index;
     if (DebugLogEnable)
         LAppPal::PrintLogLn("[APP]model index: %d", _sceneIndex);

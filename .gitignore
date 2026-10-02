@@ -10,16 +10,16 @@
 lib
 log
 release
-Resources/**
 voice_files
-thirdParty/voicevox_core/onnxruntime/**
-thirdParty/voicevox_core/c_api/**
+Liv2d_SDK
+thirdParty/voicevox_core/**
 thirdParty/core/**
-thirdParty/Framework
 thirdParty/glew
 thirdParty/glfw
 lib
 .history
+__pycache__/
+*.pyc
 
 # need contain LICENCE/TERMS...
 !thirdParty/voicevox_core/c_api/LICENSE
@@ -28,4 +28,9 @@ lib
 !thirdParty/Core/README.md
 # test
 **test**
-!Resources/.Resources
+.cpcleaner-cache
+
+# docs
+docs/.ai
+docs/architecture
+audit*.md

@@ -1,0 +1,326 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: build & package, but do not create tag or GitHub Release'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  PELR_PLATFORM: windows-x86_64
+  QT_VERSION: '6.10.1'
+  GLEW_VERSION: '2.2.0'
+  GLFW_VERSION: '3.4'
+  VOICEVOX_VERSION: '0.17.0'
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      # release.py 只用标准库；这里只为确定 python 指向，避免命中 Store 存根
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Live2D Cubism Core 是专有许可、禁止公开分发，仓库里只有 LICENSE.md/README.md。
+      # 编译只需要 include/Live2DCubismCore.h（Core 走 QLibrary 运行时加载，不参与链接），
+      # 因此把它以 base64 存进 secret —— 单文件 20,966 B → 约 28 KB，低于 secret 48 KB 上限。
+      # 产物归档里不会有 Core DLL。
+      - name: Restore Live2D Cubism Core header
+        shell: pwsh
+        env:
+          LIVE2D_CORE_H_B64: ${{ secrets.LIVE2D_CORE_H_B64 }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:LIVE2D_CORE_H_B64)) {
+            throw 'Repository secret LIVE2D_CORE_H_B64 is not set. Generate it on a machine with the Cubism SDK: [Convert]::ToBase64String([IO.File]::ReadAllBytes(''thirdParty/Core/include/Live2DCubismCore.h''))'
+          }
+          $dir = 'thirdParty/Core/include'
+          New-Item -ItemType Directory -Force -Path $dir | Out-Null
+          $bytes = [Convert]::FromBase64String($env:LIVE2D_CORE_H_B64)
+          [IO.File]::WriteAllBytes("$dir/Live2DCubismCore.h", $bytes)
+          if (-not (Test-Path "$dir/Live2DCubismCore.h")) { throw "write failed: $dir" }
+          Write-Host "Live2DCubismCore.h restored ($($bytes.Length) bytes)"
+
+      # 不调用 thirdParty/scripts/setup_glew_glfw.bat —— 它结尾有 `pause` 会挂住 runner。
+      # 这里复刻同一个脚本的 curl/unzip 步骤，版本号与该脚本一致。
+      - name: Fetch GLEW and GLFW
+        shell: pwsh
+        env:
+          GLEW_URL: "https://github.com/nigels-com/glew/releases/download/glew-${{ env.GLEW_VERSION }}/glew-${{ env.GLEW_VERSION }}.zip"
+          GLFW_URL: "https://github.com/glfw/glfw/releases/download/${{ env.GLFW_VERSION }}/glfw-${{ env.GLFW_VERSION }}.zip"
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          if (-not (Test-Path 'thirdParty/glew/src/glew.c')) {
+            curl.exe -fsSL -o glew.zip $env:GLEW_URL
+            if ($LASTEXITCODE -ne 0) { throw "GLEW download failed (exit $LASTEXITCODE)" }
+            Expand-Archive -Path glew.zip -DestinationPath thirdParty -Force
+            Move-Item -Path "thirdParty/glew-$env:GLEW_VERSION" -Destination 'thirdParty/glew'
+            Remove-Item glew.zip -Force
+          }
+
+          if (-not (Test-Path 'thirdParty/glfw/CMakeLists.txt')) {
+            curl.exe -fsSL -o glfw.zip $env:GLFW_URL
+            if ($LASTEXITCODE -ne 0) { throw "GLFW download failed (exit $LASTEXITCODE)" }
+            Expand-Archive -Path glfw.zip -DestinationPath thirdParty -Force
+            Move-Item -Path "thirdParty/glfw-$env:GLFW_VERSION" -Destination 'thirdParty/glfw'
+            Remove-Item glfw.zip -Force
+          }
+
+          if (-not (Test-Path 'thirdParty/glew/src/glew.c')) { throw 'GLEW sources missing after fetch' }
+          if (-not (Test-Path 'thirdParty/glfw/CMakeLists.txt')) { throw 'GLFW sources missing after fetch' }
+          Write-Host 'GLEW and GLFW ready'
+
+      # local_voicevox 目标是无条件的：缺 voicevox_core.h / .lib 会直接链接失败。
+      # 只需要 C API 部分（1.4 MB）；onnxruntime 是运行时依赖，Release 构建不投放。
+      - name: Fetch voicevox_core C API
+        shell: pwsh
+        env:
+          VOICEVOX_URL: "https://github.com/VOICEVOX/voicevox_core/releases/download/${{ env.VOICEVOX_VERSION }}/voicevox_core-windows-x64-${{ env.VOICEVOX_VERSION }}.zip"
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $inc = Join-Path 'thirdParty/voicevox_core/c_api/include' 'voicevox_core.h'
+          $lib = Join-Path 'thirdParty/voicevox_core/c_api/lib' 'voicevox_core.lib'
+          if ((Test-Path $inc) -and (Test-Path $lib)) {
+            Write-Host 'voicevox_core already present, skipping download'
+            return
+          }
+
+          curl.exe -fsSL -o voicevox.zip $env:VOICEVOX_URL
+          if ($LASTEXITCODE -ne 0) { throw "voicevox_core download failed (exit $LASTEXITCODE)" }
+          Expand-Archive -Path voicevox.zip -DestinationPath voicevox_tmp -Force
+
+          # 发布包内部布局随版本变化，按文件名搜索而不是假设目录结构
+          $h = Get-ChildItem voicevox_tmp -Recurse -Filter 'voicevox_core.h' -File | Select-Object -First 1
+          $l = Get-ChildItem voicevox_tmp -Recurse -Filter 'voicevox_core.lib' -File | Select-Object -First 1
+          if (-not $h) { throw 'voicevox_core.h not found in release zip' }
+          if (-not $l) { throw 'voicevox_core.lib not found in release zip' }
+
+          New-Item -ItemType Directory -Force -Path (Split-Path $inc -Parent), (Split-Path $lib -Parent) | Out-Null
+          Copy-Item $h.FullName $inc -Force
+          Copy-Item $l.FullName $lib -Force
+          $d = Get-ChildItem voicevox_tmp -Recurse -Filter 'voicevox_core.dll' -File | Select-Object -First 1
+          if ($d) { Copy-Item $d.FullName (Split-Path $lib -Parent) -Force }
+
+          Remove-Item voicevox.zip -Force
+          Remove-Item voicevox_tmp -Recurse -Force
+          Write-Host "voicevox_core $env:VOICEVOX_VERSION C API ready"
+
+      - name: Install Qt (MinGW)
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_mingw'
+          tools: 'tools_mingw1310,qt.tools.win64_mingw1310'
+          cache: 'true'
+
+      # 参考工作流没有这一步；显式补上，避免依赖 runner 镜像的隐式 PATH。
+      - name: Put MinGW on PATH
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (Get-Command mingw32-make -ErrorAction SilentlyContinue) {
+            Write-Host 'mingw32-make already on PATH'
+            return
+          }
+          $roots = @($env:QT_ROOT_DIR,
+                     (Split-Path $env:QT_ROOT_DIR -Parent),
+                     (Split-Path (Split-Path $env:QT_ROOT_DIR -Parent) -Parent))
+          $bin = $roots |
+            Where-Object { $_ } |
+            ForEach-Object { Get-ChildItem -LiteralPath $_ -Directory -Filter 'mingw*' -ErrorAction SilentlyContinue } |
+            Where-Object { Test-Path (Join-Path $_.FullName 'bin/mingw32-make.exe') } |
+            ForEach-Object { Join-Path $_.FullName 'bin' } |
+            Select-Object -First 1
+          if (-not $bin) { throw "mingw32-make not found near QT_ROOT_DIR=$env:QT_ROOT_DIR" }
+          $bin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+          Write-Host "MinGW added to PATH: $bin"
+
+      # CMAKE_PREFIX_PATH 必须单值传入：
+      #  - CMakeLists.txt:51-55 find_package(Qt6) 的查找根
+      #  - CMakeLists.txt:512-513 透传给 FluentUIStyle ExternalProject 作 CMAKE_PREFIX_PATH / CMAKE_INSTALL_PREFIX
+      #  - CMakeLists.txt:378     windeployqt 的查找路径
+      #  - CMAKE_BUILD_TYPE=Release → DEBUG_MODE 推导为 OFF，组件投放块被跳过
+      - name: Configure
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:Path = "$env:QT_ROOT_DIR\bin;" + $env:Path
+          cmake -S . -B build/Release -G 'MinGW Makefiles' `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+          if ($LASTEXITCODE -ne 0) { throw "CMake configure failed (exit $LASTEXITCODE)" }
+
+      - name: Build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:Path = "$env:QT_ROOT_DIR\bin;" + $env:Path
+          cmake --build build/Release --parallel
+          if ($LASTEXITCODE -ne 0) { throw "Build failed (exit $LASTEXITCODE)" }
+
+      - name: Version, archive name, release notes
+        id: version
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          # 锚定行首，避免命中 `// #define VERSION ...` 这类注释行
+          $m = Select-String -Path 'src/core/data.hpp' -Pattern '^\s*#define\s+VERSION\s+"v?([\d.]+)"' |
+               Select-Object -First 1
+          if (-not $m) { throw 'Cannot parse VERSION from src/core/data.hpp' }
+          $v = $m.Matches[0].Groups[1].Value
+          $tag = "v$v"
+
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne $tag) {
+            throw "Pushed tag '$env:GITHUB_REF_NAME' does not match VERSION '$tag' in src/core/data.hpp"
+          }
+
+          # 注意：.NET 正则不支持 \Q...\E，必须用 [regex]::Escape
+          $raw = Get-Content 'docs/ChangeLog.md' -Raw -Encoding UTF8
+          $pattern = '(?ms)^## ' + [regex]::Escape($tag) + '\b.*?(?=^## |\z)'
+          $sec = [regex]::Match($raw, $pattern)
+          $notes = if ($sec.Success -and $sec.Value.Trim()) { $sec.Value.Trim() } else { "Release $tag" }
+          Set-Content -Path 'release_notes.md' -Value $notes -Encoding utf8
+
+          $archive = 'pelr_' + $env:PELR_PLATFORM + '_' + $tag + '.7z'
+          foreach ($kv in @("version=$v", "tag=$tag", "archive=$archive")) {
+            $kv | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          }
+          Write-Host "version=$v tag=$tag archive=$archive"
+
+      # release.py：生成 NOTICE → 复制 build/Release 到 Release/ → 复制配套文件 → 清理残留
+      # runner 上 copytree/rmtree 常撞到文件锁（杀软扫描、句柄未释放），故重试。
+      # release_config.json 的 wipe_target_first=true 保证每次重试都从干净目标开始，重试是安全的。
+      - name: Assemble Release directory (release.py)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # 关掉 PS7.4 的原生命令非零退出即抛异常，改由下方显式判断，才能实现重试
+          $PSNativeCommandUseErrorActionPreference = $false
+
+          if (-not (Get-Command python -ErrorAction SilentlyContinue)) { throw 'python not found on PATH' }
+
+          $maxAttempts = 4
+          $code = 1
+          for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+            Write-Host "release.py attempt $attempt of $maxAttempts"
+            try {
+              python scripts/release.py
+              $code = $LASTEXITCODE
+            } catch {
+              $code = 1
+              Write-Host "release.py threw: $_"
+            }
+
+            if ($code -eq 0) { break }
+
+            if ($attempt -eq $maxAttempts) {
+              throw "release.py failed after $maxAttempts attempts (exit $code)"
+            }
+            $wait = 5 * $attempt
+            Write-Host "release.py exited with $code; retrying in $wait seconds"
+            Start-Sleep -Seconds $wait
+          }
+          Write-Host 'release.py succeeded'
+
+      - name: Verify package contents
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $must = @(
+            'Pelr.exe', 'NOTICE', 'LICENSE', 'README.md',
+            'plugins/local_voicevox.dll',
+            'SampleShaders', 'FrameworkShaders', 'Resources/Hiyori'
+          )
+          foreach ($f in $must) {
+            if (-not (Test-Path "Release/$f")) { throw "Release is missing required entry: $f" }
+          }
+
+          $forbidden = @(
+            '_deps', 'CMakeFiles', 'qrc_Resource.cpp', 'Makefile', 'CMakeCache.txt',
+            'Live2D/Live2DCubismCore.dll', 'voicevox_core/c_api'
+          )
+          foreach ($f in $forbidden) {
+            if (Test-Path "Release/$f") { throw "Release contains build residue or a non-redistributable: $f" }
+          }
+
+          $size = [math]::Round(
+            (Get-ChildItem Release -Recurse -File | Measure-Object Length -Sum).Sum / 1MB, 1)
+          if ($size -gt 300) { throw "Release directory is ${size} MB — clean step did not run" }
+          Write-Host "Release directory OK ($size MB)"
+
+      - name: Create 7z archive
+        id: archive
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sevenZip = (Get-Command 7z -ErrorAction SilentlyContinue).Source
+          if (-not $sevenZip) {
+            $sevenZip = @('C:\Program Files\7-Zip\7z.exe',
+                          'C:\Program Files (x86)\7-Zip\7z.exe') |
+                        Where-Object { Test-Path $_ } | Select-Object -First 1
+          }
+          if (-not $sevenZip) { throw '7z.exe not found' }
+
+          $archive = '${{ steps.version.outputs.archive }}'
+          & $sevenZip a $archive '.\Release\*'
+          if ($LASTEXITCODE -ne 0) { throw "7z failed (exit $LASTEXITCODE)" }
+          if (-not (Test-Path $archive)) { throw "archive not created: $archive" }
+          Write-Host "created $archive ($([math]::Round((Get-Item $archive).Length / 1MB, 1)) MB)"
+
+      - name: Upload archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.version.outputs.archive }}
+          path: ${{ steps.version.outputs.archive }}
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Create git tag
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == false }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = '${{ steps.version.outputs.tag }}'
+          git tag $tag
+          git push origin $tag
+          if ($LASTEXITCODE -ne 0) { throw "git push failed (exit $LASTEXITCODE)" }
+
+      - name: Create GitHub Release
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run == false }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          gh release create '${{ steps.version.outputs.tag }}' `
+            '${{ steps.version.outputs.archive }}' `
+            --title '${{ steps.version.outputs.tag }}' `
+            --notes-file release_notes.md `
+            --latest
+          if ($LASTEXITCODE -ne 0) { throw "gh release create failed (exit $LASTEXITCODE)" }

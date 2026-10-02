@@ -1,3 +1,6 @@
 {
-    "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}"
+    "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}",
+    "cmake.configureArgs": [
+        "-DCMAKE_PREFIX_PATH=D:/Qt/6.10.1/mingw_64" // 修改为你的6.10.1/mingw_64路径
+    ]
 }

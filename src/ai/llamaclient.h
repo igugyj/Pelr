@@ -54,7 +54,6 @@ private:
 
     // 单例指针
     static LlamaClient *m_instance;
-    int m_id = 1; // 1 box 2 window
     QNetworkAccessManager *m_manager;
     QString m_baseUrl;
     QString m_apiKey;
@@ -64,7 +63,7 @@ private:
     int m_maxContextMessages; // 最大保留轮数，-1不限
 
     void applyContextCompression();
-    void doGenerate(const QString &prompt, bool stream);
+    void doGenerate(const QString &prompt, bool stream, int id);
 
 private slots:
     void onReplyFinished(QNetworkReply *reply);

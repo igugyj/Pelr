@@ -49,12 +49,12 @@
 <details>
 <summary>Click to expand</summary>
 <div style="display: flex; overflow-x: auto; gap: 10px; padding: 10px; background: #f5f5f5; border-radius: 8px;">
-  <img src="repo_assets/p1.png" alt="preview1" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-  <img src="repo_assets/p2.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="screenshots/p1.png" alt="preview1" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="screenshots/p2.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
   </div>
   <div style="display: flex; overflow-x: auto; gap: 10px; padding: 10px; background: #f5f5f5; border-radius: 8px;">
-  <img src="repo_assets/p3.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-  <img src="repo_assets/p4.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="screenshots/p3.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+  <img src="screenshots/p4.png" alt="preview2" style="width: 49%; height: auto; flex-shrink: 0; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
 </div>
 </details>
 
@@ -150,6 +150,7 @@ See [docs/dev-structure.md](docs/dev-structure.md) for details.
 |  ONNX Runtime      (bundled with voicevox_core)               |
 |  stb               (image loading)                             |
 |  FluentUI3Style    (Qt style plugin: Fluent UI 3 look)        |
+|  miniz             (ZIP extraction for component install)     |
 |                                                                 |
 +---------------------------------------------------------------+
                                |
@@ -188,6 +189,7 @@ See [NOTICE](NOTICE) for third-party notices.
 - **VOICEVOX** - Free, medium-quality TTS engine
 - **kissfft** - Real-time spectrum analysis and audio detection
 - **FluentUI3Style** - Fluent UI 3 style for Qt widgets (built as plugin via ExternalProject)
+- **miniz** - ZIP compression/decompression, used to extract Live2D component archives
 
 ### Python Toolchain (optional)
 
@@ -231,6 +233,7 @@ Different components use different licenses:
 - [kissfft](https://github.com/mborgerding/kissfft) - Fast Fourier transform library
 - [FluentUI3Style](https://github.com/XHY-ChuJian/FluentUIStyle) - Fluent UI 3 Qt style implementation
 - [miniaudio](https://github.com/mackron/miniaudio) - Single-file audio decoding library
+- [miniz](https://github.com/richgel999/miniz) - Single-file ZIP compression/decompression library
 - [stb](https://github.com/nothings/stb) - Single-header image processing library
 - [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core) - Free TTS engine
 - [ONNX Runtime](https://github.com/microsoft/onnxruntime) - Cross-platform ML inference engine

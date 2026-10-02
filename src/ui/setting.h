@@ -17,6 +17,8 @@ namespace Ui
     class setting;
 }
 
+class ComponentCard;
+
 class SettingWidget : public QWidget
 {
     Q_OBJECT
@@ -73,9 +75,18 @@ private slots:
     void onTestVoicevox();
     void loadNotice();
 
+    // Components（可选组件）页
+    void buildComponentsTab();
+    void refreshComponentCardTexts();
+    void refreshComponentsDocsLink();
+    void refreshComponents();
+    void refreshVoicevoxAvailability();
+
 private:
     PyLang *m_langClient;
     VersionChecker *m_versionChecker;
     Ui::setting *ui;
     bool m_isUpdatingLanguage = false;
+    ComponentCard *m_live2dCard = nullptr;
+    ComponentCard *m_voicevoxCard = nullptr;
 };

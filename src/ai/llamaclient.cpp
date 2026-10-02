@@ -9,6 +9,7 @@
 #include <QEventLoop>
 #include <QMutexLocker>
 #include <QMutex>
+#include "logger.hpp"
 
 // 静态成员初始化
 LlamaClient *LlamaClient::m_instance = nullptr;
@@ -35,15 +36,6 @@ LlamaClient *LlamaClient::instance()
         if (!m_instance)
         {
             m_instance = new LlamaClient();
-
-            // 应用程序退出时自动清理实例
-            connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
-                    []()
-                    {
-                        QMutexLocker lock(&mutex);
-                        delete m_instance;
-                        m_instance = nullptr;
-                    });
         }
     }
     return m_instance;
@@ -201,11 +193,11 @@ void LlamaClient::applyContextCompression()
     m_messages = compressed;
 }
 
-void LlamaClient::doGenerate(const QString &prompt, bool stream)
+void LlamaClient::doGenerate(const QString &prompt, bool stream, int id)
 {
     if (m_baseUrl.isEmpty())
     {
-        emit errorOccurred("Base URL not configured. Call configure() first.", m_id);
+        emit errorOccurred("Base URL not configured. Call configure() first.", id);
         return;
     }
 
@@ -225,12 +217,13 @@ void LlamaClient::doGenerate(const QString &prompt, bool stream)
     jsonBody["messages"] = m_messages;
     jsonBody["stream"] = stream;
 
-    m_manager->post(request, QJsonDocument(jsonBody).toJson());
+    QNetworkReply *reply = m_manager->post(request, QJsonDocument(jsonBody).toJson());
+    reply->setProperty("_reqId", id);
 }
 
 QString LlamaClient::generateText(const QString &prompt, const int &id, bool stream)
 {
-    m_id = id;
+    Q_UNUSED(id);
     if (m_baseUrl.isEmpty())
         return "Error: Base URL not configured.";
 
@@ -303,14 +296,13 @@ QString LlamaClient::generateText(const QString &prompt, const int &id, bool str
 
 void LlamaClient::generateTextAsync(const QString &prompt, const int &id, bool stream)
 {
-    m_id = id;
-    doGenerate(prompt, stream);
+    doGenerate(prompt, stream, id);
 }
 
 bool LlamaClient::isConfigured() const
 {
     bool ok = !m_baseUrl.isEmpty() && !m_model.isEmpty();
-    qDebug() << "[AI] isConfigured:" << ok << "baseUrl:" << m_baseUrl << "model:" << m_model;
+    qDebug() << "[AI] isConfigured:" << ok << "model:" << m_model;
     return ok;
 }
 
@@ -394,7 +386,7 @@ void LlamaClient::generateRandomAsync(const QString &prompt, const int &id)
     jsonBody["messages"] = msgs;
     jsonBody["stream"] = false;
 
-    qDebug() << "[AI] generateRandomAsync: posting to" << m_baseUrl << "model:" << m_model;
+    qDebug() << "[AI] generateRandomAsync: posting to" << maskUrl(m_baseUrl) << "model:" << m_model;
 
     QNetworkReply *reply = m_manager->post(request, QJsonDocument(jsonBody).toJson());
     reply->setProperty("_randomOnce", true);
@@ -436,9 +428,10 @@ void LlamaClient::onReplyFinished(QNetworkReply *reply)
 {
     if (reply->property("_randomOnce").toBool())
         return;
+    const int reqId = reply->property("_reqId").toInt();
     if (reply->error() != QNetworkReply::NoError)
     {
-        emit errorOccurred(QString("Network error: %1").arg(reply->errorString()), m_id);
+        emit errorOccurred(QString("Network error: %1").arg(reply->errorString()), reqId);
         reply->deleteLater();
         return;
     }
@@ -449,7 +442,7 @@ void LlamaClient::onReplyFinished(QNetworkReply *reply)
     QJsonArray choices = obj["choices"].toArray();
     if (choices.isEmpty())
     {
-        emit errorOccurred("No choices in response", m_id);
+        emit errorOccurred("No choices in response", reqId);
         return;
     }
 
@@ -457,7 +450,7 @@ void LlamaClient::onReplyFinished(QNetworkReply *reply)
     QString content = message["content"].toString();
     if (content.isEmpty())
     {
-        emit errorOccurred("Empty content from AI", m_id);
+        emit errorOccurred("Empty content from AI", reqId);
         return;
     }
 
@@ -467,5 +460,5 @@ void LlamaClient::onReplyFinished(QNetworkReply *reply)
     m_messages.append(assistantMsg);
     applyContextCompression();
 
-    emit textGenerated(content, m_id);
+    emit textGenerated(content, reqId);
 }

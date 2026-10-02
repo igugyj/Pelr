@@ -119,7 +119,7 @@ void BubbleBox::paintEvent(QPaintEvent *event)
     QLabel::paintEvent(event);
 }
 
-void BubbleBox::RandomSentence()
+void BubbleBox::RandomSentence(int mode)
 {
     const ConfigData basic = DataManager::instance().getBasicData();
     if (basic.isLLMGreeting && LlamaClient::instance()->isConfigured())
@@ -134,7 +134,16 @@ void BubbleBox::RandomSentence()
                 "Never mention that you are an AI or language model.\n"
                 "Match the language of your role description above.\n"),
             AI_RANDOM_ID);
-        setThinkingText();
+        if (mode == RandomSentenceMode::click)
+        {
+            // 点击按钮才使用思考文本（
+            qDebug() << "[BubbleBox] set thinking text by click";
+            setThinkingText();
+        }
+        else
+        {
+            qDebug() << "[BubbleBox] automation do not use thinking text";
+        }
         return;
     }
     qInfo() << "[BubbleBox] RandomSentence: falling back to file";
@@ -223,6 +232,7 @@ void BubbleBox::onRandomSentenceError(const QString &error, int id)
 void BubbleBox::setThinkingText()
 {
     fadeTimer->stop();
+    // 总开关判断在此生效
     if (!DataManager::instance().getBasicData().isShowThinkingBubble)
         return;
     setText(tr("In response..."));
@@ -232,7 +242,17 @@ void BubbleBox::setThinkingText()
 
 void BubbleBox::textSet(const QString &text)
 {
-    m_text = text.trimmed();
+    const QString trimmed = text.trimmed();
+    // 防抖：30s 内相同文本不重复显示/合成
+    if (trimmed == m_lastDebounceText && m_lastDebounceTimer.isValid() &&
+        m_lastDebounceTimer.elapsed() < 30 * 1000)
+    {
+        qDebug() << "[BubbleBox] Debounce: duplicate text within 30s, skipped:" << trimmed.left(30);
+        return;
+    }
+    m_lastDebounceText = trimmed;
+    m_lastDebounceTimer.restart();
+    m_text = trimmed;
     if (!DataManager::instance().getBasicData().isSaying)
     {
         qDebug() << "[BubbleBox] No text-to-speech interface is used";

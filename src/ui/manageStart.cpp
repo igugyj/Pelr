@@ -346,15 +346,15 @@ void ManageStartWidget::editObj()
         return;
     }
 
-    // 获取当前行号
-    currentRow = currentIndex.row();
+    // 记录当前项的持久索引（编辑器打开期间排序/移动后仍可定位）
+    currentEditIndex = currentIndex;
     // 获取分类
     currentCategory = parentItem->text();
     // 获取各项数据
-    QStandardItem *nameItem = parentItem->child(currentRow, 1);
-    QStandardItem *pathItem = parentItem->child(currentRow, 2);
-    QStandardItem *iconItem = parentItem->child(currentRow, 3);
-    QStandardItem *descItem = parentItem->child(currentRow, 4);
+    QStandardItem *nameItem = parentItem->child(currentEditIndex.row(), 1);
+    QStandardItem *pathItem = parentItem->child(currentEditIndex.row(), 2);
+    QStandardItem *iconItem = parentItem->child(currentEditIndex.row(), 3);
+    QStandardItem *descItem = parentItem->child(currentEditIndex.row(), 4);
     if (!nameItem || !pathItem)
     {
         qWarning() << "[ManageStart] Error: name or path is null";
@@ -364,7 +364,7 @@ void ManageStartWidget::editObj()
     QString currentPath = pathItem->text();
     QString currentIcon = iconItem ? iconItem->text() : "";
     QString currentDesc = descItem ? descItem->text() : "";
-    qDebug() << "[ManageStart] editObj - category:" << currentCategory << "name:" << currentName << "row:" << currentRow;
+    qDebug() << "[ManageStart] editObj - category:" << currentCategory << "name:" << currentName << "row:" << currentEditIndex.row();
     if (editorWidget)
     {
         disconnect(editorWidget, &EditorWidget::accepted, this, &ManageStartWidget::onEditorAcceptedForEdit);
@@ -399,33 +399,23 @@ void ManageStartWidget::onEditorAcceptedForEdit()
     }
     qDebug() << "[ManageStart] onEditorAcceptedForEdit categories:" << info.first;
 
-    QStandardItem *parentItem = nullptr;
-    if (currentCategory == "Star")
-        parentItem = p1_star;
-    else if (currentCategory == "App")
-        parentItem = p2_app;
-    else if (currentCategory == "Link")
-        parentItem = p3_link;
-    else if (currentCategory == "Scripts")
-        parentItem = p4_scripts;
-
+    // 从持久索引解析当前条目（编辑器打开期间排序/移动/删除后仍能正确定位）
+    if (!currentEditIndex.isValid())
+    {
+        qWarning() << "[ManageStart] edited item no longer exists (moved/deleted while editor open)";
+        editorWidget = editor;
+        return;
+    }
+    QModelIndex parentIndex = currentEditIndex.parent();
+    QStandardItem *parentItem = parentIndex.isValid() ? dataModel->itemFromIndex(parentIndex) : nullptr;
     if (!parentItem)
     {
-        qWarning() << "[ManageStart] onEditorAcceptedForEdit: unknown category:" << currentCategory;
+        qWarning() << "[ManageStart] parent of edited item not found";
         editorWidget = editor;
         return;
     }
-
-    if (currentRow >= parentItem->rowCount())
-    {
-        qWarning() << "[ManageStart] currentRow" << currentRow
-                   << "out of range for category:" << currentCategory
-                   << "(max:" << (parentItem->rowCount() - 1) << ")";
-        editorWidget = editor;
-        return;
-    }
-    parentItem->removeRow(currentRow);
-    qDebug() << "[ManageStart] Removed row:" << currentRow << "from category:" << currentCategory;
+    parentItem->removeRow(currentEditIndex.row());
+    qDebug() << "[ManageStart] Removed row:" << currentEditIndex.row() << "from category:" << parentItem->text();
 
     if (info.first.contains("Star"))
         addItemToList(p1_star, info.second);

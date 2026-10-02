@@ -312,7 +312,6 @@
         <file>public/style/menu.qss</file>
     </qresource>
     <qresource>
-        <file>THANBKS.md</file>
         <file>public/image/Pelr.png</file>
         <file>public/image/Pelr.ico</file>
         <file>NOTICE</file>

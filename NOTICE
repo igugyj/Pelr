@@ -27,7 +27,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-
 2. Third Party Libraries
 ----------------------------------------
 --- Library 1: Qt ---
@@ -98,7 +97,93 @@ Additional Notes:
 If your annual revenue exceeds 10 million JPY, a separate Cubism SDK Release License is required.
 See https://www.live2d.com/en/download/cubism-sdk/release-license/
 
---- Library 3: Live2D Cubism Core ---
+--- Library 3: Live2D Cubism Native Samples ---
+Version: 5-r.5
+License Type: Live2D Open Software License (sample models: Free Material License)
+Copyright (c) Live2D Inc.
+Website: https://www.live2d.com/
+
+---- Included License Text ----
+## Definitions
+
+### Live2D Cubism Components
+
+Cubism Native Samples is included in Live2D Cubism Components.
+
+Cubism Native Samples は Live2D Cubism Components に含まれます。
+
+Cubism Native Samples 包括在 Live2D Cubism Components 中。
+
+## Cubism SDK Release License
+
+*All business* users must obtain a Cubism SDK Release License. "Business" means an entity with the annual gross revenue more than ten million (10,000,000) JPY for the most recent fiscal year.
+
+* [Cubism SDK Release License](https://www.live2d.com/en/download/cubism-sdk/release-license/)
+
+直近会計年度の売上高が 1000 万円以上の事業者様がご利用になる場合は、Cubism SDK リリースライセンス（出版許諾契約）に同意していただく必要がございます。
+
+* [Cubism SDK リリースライセンス](https://www.live2d.com/ja/download/cubism-sdk/release-license/)
+
+如果您的企业在最近一个会计年度的销售额达到或超过1000万日元，您必须得到Cubism SDK的出版授权许可（出版许可协议）。
+
+* [Cubism SDK发行许可证](https://www.live2d.com/zh-CHS/download/cubism-sdk/release-license/)
+
+## Live2D Open Software License
+
+Live2D Cubism Components is available under Live2D Open Software License.
+
+* [Live2D Open Software License Agreement](https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html)
+* [Live2D Open Software 使用許諾契約書](https://www.live2d.com/eula/live2d-open-software-license-agreement_jp.html)
+* [Live2D Open Software 使用授权协议](https://www.live2d.com/eula/live2d-open-software-license-agreement_cn.html)
+
+
+## Live2D Proprietary Software License
+
+Live2D Cubism Core is available under Live2D Proprietary Software License.
+
+* [Live2D Proprietary Software License Agreement](https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html)
+* [Live2D Proprietary Software 使用許諾契約書](https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_jp.html)
+* [Live2D Proprietary Software 使用授权协议](https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_cn.html)
+
+
+## Free Material License
+
+Live2D models listed below are available under Free Material License.
+
+* [Free Material License Agreement](https://www.live2d.com/eula/live2d-free-material-license-agreement_en.html)
+* [無償提供マテリアルの使用許諾契約書](https://www.live2d.com/eula/live2d-free-material-license-agreement_jp.html)
+* [无偿提供素材使用授权协议](https://www.live2d.com/eula/live2d-free-material-license-agreement_cn.html)
+
+```
+Samples/Resources/Haru
+Samples/Resources/Hiyori
+Samples/Resources/Mao
+Samples/Resources/Mark
+Samples/Resources/Natori
+Samples/Resources/Ren
+Samples/Resources/Rice
+Samples/Resources/Wanko
+```
+
+If you use these models, you must agree to the terms of a contract set [here](https://www.live2d.com/eula/live2d-sample-model-terms_en.html) for each model.
+
+
+---
+
+Please contact us from [here](https://www.live2d.jp/contact/) for more license information.
+
+Additional Notes:
+Shipped in this build, copied from CubismNativeSamples at build time:
+- SampleShaders/ (OpenGL shader source used by the renderer)
+- Resources/ sample models: Haru, Hiyori, Mao, Mark, Natori, Ren, Rice, Wanko
+  (Resources/Hiyori is the default model when no user model is configured)
+The sample models are made available under the Free Material License; using them
+constitutes agreement to https://www.live2d.com/eula/live2d-sample-model-terms_en.html
+FrameworkShaders/ comes from Live2D Cubism Native Framework (see Library above).
+If your annual revenue exceeds 10 million JPY, a separate Cubism SDK Release License is required.
+See https://www.live2d.com/en/download/cubism-sdk/release-license/
+
+--- Library 4: Live2D Cubism Core ---
 Version: Included with SDK
 License Type: Live2D Proprietary Software License
 Copyright (c) Live2D Inc.
@@ -109,19 +194,19 @@ Cubism Core is under a proprietary license. It must not be redistributed in publ
 Obtain it from the official Live2D SDK. License text:
 https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html
 
---- Library 4: GLEW ---
+--- Library 5: GLEW ---
 Version: 2.1.0
 License Type: Modified BSD License
 Copyright (c) Milan Ikits, Marcelo E. Magallon, Lev Povalahev
 Website: http://glew.sourceforge.net/
 
---- Library 5: GLFW ---
+--- Library 6: GLFW ---
 Version: 3.4.0
 License Type: zlib/libpng License
 Copyright (c) Marcus Geelnard, Camilla Löwy
 Website: https://www.glfw.org/
 
---- Library 6: kissfft ---
+--- Library 7: kissfft ---
 Version: Latest
 License Type: BSD-3-Clause
 Copyright (c) Mark Borgerding
@@ -139,7 +224,7 @@ according with:
 
   LICENSES/BSD-3-Clause
 
---- Library 7: miniaudio ---
+--- Library 8: miniaudio ---
 Version: 0.11.25
 License Type: Public Domain (www.unlicense.org) & MIT No Attribution
 Copyright (c) David Reid
@@ -194,7 +279,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
---- Library 8: stb ---
+--- Library 9: stb ---
 Version: Latest
 License Type: MIT / Public Domain
 Copyright (c) Sean Barrett
@@ -204,8 +289,38 @@ Additional Notes:
 Each stb header file contains its own license notice at the top, typically public domain
 or the MIT License. Refer to the individual file for exact terms.
 
---- Library 9: VOICEVOX CORE ---
-Version: 0.16.4
+--- Library 10: miniz ---
+Version: Latest
+License Type: MIT
+Copyright (c) RAD Game Tools and Valve Software, Rich Geldreich and Tenacious Software LLC
+Website: https://github.com/richgel999/miniz
+
+---- Included License Text ----
+Copyright 2013-2014 RAD Game Tools and Valve Software
+Copyright 2010-2014 Rich Geldreich and Tenacious Software LLC
+
+All Rights Reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+--- Library 11: VOICEVOX CORE ---
+Version: 0.17.0 
 License Type: MIT (with additional terms)
 Copyright (c) Hiroshiba Kazuyuki
 Website: https://github.com/VOICEVOX/voicevox_core
@@ -236,7 +351,7 @@ Additional Notes:
 YOU MUST INCLUDE THE CREDIT 'VOICEVOX: Hiroshiba Kazuyuki' when using the generated audio.
 Additional terms: see thirdParty/voicevox_core/c_api/TERMS.txt
 
---- Library 10: ONNX Runtime ---
+--- Library 12: ONNX Runtime ---
 Version: Included with voicevox_core
 License Type: MIT (with VOICEVOX additional terms)
 Copyright (c) Microsoft Corporation
@@ -289,7 +404,7 @@ SOFTWARE.
 
 ご利用の際は VOICEVOX を利用したことがわかるクレジット表記が必要です。
 
---- Library 11: Maple Mono (Maple Font) ---
+--- Library 13: Maple Mono (Maple Font) ---
 Version: V7
 License Type: SIL Open Font License 1.1
 Copyright (c) The Maple Mono Project Authors
@@ -390,7 +505,7 @@ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
---- Library 12: FluentUIStyle ---
+--- Library 14: FluentUIStyle ---
 Version: Latest
 License Type: MIT License
 Copyright (c) XuHongYun-ChuJian
@@ -419,7 +534,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
---- Library 13: IconaMoon ---
+--- Library 15: IconaMoon ---
 Version: 1.1
 License Type: Free for any use
 Copyright (c) Dariush HPG
@@ -432,5 +547,5 @@ The README states: 'IconaMoon is totally free and you can do whatever you want w
 ----------------------------------------
 Full license texts for the above libraries are maintained in their respective
 subdirectories under `thirdParty/`&`public/` in the source repository.
-This NOTICE file is auto-generated by `generate_notice.py`. Please update the
-script when dependencies change.
+This NOTICE file is auto-generated by `generate_notice.py`. Please update
+`scripts/release_config.json` when dependencies change.

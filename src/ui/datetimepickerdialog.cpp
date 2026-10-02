@@ -83,11 +83,6 @@ void DateTimePickerDialog::setupUI()
     QPushButton *afternoonBtn = new QPushButton("14:00", this);
     QPushButton *eveningBtn = new QPushButton("19:00", this);
 
-    // 设置按钮尺寸
-    morningBtn->setFixedSize(50, 25);
-    afternoonBtn->setFixedSize(50, 25);
-    eveningBtn->setFixedSize(50, 25);
-
     connect(morningBtn, &QPushButton::clicked, [this]()
             { m_timeEdit->setTime(QTime(9, 0)); });
 

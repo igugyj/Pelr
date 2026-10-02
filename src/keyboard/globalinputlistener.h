@@ -15,6 +15,8 @@ public:
 
     bool isListening() const;
 
+    bool switchListener();
+
 signals:
     void keyPressed(int keyCode, ModifierKeys modifiers);
 

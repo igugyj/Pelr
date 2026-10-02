@@ -14,11 +14,13 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QDebug>
+#include <QQueue>
 #include "data.hpp"
 #include "launcher.hpp"
 #include "translator.h"
 #include "trmanager.h"
 #include "voicevox_tts.h"
+#include "logger.hpp"
 
 class VoiceGenerator : public QObject
 {
@@ -38,11 +40,8 @@ public:
      */
     void generateVoice(const TTSConfig &config, const QString &text)
     {
-
-        m_pendingConfig = config;
-        m_pendingText = text;
-        TrManager::instance()->setConfig(config);
-        TrManager::instance()->translate(text);
+        m_pendingQueue.enqueue(PendingRequest{config, text});
+        processNextTranslation();
     }
 
     // 原有讯飞 TTS 调用方式（保持不变）
@@ -81,7 +80,7 @@ public:
                                    double speed)
     {
         qDebug() << "[VoiceGen] OpenAI-Compatible: text=" << text.left(50)
-                 << "endpoint=" << endpoint << "model=" << model << "voice=" << voice << "speed=" << speed;
+                 << "endpoint=" << maskUrl(endpoint) << "model=" << model << "voice=" << voice << "speed=" << speed;
 
         if (endpoint.isEmpty())
         {
@@ -118,12 +117,12 @@ public:
         QUrl url(endpoint.trimmed());
         if (!url.isValid())
         {
-            qWarning() << "[VoiceGen] Invalid URL:" << url.toString();
+            qWarning() << "[VoiceGen] Invalid URL:" << maskUrl(url.toString());
             emit errorOccurred("Invalid OpenAI TTS URL: " + url.errorString());
             return;
         }
 
-        qDebug() << "[VoiceGen] POST" << url.toString();
+        qDebug() << "[VoiceGen] POST" << maskUrl(url.toString());
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
         if (!apiKey.isEmpty())
@@ -209,15 +208,18 @@ private slots:
     // 翻译成功后的处理
     void onTranslationFinished(const QString &translatedText)
     {
-        qDebug() << "[VoiceGen] Translation successful:" << translatedText;
-        doGenerateVoice(m_pendingConfig, translatedText);
+        qDebug() << "[VoiceGen] Translation successful:" << translatedText.left(50);
+        m_translating = false;
+        doGenerateVoice(m_currentRequest.config, translatedText);
+        processNextTranslation();
     }
 
     void onTranslationError(const QString &errorMessage)
     {
         qWarning() << "[VoiceGen] Translation failed:" << errorMessage;
-        emit errorOccurred("Translation failed: " + errorMessage);
-        doGenerateVoice(m_pendingConfig, m_pendingText); // 回退原文合成
+        m_translating = false;
+        doGenerateVoice(m_currentRequest.config, m_currentRequest.text); // 回退原文合成
+        processNextTranslation();
     }
 
 private:
@@ -246,6 +248,22 @@ private:
 
     VoiceGenerator(const VoiceGenerator &) = delete;
     VoiceGenerator &operator=(const VoiceGenerator &) = delete;
+
+    struct PendingRequest
+    {
+        TTSConfig config;
+        QString text;
+    };
+
+    void processNextTranslation()
+    {
+        if (m_translating || m_pendingQueue.isEmpty())
+            return;
+        m_translating = true;
+        m_currentRequest = m_pendingQueue.dequeue();
+        TrManager::instance()->setConfig(m_currentRequest.config);
+        TrManager::instance()->translate(m_currentRequest.text);
+    }
 
     // 统一执行 TTS 生成
     void doGenerateVoice(const TTSConfig &config, const QString &text)
@@ -302,15 +320,16 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "[VoiceGen] Voice generate response:" << json;
             QString filePath = json["file_path"].toString();
+            QString error = json["error"].toString();
+            qDebug() << "[VoiceGen] Voice generate response: file_path=" << filePath
+                     << "error=" << error;
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
                 emit voiceGenerated(filePath);
             }
             else
             {
-                QString error = json["error"].toString();
                 emit errorOccurred(error.isEmpty() ? "File not found" : error);
             }
         }
@@ -332,15 +351,16 @@ private:
             QByteArray response = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(response);
             QJsonObject json = doc.object();
-            qDebug() << "[VoiceGen] OpenAI TTS response:" << json;
             QString filePath = json["file_path"].toString();
+            QString error = json["error"].toString();
+            qDebug() << "[VoiceGen] OpenAI TTS response: file_path=" << filePath
+                     << "error=" << error;
             if (!filePath.isEmpty() && QFile::exists(filePath))
             {
                 emit voiceGenerated(filePath);
             }
             else
             {
-                QString error = json["error"].toString();
                 emit errorOccurred(error.isEmpty() ? "File not found from OpenAI TTS" : error);
             }
         }
@@ -394,7 +414,8 @@ private:
     QNetworkAccessManager *m_manager;
     QMediaPlayer *m_player;
     QAudioOutput *m_audioOutput;
-    TTSConfig m_pendingConfig; // 暂存等待翻译完成的配置
-    QString m_pendingText;     // 暂存待翻译的原始文本
+    QQueue<PendingRequest> m_pendingQueue; // 待翻译请求队列（串行化，避免 pending 状态被覆盖）
+    bool m_translating = false;            // 当前是否有翻译在途
+    PendingRequest m_currentRequest;       // 当前在途请求的配置与原文
     QString m_currentPlayFile; // 当前正在播放（或刚播完）的文件路径
 };

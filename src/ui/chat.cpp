@@ -26,9 +26,7 @@ ChatWidget::ChatWidget(QWidget *parent) : QWidget(parent), ui(new Ui::chat)
             this, [this](const QString &) { retranslateUI(); });
     connect(ui->pushButton_2, &QPushButton::clicked, [&]()
             {
-                // 删除旧的内容部件
-                delete ui->scrollAreaWidgetContents;
-                // 创建新的内容部件
+                // 创建新的内容部件（setWidget 会自动删除旧部件，不能手动 delete）
                 ui->scrollAreaWidgetContents = new QWidget();
                 ui->scrollArea->setWidget(ui->scrollAreaWidgetContents);
                 currentY = 0;

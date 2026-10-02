@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
+#include <QDateTime>
 #include "launcher.hpp"
 #include "launcherMenu.hpp"
 #include "custommenu.h"
@@ -94,7 +95,8 @@ TrayIcon::TrayIcon(QObject *parent)
     qDebug() << "[Tray] TrayIcon singleton initialized";
 
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            this, [this](const QString &) { retranslateUI(); });
+            this, [this](const QString &)
+            { retranslateUI(); });
     setTrayIconMode(DataManager::instance().getBasicData().trayIconMode,
                     DataManager::instance().getBasicData().trayGifPath);
     switchLaunchMenu(DataManager::instance().getBasicData().ShowLaunchMenuinTrayMenu);
@@ -133,6 +135,8 @@ void TrayIcon::setTrayIconMode(int mode, const QString &gifPath)
     m_gifFrames.clear();
     m_gifIdx = 0;
 
+    m_alwaysDynamicEffects =
+        DataManager::instance().getBasicData().alwaysDynamicEffects;
     m_mode = mode;
 
     switch (m_mode)
@@ -144,7 +148,9 @@ void TrayIcon::setTrayIconMode(int mode, const QString &gifPath)
 
     case TrayIcon_Text:
         textRotate(); // draw static text icon
-        initializeAudioDetector();
+        m_audioCheckTimer->start();
+        if (!m_alwaysDynamicEffects)
+            initializeAudioDetector();
         qDebug() << "[Tray] Mode set to Text";
         break;
 
@@ -161,7 +167,9 @@ void TrayIcon::setTrayIconMode(int mode, const QString &gifPath)
         {
             setIcon(m_appIcon);
         }
-        initializeAudioDetector();
+        m_audioCheckTimer->start();
+        if (!m_alwaysDynamicEffects)
+            initializeAudioDetector();
         qDebug() << "[Tray] Mode set to GIF";
         break;
 
@@ -173,10 +181,19 @@ void TrayIcon::setTrayIconMode(int mode, const QString &gifPath)
 
 void TrayIcon::initializeAudioDetector()
 {
+    if (m_audioDetector)
+        return;
+
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (m_audioInitRetryDeadlineMs > 0 && now < m_audioInitRetryDeadlineMs)
+        return;
+
     m_audioDetector = new AudioSpectrumDetector();
     if (m_audioDetector->start())
     {
-        m_audioCheckTimer->start();
+        m_audioInitRetryDeadlineMs = 0;
+        if (!m_audioCheckTimer->isActive())
+            m_audioCheckTimer->start();
         qDebug() << "[Tray] Spectrum-based audio detector initialized";
     }
     else
@@ -184,37 +201,51 @@ void TrayIcon::initializeAudioDetector()
         qDebug() << "[Tray] Audio spectrum detector initialization failed";
         delete m_audioDetector;
         m_audioDetector = nullptr;
+        m_audioInitRetryDeadlineMs = now + 5000;
     }
 }
 
 void TrayIcon::stopAudioDetector()
 {
     m_audioCheckTimer->stop();
-    if (m_audioDetector)
-    {
-        m_audioDetector->stop();
-        delete m_audioDetector;
-        m_audioDetector = nullptr;
-    }
+    destroyAudioDetectorOnly();
+}
+
+void TrayIcon::destroyAudioDetectorOnly()
+{
+    if (!m_audioDetector)
+        return;
+    m_audioDetector->stop();
+    delete m_audioDetector;
+    m_audioDetector = nullptr;
 }
 
 void TrayIcon::checkAudioActivity()
 {
-    if (!m_audioDetector)
-        return;
+    const bool alwaysOn = m_alwaysDynamicEffects;
+    bool flag = alwaysOn;
 
-    bool playing = m_audioDetector->isAudioPlaying();
+    if (!alwaysOn)
+    {
+        initializeAudioDetector();
+        if (m_audioDetector)
+            flag = m_audioDetector->isAudioPlaying();
+    }
+    else
+    {
+        destroyAudioDetectorOnly();
+    }
 
     switch (m_mode)
     {
     case TrayIcon_Text:
     {
-        if (playing && !m_textRotating)
+        if (flag && !m_textRotating)
         {
             m_textRotating = true;
             m_textTimer->start(100);
         }
-        else if (!playing && m_textRotating)
+        else if (!flag && m_textRotating)
         {
             m_textRotating = false;
             m_textTimer->stop();
@@ -224,7 +255,7 @@ void TrayIcon::checkAudioActivity()
     }
     case TrayIcon_Gif:
     {
-        if (playing && !m_gifTimer->isActive())
+        if (flag && !m_gifTimer->isActive())
         {
             if (!m_gifFrames.isEmpty())
             {
@@ -233,7 +264,7 @@ void TrayIcon::checkAudioActivity()
                 setIcon(QIcon(m_gifFrames[0].pixmap));
             }
         }
-        else if (!playing && m_gifTimer->isActive())
+        else if (!flag && m_gifTimer->isActive())
         {
             m_gifTimer->stop();
             m_gifIdx = 0;
@@ -244,6 +275,28 @@ void TrayIcon::checkAudioActivity()
     }
     default:
         break;
+    }
+}
+
+void TrayIcon::setAlwaysDynamicEffects(bool enabled)
+{
+    if (m_alwaysDynamicEffects == enabled)
+        return;
+    m_alwaysDynamicEffects = enabled;
+
+    if (m_mode == TrayIcon_Text || m_mode == TrayIcon_Gif)
+    {
+        if (!m_audioCheckTimer->isActive())
+            m_audioCheckTimer->start();
+
+        if (enabled)
+            destroyAudioDetectorOnly();
+        else
+        {
+            m_audioInitRetryDeadlineMs = 0;
+            initializeAudioDetector();
+        }
+        checkAudioActivity();
     }
 }
 

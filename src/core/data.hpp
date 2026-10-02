@@ -11,15 +11,28 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QDebug>
+#include <QReadWriteLock>
 #include "llamaclient.h"
+#include "ttsconfig.hpp"
 
-#define VERSION "v0.7.4"
+#define VERSION "v0.8.0"
 
 enum TrayIconMode : int
 {
     TrayIcon_Static = 0,
     TrayIcon_Text = 1,
     TrayIcon_Gif = 2
+};
+enum RandomSentenceMode : int
+{
+    automation = 0,
+    click = 1
+};
+enum ChatScenery : int
+{
+    onModel = 1,
+    inUI = 2,
+    bubble = 3
 };
 
 struct filePaths
@@ -33,6 +46,8 @@ struct filePaths
     QString llmConfigFile = "user/llmConfig.json";
     QString defaultTextFile = "assets/text/text.json";
     QString userTextFile = "user/text.json";
+    QString menuSigFile = "user/.menuSig"; // H15: 菜单 HMAC 签名（明文 JSON，密钥由机器标识派生）
+    QString windowLocationFile = "user/window_location.dat";
 };
 inline filePaths FilePaths;
 
@@ -70,6 +85,7 @@ struct ConfigData
     bool isRecordWindowLocation = false;
     int trayIconMode = TrayIconMode::TrayIcon_Static;
     bool ShowLaunchMenuinTrayMenu = true;
+    bool alwaysDynamicEffects = false;
     QString trayGifPath;
     bool isShowThinkingBubble = false;
     bool isLLMGreeting = false;
@@ -83,6 +99,8 @@ struct constConfigData
     const QString iFlytek_tts_url = "https://console.xfyun.cn/services/tts";
     const QString openWeather_url = "https://home.openweathermap.org/api_keys";
     const QString docs_link = "https://github.com/igugyj/Pelr/tree/master/docs";
+    // Components 页顶部引导链接（与 docs/app-components.md 对应）
+    const QString components_doc_link = "https://github.com/igugyj/Pelr/blob/master/docs/app-components.md";
     const QString version = VERSION;
     const QString Gitee_repo_owner = "Pfolg";
     const QString Gitee_repo_name = "Pelr";
@@ -106,6 +124,12 @@ struct LlamaData
     int maxContextMessages;
 };
 
+enum TodoCategory : int
+{
+    done = 0,
+    todo = 1
+};
+
 struct TodoData
 {
     int category;
@@ -114,6 +138,16 @@ struct TodoData
     QString deadline;
     QString remarks;
     bool isNotify;
+
+    bool operator==(const TodoData &other) const
+    {
+        return category == other.category && title == other.title && content == other.content && deadline == other.deadline && remarks == other.remarks && isNotify == other.isNotify;
+    }
+
+    bool operator!=(const TodoData &other) const
+    {
+        return !(*this == other);
+    }
 };
 
 struct MenuData
@@ -134,37 +168,6 @@ struct ToDoSettingData
 {
     bool is_show_todo = true;
     bool is_notify_tray = true;
-};
-
-struct TTSConfig
-{
-    int provider = 0;
-    QString speaker_openai_edge_tts = "zh-CN-XiaoxiaoNeural";
-    double speed_openai_edge_tts = 1.0;
-    QString openai_endpoint;
-    QString openai_apiKey;
-    QString openai_model = "tts-1";
-    QString openai_voice = "alloy";
-    double openai_speed = 1.0;
-    QString iFlytek_APPID;
-    QString iFlytek_APISecret;
-    QString iFlytek_APIKey;
-    QString iFlytek_speaker = "x4_yezi";
-    QString voicevox_dict_dir;
-    QString voicevox_model;
-    int voicevox_style_id;
-    double voicevox_speed = 1.0;
-    int tr_point;
-    QString tr_provider;
-    QString tr_lang_translators;
-    QString tr_lang_libretranslate;
-    QString tr_libretranslate_port = "5000";
-    QString tr_tx_secret_id;
-    QString tr_tx_secret_key;
-    QString tr_tx_region;
-    int tr_tx_project_id = 0;
-    QString tr_tx_source_lang = "auto";
-    QString tr_tx_target_lang;
 };
 
 static QVector<QPair<QString, int>> TTSProviderList = {
@@ -206,6 +209,16 @@ protected:
     OpenWeatherData openWeather_data;
     LlamaData llama_data;
 
+    bool menuLoaded = false;
+    bool basicLoaded = false;
+    bool todoLoaded = false;
+    bool todoSettingLoaded = false;
+    bool ttsLoaded = false;
+    bool openWeatherLoaded = false;
+    bool llamaLoaded = false;
+
+    QReadWriteLock rwlock;
+
 public:
     QList<TodoData> todo_data;
     constConfigData const_config_data;
@@ -220,41 +233,48 @@ public:
 
     OpenWeatherData getOpenWeatherData()
     {
-        readOpenWeatherData();
+        ensureOpenWeatherLoaded();
+        QReadLocker rl(&rwlock);
         return openWeather_data;
     }
     LlamaData getLlamaData()
     {
-        readLlamaData();
+        ensureLlamaLoaded();
+        QReadLocker rl(&rwlock);
         return llama_data;
     }
     TTSConfig getTTSConfig()
     {
-        readTTSConfig();
+        ensureTTSLoaded();
+        QReadLocker rl(&rwlock);
         return tts_config;
     }
 
     ToDoSettingData getTodoSetting()
     {
-        readTodoNotify();
+        ensureTodoSettingLoaded();
+        QReadLocker rl(&rwlock);
         return todo_setting_data;
     }
 
     QList<MenuData> getMenuData()
     {
-        readMenuData();
+        ensureMenuLoaded();
+        QReadLocker rl(&rwlock);
         return cached_menu_data;
     }
 
     ConfigData getBasicData()
     {
-        readBasicData();
+        ensureBasicLoaded();
+        QReadLocker rl(&rwlock);
         return basic_data;
     }
 
     QList<TodoData> getTodoData()
     {
-        readTodoData();
+        ensureTodoLoaded();
+        QReadLocker rl(&rwlock);
         return todo_data;
     }
 
@@ -265,6 +285,7 @@ public:
     template <typename T>
     void writeData(const T &data)
     {
+        QWriteLocker wl(&rwlock);
         QString filename;
         QJsonDocument doc;
 
@@ -292,7 +313,18 @@ public:
             return;
         }
         writeJsonFile(filename, doc);
+        if constexpr (std::is_same_v<T, QList<MenuData>>)
+        {
+            const QList<MenuData> snapshot = data; // 拷贝给子线程，避免跨线程读共享状态
+            wl.unlock();                           // 菜单文件已落盘，签名改为后台执行，不再阻塞 UI
+            scheduleMenuResign(snapshot);
+        }
     }
+
+    // H15: 菜单数据签名/验签（HMAC-SHA256（密钥由机器标识派生）+ 逐条目文件 SHA-256）
+    void signMenuData(const QList<MenuData> &items, int gen);
+    static void scheduleMenuResign(const QList<MenuData> &items);
+    bool verifyMenuData(bool *jsonOk = nullptr, QStringList *failedFiles = nullptr);
 
     void writeData(ToDoSettingData setting);
 
@@ -314,4 +346,12 @@ protected:
     static QFont loadFont();
     void readMenuData();
     void readBasicData();
+
+    void ensureMenuLoaded();
+    void ensureBasicLoaded();
+    void ensureTodoLoaded();
+    void ensureTodoSettingLoaded();
+    void ensureTTSLoaded();
+    void ensureOpenWeatherLoaded();
+    void ensureLlamaLoaded();
 };

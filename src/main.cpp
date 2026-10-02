@@ -2,7 +2,8 @@
 #include <QCoreApplication>
 #include <QIcon>
 #include <QDebug>
-
+#include <QDir>
+#include <QFileInfo>
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -15,27 +16,34 @@
 #include "logger.hpp"
 #include "NotificationWidget.h"
 #include "initFileSys.h"
-#include "voicevox_tts.h"
+#include "componentmanager.hpp"
 #include "CrashHandler.h"
 
 void initTranslator(QApplication &a, const QString &path);
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_WIN
+    wchar_t exeBuf[MAX_PATH];
+    DWORD exeLen = GetModuleFileNameW(nullptr, exeBuf, MAX_PATH);
+    if (exeLen > 0 && exeLen < MAX_PATH)
+    {
+        QDir::setCurrent(QFileInfo(QString::fromWCharArray(exeBuf, exeLen)).absolutePath());
+    }
+
+    SetConsoleOutputCP(CP_UTF8);
+    qDebug() << "[APP] code page after QApplication:" << GetConsoleOutputCP();
+
+#endif
+
     // ---- 基础初始化（应在 QApplication 之前完成，但注意不要依赖 QSettings 等） ----
     initFileSys();
     initLogFile();
     CrashHandler::install();
 
-#ifdef Q_OS_WIN
-    SetConsoleOutputCP(CP_UTF8);
-#endif
-
     setLogLevel(read_log_level());
 
-#ifndef CONSOLE // Release 模式（无控制台）才安装消息处理器
-    qInstallMessageHandler(messageHandler);
-#endif
+    qInstallMessageHandler(messageHandler); // 安装通用消息处理器
 
     QApplication app(argc, argv);
 
@@ -77,11 +85,8 @@ int main(int argc, char *argv[])
 
     TrayIcon::instance()->show();
 
-    // ONNX 初始化（如可能耗时，可考虑异步，此处保持简单）
-    if (!VoicevoxTTS::initializeOnnxRuntime())
-    {
-        qWarning() << "[APP] Failed to initialize OnnxRuntime";
-    }
+    // 自动解包可选组件（Live2D SDK 压缩包 -> Live2D/）
+    ComponentManager::instance().scanAllForZip();
 
     // 根据静默启动选项决定是否显示主窗口
     GLCore w;
@@ -93,7 +98,6 @@ int main(int argc, char *argv[])
     {
         w.show();
     }
-
     return app.exec();
 }
 

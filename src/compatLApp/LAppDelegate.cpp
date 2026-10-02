@@ -7,6 +7,7 @@
 #include "LAppDefine.hpp"
 #include "LAppLive2DManager.hpp"
 #include "LAppTextureManager.hpp"
+#include "cubismcoreloader.hpp"
 
 using namespace Csm;
 using namespace std;
@@ -136,8 +137,19 @@ LAppDelegate::LAppDelegate()
 
 LAppDelegate::~LAppDelegate() {}
 
-void LAppDelegate::InitializeCubism()
+bool LAppDelegate::InitializeCubism()
 {
+    // load() 必须先于 StartUp()，否则 Core 存在时 csmSetLogFunction 无法解析。
+    const bool coreReady = CubismCoreLoader::instance().load();
+    if (!coreReady)
+    {
+        LAppPal::PrintLogLn("[Core] Live2D Cubism Core not installed, model disabled.");
+    }
+
+    // StartUp()/Initialize() 必须无条件执行，不能放进 coreReady 分支：
+    // Framework 的 s_allocator 只在 StartUp() 里赋值，缺了它 LAppPal::LoadFileAsBytes
+    // 的 CSM_MALLOC、csmString 等全部空指针崩溃（LAppView::Initialize 建 shader 即触发）。
+    // Core DLL 缺失只影响 moc/渲染解析，已由 LAppLive2DManager 的两处守卫拦截。
     _cubismOption.LogFunction = LAppPal::PrintMessage;
     _cubismOption.LoggingLevel = LAppDefine::CubismLoggingLevel;
     _cubismOption.LoadFileFunction = LAppPal::LoadFileAsBytes;
@@ -148,6 +160,7 @@ void LAppDelegate::InitializeCubism()
     LAppLive2DManager::GetInstance();
     CubismMatrix44 projection;
     LAppPal::UpdateTime();
+    return coreReady;
 }
 
 // ---------- 鼠标回调 ----------

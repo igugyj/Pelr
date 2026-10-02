@@ -43,7 +43,6 @@ This project is governed by a standard code of conduct. Please be respectful and
 - **Windows 10 or 11** (this is a Windows-only application)
 - **Qt 6.10.1** with MinGW 64-bit toolchain (available at `D:/Qt/6.10.1/mingw_64`)
 - **CMake** (bundled with Qt: `D:/Qt/Tools/CMake_64/bin/cmake.exe`)
-- **Visual Studio 2022** (C++ workload required for Cubism SDK resource generation)
 - **Git**
 - **Python 3.10+** (optional, for TTS server and translation services)
 
@@ -52,14 +51,15 @@ This project is governed by a standard code of conduct. Please be respectful and
 Before building, the following resources must be present:
 
 | Resource | Source | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `thirdParty/Core/` | [Live2D Cubism SDK Native](https://www.live2d.com/en/sdk/download/native/) | **Not included in the repository.** Download `CubismSdkForNative-5-r.5.zip` and extract the `Core` folder. Governed by the Live2D Proprietary Software License. |
-| `thirdParty/Framework/` | Git submodule | Initialize with `git submodule update --init --recursive` |
+| `thirdParty/CubismNativeFramework/` | Git submodule | Initialize with `git submodule update --init --recursive` |
+| `thirdParty/CubismNativeSamples/` | Git submodule | Initialize with `git submodule update --init --recursive`. Supplies the demo sources (`LAPP_2D_SRC`) and sample resources used by the build. |
 | `thirdParty/glew/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
 | `thirdParty/glfw/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
-| `thirdParty/stb/` | Git submodule | Included in submodule init |
-| `Resources/` | Cubism SDK Demo build | See `docs/dev-init.md` for detailed instructions |
-| `Resources/voicevox_core/` | [voicevox_core 0.16.4](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.16.4) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the output in `Resources/voicevox_core/` |
+| `thirdParty/stb/` | Committed in repository | Already present — no setup needed (`README.md` + `stb_image.h` v2.30) |
+| `thirdParty/miniz/` | Git submodule | Included in submodule init |
+| `thirdParty/voicevox_core/` | [voicevox_core 0.17.0](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the generated `voicevox_core` folder directly under `thirdParty/` (`c_api` / `onnxruntime` / `dict` / `models`). Debug builds copy `c_api`/`onnxruntime`/`dict` to the output `voicevox_core/`; `models` is never auto-copied (~1.6 GB) and must be copied to `<out>/voicevox_core/models` manually. |
 | `thirdParty/FluentUIStyle/` | Git submodule | Initialize with `git submodule update --init --recursive`. Built as Qt style plugin (dll) via ExternalProject. |
 
 For detailed setup instructions, refer to [docs/dev-init.md](docs/dev-init.md).
@@ -69,13 +69,13 @@ For detailed setup instructions, refer to [docs/dev-init.md](docs/dev-init.md).
 ### Configure
 
 ```sh
-D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build -G "MinGW Makefiles"
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Debug -G "MinGW Makefiles"
 ```
 
 ### Build
 
 ```sh
-D:/Qt/Tools/CMake_64/bin/cmake.exe --build build --config Debug
+D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Debug
 ```
 
 ### Adding New Source Files
@@ -84,12 +84,26 @@ Source files are collected via `file(GLOB ...)` in `CMakeLists.txt`. After addin
 
 ### Debug vs Release
 
-`CMakeLists.txt` has a `DEBUG_MODE` flag:
+`DEBUG_MODE` controls debug features (console subsystem, `CONSOLE` define, log level). It is **derived from `CMAKE_BUILD_TYPE`** — you do not edit it in `CMakeLists.txt`:
 
-```txt
-set(DEBUG_MODE ON)   # Debug: console window visible, CONSOLE define active
-set(DEBUG_MODE OFF)  # Release: no console, WIN32_EXECUTABLE
+```sh
+# Debug (console window, CONSOLE define) — the default when CMAKE_BUILD_TYPE is unset
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Debug -G "MinGW Makefiles"
+D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Debug
+
+# Release (no console, WIN32_EXECUTABLE, Qt message handler) — use a separate build tree
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Release -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Release
+
+# Optional: force DEBUG_MODE independently of the build type
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Release -DCMAKE_BUILD_TYPE=Release -DDEBUG_MODE=ON
 ```
+
+Notes:
+
+- `CMAKE_BUILD_TYPE` falls back to `Debug` when unset — FluentUIStyle's `ExternalProject_Add` forwards it via `$<CONFIG>`, and an empty value breaks that subproject.
+- Third-party optional components (Live2D Cubism Core, `voicevox_core`) are deployed **only on Debug builds**. Release builds intentionally start in a "component missing" state.
+- MinGW must be on `PATH` or configure fails with `CMAKE_MAKE_PROGRAM is not set`.
 
 ## Project Architecture
 
@@ -98,7 +112,10 @@ src/
 ├── main.cpp              # Entry point: creates GLCore + TrayIcon
 ├── core/
 │   ├── GLCore.h/cpp      # Main OpenGL widget, mouse/timer/event handling
-│   └── tray.h            # System tray icon management
+│   ├── tray.h            # System tray icon management
+│   ├── data.hpp/cpp      # Central runtime config (DataManager singleton)
+│   ├── componentmanager.*  # Optional component scan/validation/import
+│   └── componentpaths.hpp  # Runtime path resolution (Live2D/, voicevox_core/, plugins/)
 ├── compatLApp/           # Live2D rendering layer (overrides Cubism SDK demo classes)
 │   ├── LAppView.*        # OpenGL rendering, touch input, sprites
 │   ├── LAppLive2DManager.*  # Model lifecycle, hit testing, view matrix
@@ -106,9 +123,14 @@ src/
 │   ├── LAppDelegate.*    # App lifecycle, GL context init, singletons
 │   ├── LAppDefine.*      # Constants (view scale, hit area names, motion groups)
 │   └── LAppPal.*         # Platform abstraction (logging, file I/O)
-├── ui/                   # Qt .ui form files (processed by AUTOUIC)
+├── compatSDK/            # Shadow Cubism Framework OpenGL headers
+├── ui/                   # Qt .ui form files (processed by AUTOUIC) + manual widgets
 ├── ai/                   # OpenAI-compatible chat API integration
-├── tts/                  # TTS backends (voicevox, xunfei, Edge TTS)
+├── tts/                  # TTS dispatch + backends + translation API clients
+├── translation/          # UI language switching only (TranslationManager)
+├── keyboard/             # Global input hook + key overlay
+├── live2d/               # Live2D model directory/resource management
+├── plugins/voicevox/     # VOICEVOX runtime plugin -> plugins/local_voicevox.dll
 ├── utils/                # Logger, weather, audio spectrum (kissfft), audio decoder (miniaudio), TTS lip sync
 └── model/                # Live2D model extensions (extra motions, file mgmt)
 ```
@@ -148,7 +170,7 @@ The files in `src/compatLApp/` shadow identically-named files in `thirdParty/Cub
 1. Ensure your branch is based on the latest `dev` branch.
 2. Make focused, atomic commits with clear commit messages.
 3. Update documentation if your changes introduce new features or modify existing behavior.
-4. Ensure the project builds successfully with `cmake --build build --config Debug`.
+4. Ensure the project builds successfully with `cmake --build build/Debug`.
 5. Submit a pull request targeting the `dev` branch.
 6. Fill out the pull request template completely, including the self-check list.
 7. A maintainer will review your PR. Address any feedback promptly.
@@ -166,6 +188,7 @@ Optional body with details.
 Types: `feat`, `fix`, `refactor`, `docs`, `style`, `chore`, `build`, `test`.
 
 Examples:
+
 - `feat(core): add mouse transparency check on window activate`
 - `fix(lapp): use px,py arguments in OnTouchesEnded instead of stale touch manager state`
 - `docs: update build instructions for Qt 6.10.1`
@@ -180,17 +203,19 @@ Examples:
 ## Third-Party Dependencies
 
 | Dependency | License | Included? |
-|---|---|---|
+| --- | --- | --- |
 | Live2D Cubism Core | Live2D Proprietary | No — must be downloaded separately |
-| Live2D Cubism Framework | Live2D Proprietary | Yes (git submodule) |
+| Live2D Cubism Framework | Live2D Open Software License | Yes (git submodule) |
 | Qt 6.10.1 | LGPL | No — system dependency |
 | GLEW | Modified BSD License | Yes (downloaded by setup script) |
 | GLFW | zlib/libpng | Yes (downloaded by setup script) |
 | kissfft | BSD-3-Clause | Yes (git submodule) |
+| miniz | MIT | Yes (git submodule) |
+| stb | MIT / Public Domain | Yes (committed in repository) |
 | miniaudio | MIT | Yes (git submodule) |
-| FluentUI3Style | MIT | Yes (git submodule, built as ExternalProject) |
-| voicevox_core | OSS (MIT, Apache 2.0) | No — must be downloaded separately |
-| ONNX Runtime | MIT | No — bundled with voicevox_core |
+| FluentUIStyle | MIT | Yes (git submodule, built as ExternalProject) |
+| voicevox_core | MIT (with additional terms) | No — must be downloaded separately |
+| ONNX Runtime | MIT | No — obtained together with voicevox_core |
 
 ### Legal Notice for Live2D Cubism Core
 

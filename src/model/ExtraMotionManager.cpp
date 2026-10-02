@@ -19,8 +19,7 @@ ExtraMotionManager::ExtraMotionManager()
     addMenu(expressionMenu);
 
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            this, [this](const QString &)
-            { retranslateUI(); });
+            this, &ExtraMotionManager::retranslateUI);
 }
 
 void ExtraMotionManager::retranslateUI()
@@ -82,7 +81,8 @@ void ExtraMotionManager::refreshMenu()
         connect(action, &QAction::triggered, [this, motionName]()
                 {
             if (model) {
-                model->StartExtraMotion(motionName.toUtf8().constData(), PriorityNormal);
+                QByteArray nameUtf8 = motionName.toUtf8();
+                model->StartExtraMotion(nameUtf8.constData(), PriorityNormal);
             } });
 
         motionMenu->addAction(action);
@@ -102,11 +102,15 @@ void ExtraMotionManager::refreshMenu()
         connect(action, &QAction::triggered, [this, expressionName]()
                 {
             if (model) {
-                model->SetExtraExpression(expressionName.toUtf8().constData());
+                QByteArray nameUtf8 = expressionName.toUtf8();
+                model->SetExtraExpression(nameUtf8.constData());
             } });
 
         expressionMenu->addAction(action);
         expressionCount++;
     }
     expressionMenu->setTitle(tr("Expressions (%1)").arg(expressionCount));
+    // 无内容时隐藏
+    motionMenu->menuAction()->setVisible(motionCount > 0);
+    expressionMenu->menuAction()->setVisible(expressionCount > 0);
 }

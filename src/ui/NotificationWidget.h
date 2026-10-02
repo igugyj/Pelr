@@ -24,10 +24,6 @@ public:
         Critical,
         Question
     };
-
-    // 获取单例实例
-    static NotificationWidget *instance();
-
     // 显示通知（线程安全，可在任何地方调用）
     static void showNotification(
         const QString &title,
@@ -68,8 +64,6 @@ private:
         MessageType type,
         std::function<void()> clickCallback
     );
-
-    static NotificationWidget *m_instance;
 
     QLabel *m_appIconLabel; // 应用图标
     QLabel *m_titleLabel; // 标题标签

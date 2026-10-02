@@ -1,20 +1,278 @@
 #include "data.hpp"
+#include <QSaveFile>
+#include <QRandomGenerator>
+#include <QCryptographicHash>
+#include <QMessageAuthenticationCode>
+#include <QJsonValue>
+#include <QMap>
+#include <QStringList>
+#include <QFileInfo>
+#include <QSysInfo>
+#include <QtConcurrent>
+#include <atomic>
 
 bool DataManager::writeJsonFile(const QString &filePath, const QJsonDocument &doc)
 {
-    QFile file(filePath);
+    QSaveFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
     {
         qCritical() << "[Data] Cannot open file for writing:" << filePath;
         return false;
     }
     file.write(doc.toJson());
-    file.close();
+    if (!file.commit())
+    {
+        qCritical() << "[Data] Failed to commit file:" << filePath;
+        return false;
+    }
     return true;
+}
+
+// ============================================================================
+// H15: 菜单数据 HMAC 签名 / 验签
+// 单文件 user/.menuSig（明文 JSON）内含 jsonSalt、json 摘要（HMAC-SHA256，
+// 密钥由机器标识派生，无定值）、各条目 salt + SHA-256 文件摘要（网页链接与文件夹跳过）。
+// 防护级别：防"随手改文件"；密钥可被本机进程重建（纯 Qt 路线的固有边界）。
+// ============================================================================
+
+namespace
+{
+    bool constantTimeEqual(const QByteArray &a, const QByteArray &b)
+    {
+        if (a.size() != b.size())
+            return false;
+        bool ok = true;
+        for (int i = 0; i < a.size(); ++i)
+            ok = ok && (a.at(i) == b.at(i));
+        return ok;
+    }
+
+    bool isUrlPath(const QString &path)
+    {
+        return path.startsWith("http://") || path.startsWith("https://") ||
+               path.startsWith("ftp://") || path.startsWith("file://");
+    }
+
+    // 跨版本稳定契约：菜单签名密钥派生规则（机器标识），改动需 bump payload v + 一次重签过渡
+    QByteArray menuHmacKey()
+    {
+        static const QByteArray key = []()
+        {
+            // 每台机器唯一：MachineGuid（Windows 注册表）；空（极端情况）回退主机名
+            QString seed = QSysInfo::machineUniqueId();
+            if (seed.isEmpty())
+                seed = QSysInfo::machineHostName();
+            return QCryptographicHash::hash(QByteArrayLiteral("Pelr-MenuSig-v1|") + seed.toUtf8(),
+                                            QCryptographicHash::Sha256);
+        }();
+        return key;
+    }
+
+    // 签名代际计数：快速连续保存时只落最新一份，防止旧任务覆盖新签名
+    std::atomic<int> g_sigGeneration{0};
+} // namespace
+
+void DataManager::signMenuData(const QList<MenuData> &items, int gen)
+{
+    QByteArray jsonBytes;
+    {
+        QFile f(FilePaths.menuDataFile); // 块作用域：读完即关，避免句柄占用影响后续写入
+        if (!f.open(QIODevice::ReadOnly))
+        {
+            qCritical() << "[Data] signMenuData: cannot read" << FilePaths.menuDataFile;
+            return;
+        }
+        jsonBytes = f.readAll();
+    }
+    const QByteArray key = menuHmacKey();
+
+    QByteArray jsonSalt;
+    {
+        QFile sigFile(FilePaths.menuSigFile); // 块作用域：读完即关，否则 QSaveFile 覆盖会被只读句柄阻塞
+        if (sigFile.open(QIODevice::ReadOnly))
+        {
+            QJsonObject obj = QJsonDocument::fromJson(sigFile.readAll()).object();
+            jsonSalt = QByteArray::fromBase64(obj.value("jsonSalt").toString().toUtf8());
+        }
+    }
+    if (jsonSalt.size() != 16)
+    {
+        jsonSalt.resize(16);
+        for (int i = 0; i < 16; ++i)
+            jsonSalt[i] = static_cast<char>(QRandomGenerator::system()->bounded(256));
+    }
+
+    const QByteArray jsonHmac = QMessageAuthenticationCode::hash(
+        jsonSalt + jsonBytes,
+        key, QCryptographicHash::Sha256);
+
+    QJsonArray filesArr;
+    for (const MenuData &item : items)
+    {
+        if (item.path.isEmpty() || isUrlPath(item.path))
+            continue;
+        QFileInfo fi(item.path);
+        if (fi.isDir())
+            continue; // 文件夹不校验（与网页链接同待遇）
+
+        QByteArray salt(16, '\0');
+        QByteArray hash;
+        QFile itemFile(item.path);
+        if (itemFile.open(QIODevice::ReadOnly))
+        {
+            for (int i = 0; i < 16; ++i)
+                salt[i] = static_cast<char>(QRandomGenerator::system()->bounded(256));
+            hash = QCryptographicHash::hash(salt + itemFile.readAll(), QCryptographicHash::Sha256);
+            itemFile.close();
+        }
+        else
+        {
+            qWarning() << "[Data] signMenuData: cannot read file for signing:" << item.path;
+        }
+        QJsonObject entry;
+        entry["path"] = item.path;
+        entry["salt"] = QString::fromLatin1(salt.toBase64());
+        entry["hash"] = QString::fromLatin1(hash.toBase64());
+        filesArr.append(entry);
+    }
+
+    QJsonObject payloadObj;
+    payloadObj["v"] = 1;
+    payloadObj["jsonSalt"] = QString::fromLatin1(jsonSalt.toBase64());
+    payloadObj["json"] = QString::fromLatin1(jsonHmac.toBase64());
+    payloadObj["files"] = filesArr;
+
+    if (gen != g_sigGeneration)
+        return; // 陈旧任务：已有更新的保存，丢弃，避免旧签名覆盖新签名
+
+    const QByteArray signedBytes = QJsonDocument(payloadObj).toJson();
+    QSaveFile sf(FilePaths.menuSigFile);
+    if (!sf.open(QIODevice::WriteOnly) || sf.write(signedBytes) < 0 || !sf.commit())
+    {
+        qCritical() << "[Data] signMenuData: failed to write signature file" << FilePaths.menuSigFile;
+        return;
+    }
+    qDebug() << "[Data] signMenuData: rewrote signature file"
+             << QFileInfo(FilePaths.menuSigFile).absoluteFilePath() << ","
+             << signedBytes.size() << "bytes," << filesArr.size() << "files signed";
+}
+
+// 后台异步写签：保存路径调用，避免哈希大文件阻塞 UI 线程
+void DataManager::scheduleMenuResign(const QList<MenuData> &items)
+{
+    const int gen = ++g_sigGeneration;
+    QtConcurrent::run([items, gen]()
+                      { DataManager::instance().signMenuData(items, gen); });
+}
+
+bool DataManager::verifyMenuData(bool *jsonOk, QStringList *failedFiles)
+{
+    if (jsonOk)
+        *jsonOk = false;
+    if (failedFiles)
+        failedFiles->clear();
+
+    QFile f(FilePaths.menuDataFile);
+    if (!f.open(QIODevice::ReadOnly))
+    {
+        qWarning() << "[Data] verifyMenuData: cannot read" << FilePaths.menuDataFile;
+        return false;
+    }
+    const QByteArray jsonBytes = f.readAll();
+
+    QFile sigFile(FilePaths.menuSigFile);
+    if (!sigFile.open(QIODevice::ReadOnly))
+    {
+        // TOFU：升级后首次启动无签名文件 → 生成机器密钥签名（信任当前菜单）
+        qDebug() << "[Data] verifyMenuData: no signature file, signing current menu (TOFU)";
+        signMenuData(getMenuData(), ++g_sigGeneration);
+        if (jsonOk)
+            *jsonOk = true;
+        return true;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(sigFile.readAll());
+    if (!doc.isObject())
+    {
+        qWarning() << "[Data] verifyMenuData: invalid signature file";
+        return false;
+    }
+    QJsonObject obj = doc.object();
+    QByteArray jsonSalt = QByteArray::fromBase64(obj.value("jsonSalt").toString().toUtf8());
+    QByteArray storedJson = QByteArray::fromBase64(obj.value("json").toString().toUtf8());
+    if (jsonSalt.size() != 16)
+    {
+        qWarning() << "[Data] verifyMenuData: invalid jsonSalt in signature";
+        return false;
+    }
+
+    const QByteArray calcJson = QMessageAuthenticationCode::hash(
+        jsonSalt + jsonBytes,
+        menuHmacKey(), QCryptographicHash::Sha256);
+    if (!constantTimeEqual(storedJson, calcJson))
+    {
+        qWarning() << "[Data] verifyMenuData: menuData.json HMAC mismatch (tampered?)";
+        return false; // jsonOk 保持 false → 整批阻止自动启动
+    }
+    if (jsonOk)
+        *jsonOk = true;
+
+    // 逐条目文件校验
+    QMap<QString, QPair<QByteArray, QByteArray>> fileMap; // path -> (salt, hash)
+    const QJsonArray filesArr = obj.value("files").toArray();
+    for (const QJsonValue &v : filesArr)
+    {
+        QJsonObject e = v.toObject();
+        fileMap[e.value("path").toString()] = qMakePair(
+            QByteArray::fromBase64(e.value("salt").toString().toUtf8()),
+            QByteArray::fromBase64(e.value("hash").toString().toUtf8()));
+    }
+
+    bool allOk = true;
+    const QList<MenuData> items = getMenuData();
+    for (const MenuData &item : items)
+    {
+        if (item.path.isEmpty() || isUrlPath(item.path))
+            continue;
+        if (QFileInfo(item.path).isDir())
+            continue;
+
+        QByteArray salt, storedHash;
+        const auto it = fileMap.constFind(item.path);
+        if (it != fileMap.constEnd())
+        {
+            salt = it.value().first;
+            storedHash = it.value().second;
+        }
+        bool ok = !storedHash.isEmpty();
+        if (ok)
+        {
+            QFile itemFile(item.path);
+            if (itemFile.open(QIODevice::ReadOnly))
+                ok = constantTimeEqual(
+                    storedHash,
+                    QCryptographicHash::hash(
+                        salt + itemFile.readAll(), QCryptographicHash::Sha256));
+            else
+                ok = false;
+        }
+        if (!ok)
+        {
+            qWarning() << "[Data] verifyMenuData: file changed or unreadable:" << item.path;
+            if (failedFiles)
+                failedFiles->append(item.path);
+            allOk = false;
+        }
+    }
+    if (!allOk && failedFiles && !failedFiles->isEmpty())
+        qWarning() << "[Data] verifyMenuData: changed files:" << failedFiles->join(", ");
+    return allOk;
 }
 
 void DataManager::writeOpenWeatherData(const OpenWeatherData &opwdt)
 {
+    QWriteLocker wl(&DataManager::instance().rwlock);
+    DataManager::instance().openWeather_data = opwdt;
     QJsonObject obj;
     obj["city"] = opwdt.city;
     obj["api_key"] = opwdt.api_key;
@@ -23,6 +281,8 @@ void DataManager::writeOpenWeatherData(const OpenWeatherData &opwdt)
 
 void DataManager::writeLlamaData(const LlamaData &llm)
 {
+    QWriteLocker wl(&DataManager::instance().rwlock);
+    DataManager::instance().llama_data = llm;
     QJsonObject obj;
     obj["maxContextMessages"] = llm.maxContextMessages;
     obj["model"] = llm.model;
@@ -35,6 +295,8 @@ void DataManager::writeLlamaData(const LlamaData &llm)
 
 void DataManager::writeTTSConfig(const TTSConfig &ttsc)
 {
+    QWriteLocker wl(&DataManager::instance().rwlock);
+    DataManager::instance().tts_config = ttsc;
     QJsonObject obj;
     obj["provider"] = ttsc.provider;
     obj["speaker_openai_edge_tts"] = ttsc.speaker_openai_edge_tts;
@@ -131,6 +393,7 @@ QJsonObject DataManager::serializeConfig(const ConfigData &d)
     obj["trayIconMode"] = d.trayIconMode;
     obj["trayGifPath"] = d.trayGifPath;
     obj["ShowLaunchMenuinTrayMenu"] = d.ShowLaunchMenuinTrayMenu;
+    obj["alwaysDynamicEffects"] = d.alwaysDynamicEffects;
     obj["isShowThinkingBubble"] = d.isShowThinkingBubble;
     obj["isLLMGreeting"] = d.isLLMGreeting;
     obj["language"] = d.language;
@@ -176,6 +439,7 @@ ConfigData DataManager::deserializeConfig(const QJsonObject &obj)
     d.trayIconMode = obj["trayIconMode"].toInt(TrayIcon_Static);
     d.trayGifPath = obj["trayGifPath"].toString().trimmed();
     d.ShowLaunchMenuinTrayMenu = obj["ShowLaunchMenuinTrayMenu"].toBool(true);
+    d.alwaysDynamicEffects = obj["alwaysDynamicEffects"].toBool(false);
     d.isShowThinkingBubble = obj["isShowThinkingBubble"].toBool();
     d.isLLMGreeting = obj["isLLMGreeting"].toBool();
     d.language = obj["language"].toString().trimmed();
@@ -259,6 +523,7 @@ QList<TodoData> DataManager::deserializeTodoList(const QJsonArray &arr)
 
 void DataManager::writeData(ToDoSettingData setting)
 {
+    QWriteLocker wl(&rwlock);
     QJsonObject obj;
     obj["is_show_todo"] = setting.is_show_todo;
     obj["is_notify_tray"] = setting.is_notify_tray;
@@ -307,9 +572,11 @@ void DataManager::readTodoNotify()
 void DataManager::readTTSConfig()
 {
     QJsonDocument doc = readJsonFile(FilePaths.ttsConfigFile);
-    if (!doc.isObject()) return;
+    if (!doc.isObject())
+        return;
     QJsonObject obj = doc.object();
-    if (obj.isEmpty()) return;
+    if (obj.isEmpty())
+        return;
 
     tts_config.provider = obj["provider"].toInt(0);
     if (tts_config.provider < 0 || tts_config.provider >= TTSProviderList.length())
@@ -354,7 +621,8 @@ void DataManager::readTTSConfig()
 void DataManager::readLlamaData()
 {
     QJsonDocument doc = readJsonFile(FilePaths.llmConfigFile);
-    if (!doc.isObject()) return;
+    if (!doc.isObject())
+        return;
     QJsonObject obj = doc.object();
 
     llama_data.maxContextMessages = obj["maxContextMessages"].toInt(10);
@@ -368,7 +636,8 @@ void DataManager::readLlamaData()
 void DataManager::readOpenWeatherData()
 {
     QJsonDocument doc = readJsonFile(FilePaths.openWeatherFile);
-    if (!doc.isObject()) return;
+    if (!doc.isObject())
+        return;
     QJsonObject obj = doc.object();
 
     openWeather_data.api_key = obj["api_key"].toString().trimmed();
@@ -396,4 +665,83 @@ QFont DataManager::loadFont()
         }
     }
     return QFont();
+}
+
+// ── Lazy load guards (first getter call reads disk, then cached) ──
+
+void DataManager::ensureMenuLoaded()
+{
+    if (menuLoaded)
+        return;
+    QWriteLocker wl(&rwlock);
+    if (menuLoaded)
+        return;
+    readMenuData();
+    menuLoaded = true;
+}
+
+void DataManager::ensureBasicLoaded()
+{
+    if (basicLoaded)
+        return;
+    QWriteLocker wl(&rwlock);
+    if (basicLoaded)
+        return;
+    readBasicData();
+    basicLoaded = true;
+}
+
+void DataManager::ensureTodoLoaded()
+{
+    if (todoLoaded)
+        return;
+    QWriteLocker wl(&rwlock);
+    if (todoLoaded)
+        return;
+    readTodoData();
+    todoLoaded = true;
+}
+
+void DataManager::ensureTodoSettingLoaded()
+{
+    if (todoSettingLoaded)
+        return;
+    QWriteLocker wl(&rwlock);
+    if (todoSettingLoaded)
+        return;
+    readTodoNotify();
+    todoSettingLoaded = true;
+}
+
+void DataManager::ensureTTSLoaded()
+{
+    if (ttsLoaded)
+        return;
+    QWriteLocker wl(&rwlock);
+    if (ttsLoaded)
+        return;
+    readTTSConfig();
+    ttsLoaded = true;
+}
+
+void DataManager::ensureOpenWeatherLoaded()
+{
+    if (openWeatherLoaded)
+        return;
+    QWriteLocker wl(&rwlock);
+    if (openWeatherLoaded)
+        return;
+    readOpenWeatherData();
+    openWeatherLoaded = true;
+}
+
+void DataManager::ensureLlamaLoaded()
+{
+    if (llamaLoaded)
+        return;
+    QWriteLocker wl(&rwlock);
+    if (llamaLoaded)
+        return;
+    readLlamaData();
+    llamaLoaded = true;
 }

@@ -4,10 +4,14 @@
 
 ```sh
 # Configure (after cloning or adding source files)
-D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build -G "MinGW Makefiles"
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Debug -G "MinGW Makefiles"
 
 # Build
-D:/Qt/Tools/CMake_64/bin/cmake.exe --build build --config Debug
+D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Debug
+
+# Release build in a separate tree (see "Debug vs Release" below)
+D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Release -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Release
 ```
 
 Qt 6.10.1 at `D:/Qt/6.10.1/mingw_64`. Windows-only (Win10/11). No tests, no lint, no typecheck.
@@ -26,8 +30,14 @@ Source files use `file(GLOB ...)` — **re-run cmake configure** after adding ne
 - `src/keyboard/` — real-time key press state display.
 - `src/utils/` — logger, weather, audio spectrum (`kissfft`), license check, audio decoder (`AudioDecoder`, wraps miniaudio), TTS lip sync (`TtsLipSync`), storage/process/power queries.
 - `src/model/` — Live2D model extension (extra motions, file management).
+- `src/live2d/` — Live2D 模型目录/资源管理。
+- `src/plugins/voicevox/` — VOICEVOX runtime plugin (`local_voicevox.dll`); hosted via `src/tts/voicevoxhost.*`.
+- `src/core/componentmanager.*` / `componentpaths.hpp` — optional component discovery, validation and import.
 - `src/ui/` — Qt `.ui` forms + manual widgets. AUTOUIC searches here.
-- `scripts/` — `clean_release.py` (dry-run via `RUN = False`), `setup_glew_glfw.bat`.
+- `scripts/` — 发布流程 `release.py`（①`generate_notice.py` 生成 NOTICE → ②复制构建产物 → ③`clean_release.py` 清理残留）；`setup_glew_glfw(.bat|.sh)` 实际在 `thirdParty/scripts/`。
+- `scripts/release_config.json` — 三脚本次共享的外部配置：路径（`paths.build_dir`/`release_dir`/`licenses_dir`）、`clean.run`（false=清理 dry-run）、`release.copy_files`（随产物复制进 Release 根的配套文件/目录）、`notice.third_party_libs` 清单。脚本内不硬编码配置。
+- `.github/workflows/release.yml` — 发布 CI（见下节 `Release CI`）；`sync-to-gitee.yml` — 镜像同步。
+- `licenses/` — NOTICE 许可证全文模板（`MIT.txt`、`BSD-3-Clause.txt`、`ONNX-Runtime-MIT.txt`）。
 - `thirdParty/` — git submodules + downloaded SDKs. See `.gitmodules`. `Live2DCubismCore.dll` NOT in repo (must download).
 
 ## FluentUIStyle (Qt Style Plugin)
@@ -93,13 +103,50 @@ glClear(GL_COLOR_BUFFER_BIT);
 
 - `-include GL/glew.h` is forced globally via CMake (`target_compile_options` + `PRIVATE -include GL/glew.h`). Do not remove.
 - GLEW is static (`GLEW_STATIC` defined globally).
-- `voicevox_core.dll`, `voicevox_onnxruntime.dll`, `Live2DCubismCore.dll` copied to output via post-build.
 - `windeployqt` runs as post-build to deploy Qt DLLs.
-- `assets/` folder and `Resources/*` subdirectories are copied to output via post-build.
+- `assets/` folder copied to output via post-build. Source-tree `Resources/` is not required and does not exist.
+- Cubism OpenGL runtime files are copied from submodules to output on Windows post-build (output `Resources/` holds sample models only): `FrameworkShaders` from `CubismNativeFramework` OpenGL `Shaders/Standard`, `SampleShaders` from `CubismNativeSamples` OpenGL `Shaders/Standard`, and sample model dirs from `CubismNativeSamples/Samples/Resources` (root demo PNGs excluded).
+
+### Optional component deployment (Debug builds only)
+
+`CMakeLists.txt` deploys third-party optional components **only when `CMAKE_BUILD_TYPE` is `Debug`**. A Release build ships without them; the program then starts in a "component missing" state.
+
+| Component | Source | Destination | Guard |
+|---|---|---|---|
+| Live2D Cubism Core `LICENSE.md` | `thirdParty/Core/LICENSE.md` | `<out>/Live2D/` | none — git-tracked, always present |
+| `Live2DCubismCore.dll` | `thirdParty/Core/dll/windows/x86_64/` | `<out>/Live2D/` | `EXISTS` — gitignored, skipped if missing |
+| voicevox `c_api`, `onnxruntime`, `dict` | `thirdParty/voicevox_core/<part>/` | `<out>/voicevox_core/<part>/` | `EXISTS` per part |
+| voicevox `models` (~1.6 GB) | — | — | **not auto-copied by design** — copy manually to `<out>/voicevox_core/models` |
+
+Copy commands are `copy_directory_if_different` (incremental, never deletes), so an existing local `voicevox_core/models` survives rebuilds. Runtime paths and the plugin host are resolved by `ComponentPaths` / `ComponentManager` (see `docs/.ai/modules/components.md`).
 
 ## Debug vs Release
 
-`CMakeLists.txt`: `set(DEBUG_MODE ON)` → console window + `CONSOLE` define. `OFF` → no console, `WIN32_EXECUTABLE`, Qt message handler installed.
+`DEBUG_MODE` is the master switch for debug features (console subsystem `EXE_WIN32`/`WIN32_EXECUTABLE`, `CONSOLE` define, log level). It is **derived from `CMAKE_BUILD_TYPE`** and can be overridden:
+
+```sh
+cmake -S . -B build/Debug   -G "MinGW Makefiles"   # CMAKE_BUILD_TYPE=Debug  → DEBUG_MODE=ON
+cmake -S . -B build/Release -G "MinGW Makefiles"   # CMAKE_BUILD_TYPE=Release → DEBUG_MODE=OFF
+cmake -S . -B build/Release -G "MinGW Makefiles" -DDEBUG_MODE=ON   # override (verbose logs on a Release build)
+```
+
+- `CMAKE_BUILD_TYPE` defaults to `Debug` when unset — the fallback is required because FluentUIStyle's `ExternalProject_Add` forwards it through `$<CONFIG>` and an empty value breaks that subproject.
+- `DEBUG_MODE` is re-derived from `CMAKE_BUILD_TYPE` on every configure unless you pass `-DDEBUG_MODE=ON/OFF` again.
+- `DEBUG_MODE=ON` → console window + `CONSOLE` define. `OFF` → no console, `WIN32_EXECUTABLE`, Qt message handler installed.
+- MinGW must be on `PATH` (e.g. `D:/Qt/Tools/mingw1310_64/bin`) or configure fails with `CMAKE_MAKE_PROGRAM is not set`.
+
+## Release CI
+
+`.github/workflows/release.yml` — 16 steps，触发为 `push` tag `v*` 或 `workflow_dispatch`（`dry_run` 选项，只出 artifact 不打 tag/不发 Release）。
+
+- **流水线**：Checkout（submodules recursive）→ 恢复 Live2D header → 下载 GLEW 2.2.0 / GLFW 3.4 → 下载 voicevox_core C API → 装 Qt 6.10.1 + MinGW → configure → build → 解析版本/notes → `release.py`（带 4 次重试）→ 校验 Release 内容 → 7z → artifact → 打 tag → `gh release create`
+- **依赖不是 submodule 的**：`thirdParty/glew|glfw|voicevox_core|Core` 全被 gitignore，所以 fresh clone 必须 CI 现场拉（这也是这条流水线除「自动化」外的唯一独立价值：证明仓库可从零构建）
+- **唯一必需 Secret `LIVE2D_CORE_H_B64`**：`thirdParty/Core/include/Live2DCubismCore.h` 的 base64。Core 是 Live2D 专有许可、禁止分发，故不入仓库、不进归档；它只被 `QLibrary` 运行时加载、不参与链接，构建期只需要头文件
+  ```powershell
+  [Convert]::ToBase64String([IO.File]::ReadAllBytes('thirdParty/Core/include/Live2DCubismCore.h'))
+  ```
+- **归档**：`pelr_windows-x86_64_<tag>.7z`，`actions/upload-artifact` + `gh release create` 双份
+- **易错点**：configure 必须传**单值** `-DCMAKE_PREFIX_PATH`（CMakeLists L512-513 会透传给 FluentUIStyle 的 ExternalProject）；`setup_glew_glfw.bat` 含 `pause` **不能**在 CI 用
 
 ## Startup Sequence
 
