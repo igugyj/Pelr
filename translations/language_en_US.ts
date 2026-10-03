@@ -922,8 +922,8 @@ Version: %2</source>
         <translation type="obsolete">Custom Role</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="592"/>
-        <location filename="../src/ui/setting.cpp" line="629"/>
+        <location filename="../src/ui/setting.cpp" line="593"/>
+        <location filename="../src/ui/setting.cpp" line="630"/>
         <source>Please fill in all fields first.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -934,53 +934,54 @@ Version: %2</source>
 Will take effect on next application launch.</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="846"/>
+        <location filename="../src/ui/setting.cpp" line="825"/>
         <source>Error</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="652"/>
-        <location filename="../src/ui/setting.cpp" line="691"/>
-        <location filename="../src/ui/setting.cpp" line="863"/>
-        <location filename="../src/ui/setting.cpp" line="901"/>
-        <location filename="../src/ui/setting.cpp" line="912"/>
-        <location filename="../src/ui/setting.cpp" line="948"/>
+        <location filename="../src/ui/setting.cpp" line="653"/>
+        <location filename="../src/ui/setting.cpp" line="692"/>
+        <location filename="../src/ui/setting.cpp" line="842"/>
+        <location filename="../src/ui/setting.cpp" line="864"/>
+        <location filename="../src/ui/setting.cpp" line="876"/>
+        <location filename="../src/ui/setting.cpp" line="896"/>
         <location filename="../src/ui/settingslots.cpp" line="139"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="691"/>
+        <location filename="../src/ui/setting.cpp" line="692"/>
         <source>Saved!
 Will take effect on next startup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="803"/>
-        <location filename="../src/ui/setting.cpp" line="811"/>
+        <location filename="../src/ui/setting.cpp" line="782"/>
+        <location filename="../src/ui/setting.cpp" line="790"/>
         <source>Confirmation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/ui/setting.cpp" line="349"/>
-        <location filename="../src/ui/setting.cpp" line="729"/>
-        <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/setting.cpp" line="350"/>
         <location filename="../src/ui/setting.cpp" line="730"/>
-        <source>Info</source>
+        <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/ui/setting.cpp" line="351"/>
-        <location filename="../src/ui/setting.cpp" line="592"/>
-        <location filename="../src/ui/setting.cpp" line="629"/>
-        <location filename="../src/ui/setting.cpp" line="654"/>
         <location filename="../src/ui/setting.cpp" line="731"/>
-        <location filename="../src/ui/setting.cpp" line="908"/>
-        <location filename="../src/ui/setting.cpp" line="943"/>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui/setting.cpp" line="352"/>
+        <location filename="../src/ui/setting.cpp" line="593"/>
+        <location filename="../src/ui/setting.cpp" line="630"/>
+        <location filename="../src/ui/setting.cpp" line="655"/>
+        <location filename="../src/ui/setting.cpp" line="732"/>
+        <location filename="../src/ui/setting.cpp" line="853"/>
+        <location filename="../src/ui/setting.cpp" line="871"/>
+        <location filename="../src/ui/setting.cpp" line="890"/>
         <location filename="../src/ui/settingslots.cpp" line="123"/>
         <location filename="../src/ui/settingslots.cpp" line="196"/>
         <location filename="../src/ui/settingslots.cpp" line="252"/>
@@ -991,75 +992,75 @@ Will take effect on next startup.</source>
         <translation type="unfinished">Warning</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="352"/>
-        <location filename="../src/ui/setting.cpp" line="732"/>
+        <location filename="../src/ui/setting.cpp" line="353"/>
+        <location filename="../src/ui/setting.cpp" line="733"/>
         <source>Critical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="353"/>
-        <location filename="../src/ui/setting.cpp" line="733"/>
+        <location filename="../src/ui/setting.cpp" line="354"/>
+        <location filename="../src/ui/setting.cpp" line="734"/>
         <source>Fatal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="399"/>
+        <location filename="../src/ui/setting.cpp" line="400"/>
         <source>Live2D Cubism Core</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="433"/>
+        <location filename="../src/ui/setting.cpp" line="434"/>
         <source>Required by the desktop pet. Drop the Live2D SDK archive into the Live2D folder, or place Live2DCubismCore.dll there directly.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="400"/>
+        <location filename="../src/ui/setting.cpp" line="401"/>
         <source>VOICEVOX CORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="437"/>
+        <location filename="../src/ui/setting.cpp" line="438"/>
         <source>Optional Japanese TTS. Place the voicevox_core runtime, dictionary and models in the voicevox_core folder.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="476"/>
+        <location filename="../src/ui/setting.cpp" line="477"/>
         <source>voicevox (Japanese, Local)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="477"/>
+        <location filename="../src/ui/setting.cpp" line="478"/>
         <source>voicevox (Japanese, Local) - not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="642"/>
+        <location filename="../src/ui/setting.cpp" line="643"/>
         <source>Select Prompt File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="644"/>
+        <location filename="../src/ui/setting.cpp" line="645"/>
         <source>Text Files (*.txt *.md *.json);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="652"/>
+        <location filename="../src/ui/setting.cpp" line="653"/>
         <source>Loaded prompt from [%1] successfully.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="654"/>
+        <location filename="../src/ui/setting.cpp" line="655"/>
         <source>Failed to load prompt from [%1].</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="804"/>
+        <location filename="../src/ui/setting.cpp" line="783"/>
         <source>Are you sure you want to reset all settings?
 This will restore all options to defaults.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="812"/>
+        <location filename="../src/ui/setting.cpp" line="791"/>
         <source>Delete all user data (logs, cache, user folder, etc.) as well?
 
 &quot;Yes&quot; will clean everything and restart - all data will be lost permanently.
@@ -1067,37 +1068,38 @@ This will restore all options to defaults.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="847"/>
+        <location filename="../src/ui/setting.cpp" line="826"/>
         <source>Some data folders could not be deleted. Please clean them manually and restart.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="863"/>
+        <location filename="../src/ui/setting.cpp" line="842"/>
         <source>Settings have been reset!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="901"/>
+        <location filename="../src/ui/setting.cpp" line="864"/>
         <source>Shortcut no longer exists!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="908"/>
+        <location filename="../src/ui/setting.cpp" line="871"/>
         <source>Failed to remove shortcut!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="912"/>
+        <location filename="../src/ui/setting.cpp" line="876"/>
         <source>Shortcut removed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="943"/>
+        <location filename="../src/ui/setting.cpp" line="853"/>
+        <location filename="../src/ui/setting.cpp" line="890"/>
         <source>Failed to create shortcut!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="948"/>
+        <location filename="../src/ui/setting.cpp" line="896"/>
         <source>Shortcut created!</source>
         <translation type="unfinished"></translation>
     </message>

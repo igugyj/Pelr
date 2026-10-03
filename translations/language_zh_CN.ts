@@ -811,49 +811,50 @@ Version: %2</translation>
 <context>
     <name>SettingWidget</name>
     <message>
-        <location filename="../src/ui/setting.cpp" line="652"/>
-        <location filename="../src/ui/setting.cpp" line="691"/>
-        <location filename="../src/ui/setting.cpp" line="863"/>
-        <location filename="../src/ui/setting.cpp" line="901"/>
-        <location filename="../src/ui/setting.cpp" line="912"/>
-        <location filename="../src/ui/setting.cpp" line="948"/>
+        <location filename="../src/ui/setting.cpp" line="653"/>
+        <location filename="../src/ui/setting.cpp" line="692"/>
+        <location filename="../src/ui/setting.cpp" line="842"/>
+        <location filename="../src/ui/setting.cpp" line="864"/>
+        <location filename="../src/ui/setting.cpp" line="876"/>
+        <location filename="../src/ui/setting.cpp" line="896"/>
         <location filename="../src/ui/settingslots.cpp" line="139"/>
         <source>Information</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="691"/>
+        <location filename="../src/ui/setting.cpp" line="692"/>
         <source>Saved!
 Will take effect on next startup.</source>
         <translation>已保存！
 将在下次启动时生效。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="803"/>
-        <location filename="../src/ui/setting.cpp" line="811"/>
+        <location filename="../src/ui/setting.cpp" line="782"/>
+        <location filename="../src/ui/setting.cpp" line="790"/>
         <source>Confirmation</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="349"/>
-        <location filename="../src/ui/setting.cpp" line="729"/>
+        <location filename="../src/ui/setting.cpp" line="350"/>
+        <location filename="../src/ui/setting.cpp" line="730"/>
         <source>Debug</source>
         <translation>调试</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="350"/>
-        <location filename="../src/ui/setting.cpp" line="730"/>
+        <location filename="../src/ui/setting.cpp" line="351"/>
+        <location filename="../src/ui/setting.cpp" line="731"/>
         <source>Info</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="351"/>
-        <location filename="../src/ui/setting.cpp" line="592"/>
-        <location filename="../src/ui/setting.cpp" line="629"/>
-        <location filename="../src/ui/setting.cpp" line="654"/>
-        <location filename="../src/ui/setting.cpp" line="731"/>
-        <location filename="../src/ui/setting.cpp" line="908"/>
-        <location filename="../src/ui/setting.cpp" line="943"/>
+        <location filename="../src/ui/setting.cpp" line="352"/>
+        <location filename="../src/ui/setting.cpp" line="593"/>
+        <location filename="../src/ui/setting.cpp" line="630"/>
+        <location filename="../src/ui/setting.cpp" line="655"/>
+        <location filename="../src/ui/setting.cpp" line="732"/>
+        <location filename="../src/ui/setting.cpp" line="853"/>
+        <location filename="../src/ui/setting.cpp" line="871"/>
+        <location filename="../src/ui/setting.cpp" line="890"/>
         <location filename="../src/ui/settingslots.cpp" line="123"/>
         <location filename="../src/ui/settingslots.cpp" line="196"/>
         <location filename="../src/ui/settingslots.cpp" line="252"/>
@@ -864,82 +865,82 @@ Will take effect on next startup.</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="352"/>
-        <location filename="../src/ui/setting.cpp" line="732"/>
+        <location filename="../src/ui/setting.cpp" line="353"/>
+        <location filename="../src/ui/setting.cpp" line="733"/>
         <source>Critical</source>
         <translation>严重</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="353"/>
-        <location filename="../src/ui/setting.cpp" line="733"/>
+        <location filename="../src/ui/setting.cpp" line="354"/>
+        <location filename="../src/ui/setting.cpp" line="734"/>
         <source>Fatal</source>
         <translation>致命</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="399"/>
+        <location filename="../src/ui/setting.cpp" line="400"/>
         <source>Live2D Cubism Core</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="433"/>
+        <location filename="../src/ui/setting.cpp" line="434"/>
         <source>Required by the desktop pet. Drop the Live2D SDK archive into the Live2D folder, or place Live2DCubismCore.dll there directly.</source>
         <translation>桌面宠物所需。将 Live2D SDK 压缩包放入 Live2D 文件夹，或直接将 Live2DCubismCore.dll 放入该文件夹。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="400"/>
+        <location filename="../src/ui/setting.cpp" line="401"/>
         <source>VOICEVOX CORE</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="437"/>
+        <location filename="../src/ui/setting.cpp" line="438"/>
         <source>Optional Japanese TTS. Place the voicevox_core runtime, dictionary and models in the voicevox_core folder.</source>
         <translation>可选日语 TTS。将 voicevox_core 运行时、词典和模型放入 voicevox_core 文件夹。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="476"/>
+        <location filename="../src/ui/setting.cpp" line="477"/>
         <source>voicevox (Japanese, Local)</source>
         <translation>voicevox（日语，本地）</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="477"/>
+        <location filename="../src/ui/setting.cpp" line="478"/>
         <source>voicevox (Japanese, Local) - not installed</source>
         <translation>voicevox（日语，本地）— 未安装</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="592"/>
-        <location filename="../src/ui/setting.cpp" line="629"/>
+        <location filename="../src/ui/setting.cpp" line="593"/>
+        <location filename="../src/ui/setting.cpp" line="630"/>
         <source>Please fill in all fields first.</source>
         <translation>请先填写所有字段。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="642"/>
+        <location filename="../src/ui/setting.cpp" line="643"/>
         <source>Select Prompt File</source>
         <translation>选择提示词文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="644"/>
+        <location filename="../src/ui/setting.cpp" line="645"/>
         <source>Text Files (*.txt *.md *.json);;All Files (*)</source>
         <translation>文本文件 (*.txt *.md *.json);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="652"/>
+        <location filename="../src/ui/setting.cpp" line="653"/>
         <source>Loaded prompt from [%1] successfully.</source>
         <translation>已成功从 [%1] 加载提示词。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="654"/>
+        <location filename="../src/ui/setting.cpp" line="655"/>
         <source>Failed to load prompt from [%1].</source>
         <translation>从 [%1] 加载提示词失败。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="804"/>
+        <location filename="../src/ui/setting.cpp" line="783"/>
         <source>Are you sure you want to reset all settings?
 This will restore all options to defaults.</source>
         <translation>确定要重置所有设置吗？
 这将把所有选项恢复为默认值。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="812"/>
+        <location filename="../src/ui/setting.cpp" line="791"/>
         <source>Delete all user data (logs, cache, user folder, etc.) as well?
 
 &quot;Yes&quot; will clean everything and restart - all data will be lost permanently.
@@ -950,42 +951,43 @@ This will restore all options to defaults.</source>
 &quot;否&quot;仅将设置重置为默认值。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="847"/>
+        <location filename="../src/ui/setting.cpp" line="826"/>
         <source>Some data folders could not be deleted. Please clean them manually and restart.</source>
         <translation>部分数据文件夹无法删除。请手动清理并重新启动。</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="863"/>
+        <location filename="../src/ui/setting.cpp" line="842"/>
         <source>Settings have been reset!</source>
         <translation>设置已重置！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="901"/>
+        <location filename="../src/ui/setting.cpp" line="864"/>
         <source>Shortcut no longer exists!</source>
         <translation>快捷方式已不存在！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="908"/>
+        <location filename="../src/ui/setting.cpp" line="871"/>
         <source>Failed to remove shortcut!</source>
         <translation>删除快捷方式失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="912"/>
+        <location filename="../src/ui/setting.cpp" line="876"/>
         <source>Shortcut removed!</source>
         <translation>快捷方式已删除！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="943"/>
+        <location filename="../src/ui/setting.cpp" line="853"/>
+        <location filename="../src/ui/setting.cpp" line="890"/>
         <source>Failed to create shortcut!</source>
         <translation>创建快捷方式失败！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="948"/>
+        <location filename="../src/ui/setting.cpp" line="896"/>
         <source>Shortcut created!</source>
         <translation>快捷方式已创建！</translation>
     </message>
     <message>
-        <location filename="../src/ui/setting.cpp" line="846"/>
+        <location filename="../src/ui/setting.cpp" line="825"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>

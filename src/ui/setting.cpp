@@ -26,6 +26,7 @@
 #include "componentcard.hpp"
 #include "componentmanager.hpp"
 #include "componentpaths.hpp"
+#include "StartupShortcut.h"
 #include <QProcess>
 #include <QRandomGenerator>
 #include <QDateTime>
@@ -761,34 +762,12 @@ void SettingWidget::saveData()
 
 bool SettingWidget::checkStartupLink()
 {
-    // 获取启动文件夹路径
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    QString appData = env.value("APPDATA");
-
-    if (appData.isEmpty())
+    const QString shortcutPath = StartupShortcut::shortcutPath();
+    if (shortcutPath.isEmpty())
     {
-        appData = env.value("USERPROFILE");
-        if (appData.isEmpty())
-        {
-            qWarning() << "[Settings] Cannot get startup folder path";
-            return false;
-        }
-        appData.append("/AppData/Roaming");
-    }
-
-    QString startupFolder = appData + "/Microsoft/Windows/Start Menu/Programs/Startup";
-
-    // 获取当前应用程序路径
-    QString executablePath = QCoreApplication::applicationFilePath();
-    if (executablePath.isEmpty())
-    {
-        qWarning() << "[Settings] Cannot get application path";
+        qWarning() << "[Settings] Cannot get startup folder path";
         return false;
     }
-
-    // 构建快捷方式名称和路径
-    QString shortcutName = QFileInfo(executablePath).baseName() + ".lnk";
-    QString shortcutPath = QDir(startupFolder).filePath(shortcutName);
     if (!QFile::exists(shortcutPath))
     {
         qDebug() << "[Settings] Shortcut does not exist:" << shortcutPath;
@@ -866,85 +845,54 @@ void SettingWidget::resetSetting()
 
 void SettingWidget::startupSwitch(const bool flag)
 {
-    // 获取启动文件夹路径
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    QString appData = env.value("APPDATA");
-
-    if (appData.isEmpty())
+    const QString shortcutPath = StartupShortcut::shortcutPath();
+    if (shortcutPath.isEmpty())
     {
-        appData = env.value("USERPROFILE");
-        if (appData.isEmpty())
-        {
-            qWarning() << "[Settings] Cannot get startup folder path";
-        }
-        appData.append("/AppData/Roaming");
+        qWarning() << "[Settings] Cannot get startup folder path";
+        ui->checkBox->setChecked(false);
+        NotificationWidget::showNotification(tr("Warning"), tr("Failed to create shortcut!"), 5000, MessageType::Warning);
+        return;
     }
 
-    QString startupFolder = appData + "/Microsoft/Windows/Start Menu/Programs/Startup";
-
-    // 获取当前应用程序路径
-    QString executablePath = QCoreApplication::applicationFilePath();
-    if (executablePath.isEmpty())
-    {
-        qWarning() << "[Settings] Cannot get application path";
-    }
-
-    // 构建快捷方式名称和路径
-    QString shortcutName = QFileInfo(executablePath).baseName() + ".lnk";
-    QString shortcutPath = QDir(startupFolder).filePath(shortcutName);
     if (!ui->checkBox->isChecked() || flag)
     {
         // 移除启动项
         if (!QFile::exists(shortcutPath))
         {
             qDebug() << "[Settings] Shortcut does not exist:" << shortcutPath;
+            ui->checkBox->setChecked(false);
             NotificationWidget::showNotification(tr("Information"), tr("Shortcut no longer exists!"));
             return;
         }
-        bool success = QFile::remove(shortcutPath);
-        if (!success)
+        if (!StartupShortcut::remove())
         {
             qWarning() << "[Settings] Cannot remove shortcut:" << shortcutPath;
+            ui->checkBox->setChecked(QFile::exists(shortcutPath));
             NotificationWidget::showNotification(tr("Warning"), tr("Failed to remove shortcut!"), 5000, MessageType::Warning);
             return;
         }
         qDebug() << "[Settings] Remove shortcut success:" << shortcutPath;
+        ui->checkBox->setChecked(false);
         NotificationWidget::showNotification(tr("Information"), tr("Shortcut removed!"));
     }
     else
     {
-        // 添加启动项
-        IShellLink *pShellLink = nullptr;
-        IPersistFile *pPersistFile = nullptr;
-
-        HRESULT hr = CoInitialize(nullptr);
-        if (SUCCEEDED(hr))
+        // 添加启动项：ShellLink 在模块内的独立 STA 线程完成，不受主线程 COM 公寓影响
+        HRESULT hr = S_OK;
+        if (!StartupShortcut::create(QCoreApplication::applicationFilePath(), &hr))
         {
-            hr = CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER, IID_IShellLink,
-                                  (void **)&pShellLink);
-            if (SUCCEEDED(hr))
-            {
-                pShellLink->SetPath(executablePath.toStdWString().c_str());
-                pShellLink->SetWorkingDirectory(QFileInfo(executablePath).absolutePath().toStdWString().c_str());
-                hr = pShellLink->QueryInterface(IID_IPersistFile, (void **)&pPersistFile);
-                if (SUCCEEDED(hr))
-                {
-                    hr = pPersistFile->Save(shortcutPath.toStdWString().c_str(), TRUE);
-                    pPersistFile->Release();
-                }
-                pShellLink->Release();
-            }
-            CoUninitialize();
-        }
-
-        if (FAILED(hr))
-        {
-            qWarning() << "[Settings] Cannot create shortcut:" << shortcutPath;
+            qWarning().noquote()
+                << "[Settings] Cannot create shortcut:" << shortcutPath
+                << QString("hr=0x%1").arg(static_cast<quint32>(hr), 8, 16, QLatin1Char('0'))
+                << StartupShortcut::hresultToString(hr);
+            // 回滚勾选状态，避免界面与实际文件失同步
+            ui->checkBox->setChecked(QFile::exists(shortcutPath));
             NotificationWidget::showNotification(tr("Warning"), tr("Failed to create shortcut!"), 5000, MessageType::Warning);
         }
         else
         {
             qDebug() << "[Settings] Create shortcut success:" << shortcutPath;
+            ui->checkBox->setChecked(true);
             NotificationWidget::showNotification(tr("Information"), tr("Shortcut created!"));
         }
     }

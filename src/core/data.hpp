@@ -15,7 +15,7 @@
 #include "llamaclient.h"
 #include "ttsconfig.hpp"
 
-#define VERSION "v0.8.0"
+#define VERSION "v0.8.1"
 
 enum TrayIconMode : int
 {

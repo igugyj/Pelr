@@ -1,3 +1,22 @@
+## v0.8.1 - 未发布
+
+### 问题修复
+
+* **开机自启快捷方式创建失败（COM 公寓冲突）** — 主线程被 `AudioSpectrumDetector` 初始化为 MTA 后，`SettingWidget::startupSwitch` 里的 `CoInitialize`(STA) 返回 `RPC_E_CHANGED_MODE`，`IShellLink` 创建逻辑被整段跳过，日志只报 `Cannot create shortcut` 且不含 hr。新增 `src/utils/StartupShortcut.{h,cpp}`，`.lnk` 创建移到独立 STA 线程完成；失败日志补 `hr=0x%08X` 与 `FormatMessage` 可读文本；创建/删除后按文件真实存在与否回滚复选框状态，消除「创建失败→界面不回退→反复点击」的日志刷屏。
+
+### 重构与优化
+
+* **COM 公寓治理** — 新增 `src/utils/ComApartment.h`（RAII：谁初始化谁释放，`RPC_E_CHANGED_MODE` 视为可用但不释放）；`main()` 早期把主线程固定为 STA；`AudioSpectrumDetector` 的全部 COM/WASAPI 初始化与资源释放移入自己的 MTA 工作线程（拆出 `initializeWasapi()` / `releaseResources()`），`start()` 经 promise/future 同步回传初始化结果（对 tray 语义不变），`stop()` 置位后 join。主线程公寓不再被任何模块改写。
+* **快捷方式代码收敛** — `checkStartupLink()` / `startupSwitch()` 删除手拼 `APPDATA` 路径与内联 COM 调用，统一走 `StartupShortcut`（`SHGetKnownFolderPath(FOLDERID_Startup)`，回退 APPDATA 拼接），路径统一 `QDir::toNativeSeparators`。
+
+### 文档与仓库
+
+* **README（中英）快速开始改为 Releases 下载优先** — 下载 `pelr_windows-x86_64_<tag>.7z` → 装组件 → 使用；`git pull` 更新改为覆盖安装，源码构建信息下沉到开发文档
+* **`docs/dev-init.md` + `docs/dev-dev.md` 合并为 `docs/dev-guide.md`** — 去重后按「环境搭建 → 第三方依赖 → 构建 → 本地打包 → Release CI → Python TTS」重排，README / index / CONTRIBUTING / app-voicevox / dev-structure 引用同步更新，旧文件删除
+* **`docs/index.md` 按读者重写** — 获取程序 / 用户文档 / 开发者文档 / 问题修复 / 项目信息；删除指向被 gitignore 文件的 404 链接（`audit-report-*.md`、`architecture/`）
+* **`CONTRIBUTING.md` 精简 226 → 78 行**（全英文）— 新增「Ways to Contribute」表：代码 / 文档 / 翻译 / 点子 / 测试 / 生态，各带入口；删除与 `dev-guide`、`dev-structure`、`NOTICE` 重复的章节；`SUPPORT.md` 中英贡献引导同步扩为「代码、文档、翻译或点子」
+* 事实修正：`app-tts` 后端数 2 → 4；`qa-OpenSSL` 标注以 `windeployqt` 实际输出为准；`THANKS.md` 补 H1；`SECURITY` 中英移除占位行；`dev-structure` 补 `icon.rc`
+
 ## v0.8.0 - 2026-10-02（已发布，GitHub 标记为 Pre-release，由 Release CI 构建）
 
 ### 新特性

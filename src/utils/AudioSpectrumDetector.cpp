@@ -4,6 +4,9 @@
 #include <cmath>
 #include <iostream>
 #include <QDebug>
+#include <future>
+#include <memory>
+#include "ComApartment.h"
 // Windows 多媒体库链接
 #pragma comment(lib, "ole32.lib")
 
@@ -18,13 +21,47 @@ bool AudioSpectrumDetector::start()
 {
     if (m_running)
         return true;
+    if (m_thread.joinable())
+        return false; // 上一次 stop 尚未结束
 
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-    if (FAILED(hr) && hr != RPC_E_CHANGED_MODE)
-    {
-        qDebug() << "[ASD] CoInitializeEx failed:" << Qt::hex << (unsigned long)hr;
-        return false;
-    }
+    auto ready = std::make_shared<std::promise<bool>>();
+    std::future<bool> result = ready->get_future();
+
+    // 所有 COM/WASAPI 操作都在本线程内完成：
+    // 主线程公寓不受影响，也不受主线程已被初始化成其它公寓的影响。
+    m_thread = std::thread([this, ready]
+                           {
+        ComApartment apartment(COINIT_MULTITHREADED);
+        if (!apartment.usable())
+        {
+            qDebug() << "[ASD] CoInitializeEx failed:" << Qt::hex << (unsigned long)apartment.hr();
+            ready->set_value(false);
+            return;
+        }
+
+        if (!initializeWasapi())
+        {
+            releaseResources();
+            ready->set_value(false);
+            return;
+        }
+
+        m_running = true;
+        ready->set_value(true);
+
+        if (m_running)
+            captureThreadFunc();
+
+        releaseResources(); // 本线程创建的 COM 对象在本线程释放
+        m_running = false;
+    });
+
+    return result.get(); // 同步等待初始化结果
+}
+
+bool AudioSpectrumDetector::initializeWasapi()
+{
+    HRESULT hr;
 
     // 1. 枚举设备
     hr = CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_ALL,
@@ -106,26 +143,24 @@ bool AudioSpectrumDetector::start()
         return false;
     }
 
-    m_running = true;
-    m_thread = std::thread(&AudioSpectrumDetector::captureThreadFunc, this);
-
     qDebug() << "[ASD] Initialization successful";
     return true;
 }
 
 void AudioSpectrumDetector::stop()
 {
-    if (!m_running)
-        return;
-    m_running = false;
-
-    if (m_audioClient)
-        m_audioClient->Stop();
-
-    // 不用 SetEvent 唤醒，因为已无事件等待
+    m_running = false; // 采集循环 10ms 轮询该标志后退出
 
     if (m_thread.joinable())
-        m_thread.join();
+        m_thread.join(); // 工作线程内自行释放 COM 资源并退出公寓
+
+    m_running = false;
+}
+
+void AudioSpectrumDetector::releaseResources()
+{
+    if (m_audioClient)
+        m_audioClient->Stop();
 
     if (m_fftCfg)
     {
@@ -163,8 +198,6 @@ void AudioSpectrumDetector::stop()
         CloseHandle(m_hEvent);
         m_hEvent = nullptr;
     }
-
-    CoUninitialize();
 }
 
 bool AudioSpectrumDetector::isAudioPlaying() const
