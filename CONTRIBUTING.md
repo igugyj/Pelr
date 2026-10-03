@@ -1,29 +1,24 @@
 # Contributing to Pelr
 
-Thank you for your interest in contributing to Pelr! This document provides guidelines and instructions for contributing to the project.
+Pelr welcomes contribution of any size — from users, not only C++ developers.
 
-## Table of Contents
+## Ways to Contribute
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [Development Environment](#development-environment)
-- [Building the Project](#building-the-project)
-- [Project Architecture](#project-architecture)
-- [Coding Guidelines](#coding-guidelines)
-- [Pull Request Process](#pull-request-process)
-- [Reporting Issues](#reporting-issues)
-- [Third-Party Dependencies](#third-party-dependencies)
+| Type | What to do | Where |
+| --- | --- | --- |
+| **Code** | Fix bugs, add features, refactor, optimize | Pick a task from [Issues](https://github.com/igugyj/Pelr/issues), or open an Issue first to discuss the approach |
+| **Documentation** | Improve `docs/` user guides, add screenshots/screen recordings, fix typos and stale descriptions | Send a PR touching `docs/*.md` |
+| **Translation** | UI strings in `translations/*.ts` (zh_CN / en_US), or translate documentation | Send a PR, or state in an Issue which languages you can cover |
+| **Ideas** | Feature suggestions, UX improvements, roadmap discussion | [Feature Request template](https://github.com/igugyj/Pelr/issues/new/choose) |
+| **Testing** | Try the pre-release builds on [Releases](https://github.com/igugyj/Pelr/releases) and report bugs with logs | Follow the bug template in [SUPPORT](SUPPORT.md) |
+| **Ecosystem** | Packaging, mirrors, components, third-party maintenance | Claim a task in an Issue |
 
-## Code of Conduct
-
-This project is governed by a standard code of conduct. Please be respectful and constructive in all interactions. Harassment, discrimination, or any form of unacceptable behavior will not be tolerated.
+> Small changes (docs, translations, typos): open a PR directly. Architecture or new features: open an Issue and reach agreement first, so the work is not thrown away.
 
 ## Getting Started
 
-1. Fork the repository on GitHub.
-2. Clone your fork locally.
-3. Set up the development environment as described in the next section.
-4. Create a new branch from `dev` for your work:
+1. Fork the repository and clone it locally
+2. Branch off `dev` (never off `master`):
 
    ```sh
    git checkout dev
@@ -31,196 +26,52 @@ This project is governed by a standard code of conduct. Please be respectful and
    git checkout -b feature/your-feature-name
    ```
 
-5. Make your changes and commit them.
-6. Push to your fork and submit a pull request.
+3. Follow the [development guide](docs/dev-guide.md) to set up the toolchain, third-party dependencies and build
+4. Make your change, test it locally, then open a PR against `dev`
 
-**Important:** Always branch from and target the `dev` branch, not `master`.
+## Project Layout
 
-## Development Environment
+- [docs/dev-guide.md](docs/dev-guide.md) — environment setup, dependencies, Debug/Release builds, release scripts and Release CI
+- [docs/dev-structure.md](docs/dev-structure.md) — source tree overview
+- [NOTICE](NOTICE) — third-party dependencies and licenses
 
-### Prerequisites
+Quick reminders:
 
-- **Windows 10 or 11** (this is a Windows-only application)
-- **Qt 6.10.1** with MinGW 64-bit toolchain (available at `D:/Qt/6.10.1/mingw_64`)
-- **CMake** (bundled with Qt: `D:/Qt/Tools/CMake_64/bin/cmake.exe`)
-- **Git**
-- **Python 3.10+** (optional, for TTS server and translation services)
-
-### Third-Party Resources
-
-Before building, the following resources must be present:
-
-| Resource | Source | Notes |
-| --- | --- | --- |
-| `thirdParty/Core/` | [Live2D Cubism SDK Native](https://www.live2d.com/en/sdk/download/native/) | **Not included in the repository.** Download `CubismSdkForNative-5-r.5.zip` and extract the `Core` folder. Governed by the Live2D Proprietary Software License. |
-| `thirdParty/CubismNativeFramework/` | Git submodule | Initialize with `git submodule update --init --recursive` |
-| `thirdParty/CubismNativeSamples/` | Git submodule | Initialize with `git submodule update --init --recursive`. Supplies the demo sources (`LAPP_2D_SRC`) and sample resources used by the build. |
-| `thirdParty/glew/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
-| `thirdParty/glfw/` | Setup script | Run `thirdParty/scripts/setup_glew_glfw.bat` |
-| `thirdParty/stb/` | Committed in repository | Already present — no setup needed (`README.md` + `stb_image.h` v2.30) |
-| `thirdParty/miniz/` | Git submodule | Included in submodule init |
-| `thirdParty/voicevox_core/` | [voicevox_core 0.17.0](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0) | Optional; required only for Japanese TTS. Download `download-windows-x64.exe` and place the generated `voicevox_core` folder directly under `thirdParty/` (`c_api` / `onnxruntime` / `dict` / `models`). Debug builds copy `c_api`/`onnxruntime`/`dict` to the output `voicevox_core/`; `models` is never auto-copied (~1.6 GB) and must be copied to `<out>/voicevox_core/models` manually. |
-| `thirdParty/FluentUIStyle/` | Git submodule | Initialize with `git submodule update --init --recursive`. Built as Qt style plugin (dll) via ExternalProject. |
-
-For detailed setup instructions, refer to [docs/dev-init.md](docs/dev-init.md).
-
-## Building the Project
-
-### Configure
-
-```sh
-D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Debug -G "MinGW Makefiles"
-```
-
-### Build
-
-```sh
-D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Debug
-```
-
-### Adding New Source Files
-
-Source files are collected via `file(GLOB ...)` in `CMakeLists.txt`. After adding new `.cpp`, `.h`, or `.hpp` files, you **must re-run cmake configure** to pick them up.
-
-### Debug vs Release
-
-`DEBUG_MODE` controls debug features (console subsystem, `CONSOLE` define, log level). It is **derived from `CMAKE_BUILD_TYPE`** — you do not edit it in `CMakeLists.txt`:
-
-```sh
-# Debug (console window, CONSOLE define) — the default when CMAKE_BUILD_TYPE is unset
-D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Debug -G "MinGW Makefiles"
-D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Debug
-
-# Release (no console, WIN32_EXECUTABLE, Qt message handler) — use a separate build tree
-D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Release -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
-D:/Qt/Tools/CMake_64/bin/cmake.exe --build build/Release
-
-# Optional: force DEBUG_MODE independently of the build type
-D:/Qt/Tools/CMake_64/bin/cmake.exe -S . -B build/Release -DCMAKE_BUILD_TYPE=Release -DDEBUG_MODE=ON
-```
-
-Notes:
-
-- `CMAKE_BUILD_TYPE` falls back to `Debug` when unset — FluentUIStyle's `ExternalProject_Add` forwards it via `$<CONFIG>`, and an empty value breaks that subproject.
-- Third-party optional components (Live2D Cubism Core, `voicevox_core`) are deployed **only on Debug builds**. Release builds intentionally start in a "component missing" state.
-- MinGW must be on `PATH` or configure fails with `CMAKE_MAKE_PROGRAM is not set`.
-
-## Project Architecture
-
-```
-src/
-├── main.cpp              # Entry point: creates GLCore + TrayIcon
-├── core/
-│   ├── GLCore.h/cpp      # Main OpenGL widget, mouse/timer/event handling
-│   ├── tray.h            # System tray icon management
-│   ├── data.hpp/cpp      # Central runtime config (DataManager singleton)
-│   ├── componentmanager.*  # Optional component scan/validation/import
-│   └── componentpaths.hpp  # Runtime path resolution (Live2D/, voicevox_core/, plugins/)
-├── compatLApp/           # Live2D rendering layer (overrides Cubism SDK demo classes)
-│   ├── LAppView.*        # OpenGL rendering, touch input, sprites
-│   ├── LAppLive2DManager.*  # Model lifecycle, hit testing, view matrix
-│   ├── LAppModel.*       # Model loading, motion/expression playback
-│   ├── LAppDelegate.*    # App lifecycle, GL context init, singletons
-│   ├── LAppDefine.*      # Constants (view scale, hit area names, motion groups)
-│   └── LAppPal.*         # Platform abstraction (logging, file I/O)
-├── compatSDK/            # Shadow Cubism Framework OpenGL headers
-├── ui/                   # Qt .ui form files (processed by AUTOUIC) + manual widgets
-├── ai/                   # OpenAI-compatible chat API integration
-├── tts/                  # TTS dispatch + backends + translation API clients
-├── translation/          # UI language switching only (TranslationManager)
-├── keyboard/             # Global input hook + key overlay
-├── live2d/               # Live2D model directory/resource management
-├── plugins/voicevox/     # VOICEVOX runtime plugin -> plugins/local_voicevox.dll
-├── utils/                # Logger, weather, audio spectrum (kissfft), audio decoder (miniaudio), TTS lip sync
-└── model/                # Live2D model extensions (extra motions, file mgmt)
-```
+- Sources are collected with `file(GLOB ...)` — **re-run cmake configure after adding a `.cpp`/`.h`**
+- The build type decides `DEBUG_MODE` (Release → OFF); do not hand-edit `CMakeLists.txt`
+- Release builds intentionally ship without Live2D Core / voicevox components; starting in a "component missing" state is by design
+- Branch model: day-to-day work lands in `dev`, only stable releases merge into `master`
 
 ## Coding Guidelines
 
-### General
-
 - **Language:** C++17
-- **Naming convention:** Use `PascalCase` for class names, `camelCase` for variables and functions, `UPPER_SNAKE_CASE` for constants and preprocessor macros.
-- **Indentation:** Use 4 spaces per indentation level. No tabs.
-- **Braces:** Opening braces on the same line (K&R style).
-- **Comments:** Write comments in Chinese or English. Keep them concise and meaningful.
-- **Include order:** Local headers first, then Qt headers, then standard library headers.
-
-### Qt & OpenGL
-
-- Use `QOpenGLWidget` as the base class for OpenGL rendering.
-- All mouse coordinate handling must account for High-DPI displays: always multiply logical coordinates by `devicePixelRatioF()` before reading framebuffer pixels.
-- The default framebuffer must be cleared at the start of each render frame with `glClearColor(0,0,0,0)` and `glClear(GL_COLOR_BUFFER_BIT)` to maintain transparent background.
-- Use `grabFramebuffer()` instead of `glReadPixels` for pixel reading outside `paintGL`.
-
-### Live2D Layer (compatLApp)
-
-The files in `src/compatLApp/` shadow identically-named files in `thirdParty/CubismNativeSamples/Samples/Common/`. When modifying these files:
-
-- Do not modify the originals in `thirdParty/` — they are excluded from the build.
-- `LAppView::OnTouchesEnded(px, py)` must use its `px, py` arguments, not `_touchManager->GetX/Y()` (which can be stale after touch end).
-- Hit area names are defined as `"Head"` and `"Body"` in `LAppDefine`, matching `model3.json` tag names.
-
-### Preprocessor
-
-`-include GL/glew.h` is forced globally on all compilation units via CMake. Do not remove this — it resolves OpenGL type definitions before Qt headers are processed.
+- **Naming:** `PascalCase` for classes, `camelCase` for variables and functions, `UPPER_SNAKE_CASE` for constants and macros
+- **Indentation:** 4 spaces; K&R braces; comments in Chinese or English, kept concise
+- **Include order:** project headers → Qt headers → standard library
+- **Qt / OpenGL:** multiply mouse coordinates by `devicePixelRatioF()`; clear the framebuffer each frame with `glClearColor(0,0,0,0)` + `glClear(GL_COLOR_BUFFER_BIT)` to keep the background transparent; use `grabFramebuffer()` for pixel reads outside `paintGL`
+- **compatLApp shadow layer:** `src/compatLApp/` overrides same-named files in `thirdParty/CubismNativeSamples/Samples/Common/` — **never edit the originals under `thirdParty/`** (they are excluded from the build)
+- **Never remove** the globally forced `-include GL/glew.h` or `GLEW_STATIC`
 
 ## Pull Request Process
 
-1. Ensure your branch is based on the latest `dev` branch.
-2. Make focused, atomic commits with clear commit messages.
-3. Update documentation if your changes introduce new features or modify existing behavior.
-4. Ensure the project builds successfully with `cmake --build build/Debug`.
-5. Submit a pull request targeting the `dev` branch.
-6. Fill out the pull request template completely, including the self-check list.
-7. A maintainer will review your PR. Address any feedback promptly.
-
-### Commit Message Style
-
-Use conventional commit format:
-
-```
-type(scope): brief description
-
-Optional body with details.
-```
-
-Types: `feat`, `fix`, `refactor`, `docs`, `style`, `chore`, `build`, `test`.
-
-Examples:
-
-- `feat(core): add mouse transparency check on window activate`
-- `fix(lapp): use px,py arguments in OnTouchesEnded instead of stale touch manager state`
-- `docs: update build instructions for Qt 6.10.1`
+1. Base your branch on the latest `dev`
+2. Keep commits focused and single-purpose, messages follow Conventional Commits: `type(scope): description` (`feat` / `fix` / `refactor` / `docs` / `style` / `chore` / `build` / `test`)
+3. Build locally: `cmake --build build/Debug`
+4. Update the matching `docs/` page when behavior changes
+5. Target the `dev` branch and fill in the PR template self-check list
+6. Example: `feat(core): add mouse transparency check on window activate`
 
 ## Reporting Issues
 
-- Use the GitHub issue tracker: [https://github.com/igugyj/Pelr/issues](https://github.com/igugyj/Pelr/issues)
-- Choose the appropriate issue template (Bug Report or Feature Request).
-- Provide clear, reproducible steps for bugs.
-- Include relevant logs, screenshots, and system information.
+- Use an [Issue template](https://github.com/igugyj/Pelr/issues/new/choose) (bug / feature, English and Chinese)
+- For bugs include: reproduction steps, Pelr version, Windows version, logs from `log/`, screenshots
+- Check [SUPPORT](SUPPORT.md) and search existing Issues first
+- **Never report security vulnerabilities publicly** — see [SECURITY](SECURITY.md)
 
-## Third-Party Dependencies
+## License & Legal
 
-| Dependency | License | Included? |
-| --- | --- | --- |
-| Live2D Cubism Core | Live2D Proprietary | No — must be downloaded separately |
-| Live2D Cubism Framework | Live2D Open Software License | Yes (git submodule) |
-| Qt 6.10.1 | LGPL | No — system dependency |
-| GLEW | Modified BSD License | Yes (downloaded by setup script) |
-| GLFW | zlib/libpng | Yes (downloaded by setup script) |
-| kissfft | BSD-3-Clause | Yes (git submodule) |
-| miniz | MIT | Yes (git submodule) |
-| stb | MIT / Public Domain | Yes (committed in repository) |
-| miniaudio | MIT | Yes (git submodule) |
-| FluentUIStyle | MIT | Yes (git submodule, built as ExternalProject) |
-| voicevox_core | MIT (with additional terms) | No — must be downloaded separately |
-| ONNX Runtime | MIT | No — obtained together with voicevox_core |
+- Author-written code under `src/` is MIT; the project as a whole is governed by the licenses listed in [NOTICE](NOTICE)
+- Live2D Cubism Core is proprietary and must not be redistributed; if you distribute compiled binaries, obtain a Live2D publishing license yourself ([terms](https://www.live2d.com/en/sdk/license/))
+- `thirdParty/LAppLive2D` and `src/compatLApp` derive from `CubismNativeSamples` and follow the Live2D Open Software License
 
-### Legal Notice for Live2D Cubism Core
-
-The Live2D Cubism Core library is governed by the Live2D Proprietary Software License. If you distribute this application, you may need a Live2D publishing license. Review the [Live2D licensing terms](https://www.live2d.com/zh-CHS/sdk/license/) for details.
-
----
-
-Thank you for contributing to Pelr!
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md). Thanks to every contributor!

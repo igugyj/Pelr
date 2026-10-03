@@ -11,7 +11,8 @@ lib
 log
 release
 voice_files
-Liv2d_SDK
+Live2d_SDK
+todo.md
 thirdParty/voicevox_core/**
 thirdParty/core/**
 thirdParty/glew

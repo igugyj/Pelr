@@ -8,9 +8,10 @@
 
 大多数常见问题都能在现有文档中找到答案。在提问前，请先尝试：
 
-1. **阅读 [README.md](../README.md)** - 包含最重要的安装、配置和基本使用说明
-2. **查阅 [文档](.)** - 提供了更详细的用户手册和常见问题解答
-3. **搜索现有的 Issues 和 Discussions** - 您遇到的问题可能已经被提出并解决。请在 [Issues](https://github.com/igugyj/Pelr/issues) 中搜索关键词
+1. **下载最新版本** - [GitHub Releases](https://github.com/igugyj/Pelr/releases)，修复会优先发布到这里
+2. **阅读 [README.md](../README.md)** - 包含最重要的安装、配置和基本使用说明
+3. **查阅 [文档](.)** - 提供了更详细的用户手册和常见问题解答
+4. **搜索现有的 Issues 和 Discussions** - 您遇到的问题可能已经被提出并解决。请在 [Issues](https://github.com/igugyj/Pelr/issues) 中搜索关键词
 
 ## 报告错误
 
@@ -29,7 +30,7 @@
 
 ## 贡献
 
-如果您想直接贡献代码来修复问题或添加功能，请阅读[贡献指南](../CONTRIBUTING.md)。
+想为项目出份力——代码、文档、翻译或点子皆可，请阅读[贡献指南](../CONTRIBUTING.md)。
 
 ## 重要提示
 

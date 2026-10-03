@@ -1,4 +1,4 @@
-## 致谢
+# 致谢
 
 [NOTICE](NOTICE)
 

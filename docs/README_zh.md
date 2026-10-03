@@ -70,21 +70,27 @@
 
 ### 下载安装
 
-使用方法见 [docs/index.md](index.md)
+1. 从 [GitHub Releases](https://github.com/igugyj/Pelr/releases) 下载最新包：`pelr_windows-x86_64_<tag>.7z`
+2. 解压到任意目录，运行 `Pelr.exe`
+3. 安装程序刻意不随包分发的组件（见 [组件安装](app-components.md)）：
+   - **Live2D Cubism Core** —— 必需，受专有许可限制不可分发
+   - **VOICEVOX** —— 可选，仅日语 TTS 需要
+
+使用方法见 [文档索引](index.md)
+
+> Release 包由 [`release` CI 工作流](../.github/workflows/release.yml) 构建，推送 `v*` 标签即触发。
+
+### 更新
+
+直接下载最新 Release 覆盖安装即可，`user` 文件夹会保留。
+
+需要从源码构建？见 [开发构建](#开发构建)。
 
 ### TTS 后端
 
 - **Edge TTS / 讯飞 TTS** — 依赖外部 Python 服务 [Pelr_tts_tr](https://github.com/igugyj/Pelr_tts_tr)，不提供打包版本
-- **VOICEVOX** — 本地 TTS 引擎（随程序分发）
+- **VOICEVOX** — 本地 TTS 引擎（需自行安装组件）
 - **OpenAI-Compatible TTS** — 使用任意 OpenAI 兼容接口
-
-### 更新
-
-```sh
-git fetch && git pull
-```
-
-依据 [CMakeLists.txt](../CMakeLists.txt) 更新依赖。
 
 ### 首次运行配置
 
@@ -205,7 +211,8 @@ git fetch && git pull
 
 ## 开发构建
 
-简要开发指南见 [docs/dev-dev.md](dev-dev.md)
+- [开发指南](dev-guide.md) —— 工具链、第三方依赖、Debug/Release 构建、`scripts/release.py`、Release CI
+- [项目结构](dev-structure.md) —— 源码树总览
 
 ## 参与贡献
 

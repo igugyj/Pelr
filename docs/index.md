@@ -1,29 +1,27 @@
 # 文档索引
 
-本文档页面提供所有项目文档的导航入口。
+Pelr 文档按读者分为**用户**与**开发者**两部分；每篇文档只在自己所属的部分出现。
 
-## 项目初始化
+## 获取程序
 
-- [环境搭建指南](dev-init.md)
-
-无论用户还是开发者，使用本项目均需完成此步骤。成功运行即表示已初步满足项目要求。
+- [GitHub Releases](https://github.com/igugyj/Pelr/releases) —— 下载 `pelr_windows-x86_64_<tag>.7z`，由 Release CI 自动构建
+- [组件安装](app-components.md) —— 首次运行必需的 Live2D Cubism Core 与可选的 VOICEVOX 下载与放置
 
 ## 用户文档
 
-- [Live2D 模型界面](app-live2d.md)
-- [主窗口](app-window.md)
+- [模型界面](app-live2d.md) —— 桌宠窗口、右键菜单、消息气泡、对话框
+- [主窗口](app-window.md) —— 设置、启动项、TODO、系统监控、AI 聊天
 - [系统托盘](app-tray.md)
 - [TTS 服务](app-tts.md)
-- [组件安装](app-components.md) —— Live2D Cubism Core、VOICEVOX 的下载与放置
-- [VoiceVox 配置](app-voicevox.md)
-- [LibreTranslate 配置](app-LibreTranslate.md)
+- [VoiceVox 配置](app-voicevox.md) —— 日语本地 TTS
+- [LibreTranslate 配置](app-LibreTranslate.md) —— 离线翻译服务
 - [腾讯云翻译配置](app-txTr.md)
 
 ## 开发者文档
 
+- [开发指南](dev-guide.md) —— 环境搭建、第三方依赖、构建、本地打包与 Release CI
 - [项目结构](dev-structure.md)
-- [构建与发布](dev-dev.md)
-- [架构图](architecture/pelr-architecture.html) —— 需在浏览器中打开
+- [贡献指南](../CONTRIBUTING.md)
 - [依赖声明](../NOTICE)
 
 ## 问题修复
@@ -35,8 +33,8 @@
 - [更新日志](ChangeLog.md)
 - [安全策略](SECURITY.md)
 - [支持与反馈](SUPPORT.md)
+- [致谢](../THANKS.md)
 - [中文 README](README_zh.md)
-- [安全审计报告（2026-07-23）](audit-report-2026-07-23.md)
 
 ---
 

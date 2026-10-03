@@ -5,6 +5,7 @@
 ```
 src/
 ├── main.cpp              # 入口：固定 CWD → 初始化文件系统/日志 → 许可检查 → GLCore + 托盘
+├── icon.rc               # Windows 图标资源
 ├── core/                 # DataManager 运行时配置、GLCore(OpenGL 主窗口)、托盘、启动器
 │                         # + componentmanager(组件扫描/校验/导入) + componentpaths(运行时路径)
 ├── compatLApp/           # Live2D 六文件封装层（影子替换 CubismNativeSamples 原版）
@@ -31,7 +32,7 @@ docs/.ai/                 # agent 向 AI 文档
 
 > 源码树**不存在 `Resources/`**。输出目录中的 `Resources/`、`FrameworkShaders`、`SampleShaders` 在构建期从 `thirdParty/` 的 submodule 复制。
 
-更完整的模块说明见 [构建与发布](dev-dev.md)；架构分层见 `.ai` 文档的 `core/architecture.md`。
+构建与发布流程见 [开发指南](dev-guide.md)；架构分层见 `.ai` 文档的 `core/architecture.md`。
 
 ## 文件树快照
 

@@ -46,4 +46,3 @@ We follow a responsible disclosure process:
 
 We thank all researchers and users who help make Pelr more secure. We appreciate your time and effort in following responsible disclosure practices.
 
-[Security contributors will be listed here]

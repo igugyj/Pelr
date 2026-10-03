@@ -14,7 +14,7 @@
 1. 前往 [voicevox_core 0.17.0 发布页面](https://github.com/VOICEVOX/voicevox_core/releases/tag/0.17.0)
 2. 下载 `download-windows-x64.exe`
 3. 运行该程序，下载完成后将生成的 `voicevox_core` 文件夹（约 1 GB）**直接放在 `Pelr.exe` 旁**（与 `Resources`、`FrameworkShaders` 等输出目录平级，不要放进 `Resources`）
-   > 目前还没有针对一般用户的发行版，没有相关的可用配置，请参考[开发配置](dev-init.md#VoiceVoxCore)
+   > 推荐改用设置 → **Components** 页的 **Open folder** 打开正确目录后放入官方下载文件夹中的四个子文件夹，详见 [组件安装](app-components.md)；从源码构建的目录布局见 [开发指南](dev-guide.md#voicevox-core)
 4. 语音模型选择：<https://github.com/VOICEVOX/voicevox_vvm>（可前往官方网站预览）
 
 如未使用推荐目录结构，可在设置中进行自定义路径配置。

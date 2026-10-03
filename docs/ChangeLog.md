@@ -1,4 +1,4 @@
-## v0.8.0 - 2026-10-03（unrelease）
+## v0.8.0 - 2026-10-02（已发布，GitHub 标记为 Pre-release，由 Release CI 构建）
 
 ### 新特性
 

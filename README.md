@@ -70,21 +70,27 @@
 
 ### Download & Install
 
-See [docs/index.md](docs/index.md) for usage instructions.
+1. Download the latest package from [GitHub Releases](https://github.com/igugyj/Pelr/releases): `pelr_windows-x86_64_<tag>.7z`
+2. Extract it anywhere and run `Pelr.exe`
+3. Install the components that the package intentionally ships without (see [Components](docs/app-components.md)):
+   - **Live2D Cubism Core** — required, cannot be redistributed
+   - **VOICEVOX** — optional, Japanese TTS only
+
+Usage instructions: [docs/index.md](docs/index.md)
+
+> Releases are built by the [`release` CI workflow](.github/workflows/release.yml), triggered by pushing a `v*` tag.
+
+### Update
+
+Download and install the newest release over the old one; your `user` folder is kept.
+
+Building from source instead? See [Development & Build](#development--build).
 
 ### TTS Backends
 
 - **Edge TTS / iFlytek TTS** — rely on an external Python server: [Pelr_tts_tr](https://github.com/igugyj/Pelr_tts_tr). Per open source license requirements, no pre-built package is provided.
-- **VOICEVOX** — local TTS engine (bundled)
+- **VOICEVOX** — local TTS engine (optional component, see [Components](docs/app-components.md))
 - **OpenAI-Compatible TTS** — uses any OpenAI-compatible API endpoint
-
-### Update
-
-```sh
-git fetch && git pull
-```
-
-Update dependencies according to [CMakeLists.txt](CMakeLists.txt).
 
 ### First-Time Setup
 
@@ -205,7 +211,8 @@ See [docs/index.md](docs/index.md) for detailed instructions.
 
 ## Development & Build
 
-Quick development guide at [docs/dev-dev.md](docs/dev-dev.md)
+- [Development guide](docs/dev-guide.md) — toolchain, third-party dependencies, Debug/Release builds, `scripts/release.py`, Release CI
+- [Project structure](docs/dev-structure.md) — source tree overview
 
 ## Contributing
 

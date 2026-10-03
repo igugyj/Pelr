@@ -8,9 +8,10 @@ Thank you for using Pelr! We are happy to help you resolve any issues. For the m
 
 Most common questions can be answered in existing documentation. Before asking, please try:
 
-1. **Read [README.md](README.md)** - contains installation, configuration, and basic usage instructions
-2. **Check [docs](docs/)** - provides detailed user manuals and FAQs
-3. **Search existing Issues and Discussions** - your issue may have been raised and resolved already. Search [Issues](https://github.com/igugyj/Pelr/issues)
+1. **Download the latest build** - [GitHub Releases](https://github.com/igugyj/Pelr/releases) fixes land there first
+2. **Read [README.md](README.md)** - contains installation, configuration, and basic usage instructions
+3. **Check [docs](docs/)** - provides detailed user manuals and FAQs
+4. **Search existing Issues and Discussions** - your issue may have been raised and resolved already. Search [Issues](https://github.com/igugyj/Pelr/issues)
 
 ## Reporting a Bug
 
@@ -29,7 +30,7 @@ If you believe you have found an unreported bug, please [create a new Issue](htt
 
 ## Contributing
 
-If you would like to contribute code to fix an issue or add a feature, please read our [contributing guide](CONTRIBUTING.md).
+Want to contribute — code, docs, translation or ideas? Read our [contributing guide](CONTRIBUTING.md).
 
 ## Important Notes
 
