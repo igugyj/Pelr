@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #ifdef Q_OS_WIN
 #include <windows.h>
+#include "ComApartment.h"
 #endif
 
 #include "GLCore.h"
@@ -24,6 +25,13 @@ void initTranslator(QApplication &a, const QString &path);
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_WIN
+    // 主线程固定为 STA：UI 线程的 COM 公寓在进入 Qt 事件循环前确定，
+    // 不再被其他模块改写（ASD 等一律在自己的工作线程里初始化 COM）。
+    const ComApartment mainApartment(COINIT_APARTMENTTHREADED);
+    if (!mainApartment.usable())
+        qWarning().noquote() << "[APP] main-thread COM apartment init failed: hr=0x"
+                             << QString("%1").arg(static_cast<quint32>(mainApartment.hr()), 8, 16, QLatin1Char('0'));
+
     wchar_t exeBuf[MAX_PATH];
     DWORD exeLen = GetModuleFileNameW(nullptr, exeBuf, MAX_PATH);
     if (exeLen > 0 && exeLen < MAX_PATH)

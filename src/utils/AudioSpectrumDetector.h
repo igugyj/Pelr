@@ -21,7 +21,9 @@ public:
     float currentEnergy() const; // 当前平滑后的频谱能量
 
 private:
-    void captureThreadFunc(); // 后台采集与 FFT 处理线程
+    bool initializeWasapi();   // WASAPI/COM 初始化（只能在工作线程内调用）
+    void captureThreadFunc();  // 后台采集与 FFT 处理线程
+    void releaseResources();   // 释放 COM/FFT 资源（只能在工作线程内调用）
     void processWindowAndFFT();
 
     // COM/WASAPI 接口
